@@ -35,11 +35,12 @@
 
 <style lang="scss">
 	input {
-		--thumb-size: 1.75rem;
+		--thumb-size: 1.5rem;
 		--thumb-color: var(--inputs-on-background-color);
 		--track-size: calc(var(--thumb-size) * 1.75);
 		--track-padding: calc(var(--base-padding) * 0.25);
 		--thumb-position: 0%;
+		--border-radius: calc(var(--inputs-border-base-radius) * 2);
 		cursor: pointer;
 
 		appearance: none;
@@ -53,7 +54,7 @@
 		background: var(--inputs-background-color);
 		border: var(--inputs-border-width) solid var(--buttons-primary-border-color);
 		padding: var(--track-padding);
-		border-radius: calc(var(--inputs-border-base-radius) + var(--track-padding));
+		border-radius: calc(var(--border-radius) + var(--track-padding));
 
 		flex-shrink: 0;
 		display: grid;
@@ -68,7 +69,7 @@
 			grid-area: track;
 			inline-size: var(--thumb-size);
 			block-size: var(--thumb-size);
-			border-radius: var(--inputs-border-base-radius);
+			border-radius: var(--border-radius);
 			background-color: var(--thumb-color);
 			outline: 1px solid var(--color-outline);
 
