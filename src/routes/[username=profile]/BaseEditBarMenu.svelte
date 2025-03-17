@@ -59,6 +59,7 @@
 			editBarEl.style.transition = 'opacity 250ms ease';
 			editBarEl.style.opacity = '0';
 			editBarEl.style.pointerEvents = 'none';
+			editBarEl.style.position = 'absolute';
 
 			// fade in the opened menu
 			menuEl.style.opacity = '1';
@@ -82,6 +83,7 @@
 		menuEl.style.opacity = '0';
 
 		// fade in the edit bar
+		editBarEl.style.position = '';
 		editBarEl.style.transition = 'opacity 250ms ease 250ms';
 		editBarEl.style.opacity = '1';
 		editBarEl.style.pointerEvents = 'all';
