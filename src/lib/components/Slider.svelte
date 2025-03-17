@@ -127,7 +127,7 @@
 	.slider {
 		--thumb-size: var(--thumb-size, 2rem);
 		--track-height: calc(var(--thumb-size) + var(--inputs-border-width) * 2);
-		--border-radius: calc(var(--inputs-border-base-radius) * 2);
+		--border-radius: calc(var(--inputs-border-base-radius) * 3);
 		// a float value from 0 to 1
 		--position: calc((var(--value) - var(--min)) / (var(--max) - var(--min)));
 
@@ -155,14 +155,13 @@
 		.thumb {
 			pointer-events: none;
 			position: absolute;
-			top: 0;
-			left: var(--left);
-			width: var(--thumb-size);
-			height: var(--thumb-size);
+			top: calc(0px - var(--inputs-border-width));
+			left: calc(var(--left) - var(--inputs-border-width));
+			width: calc(var(--thumb-size) + var(--inputs-border-width) * 2);
+			height: calc(var(--thumb-size) + var(--inputs-border-width) * 2);
 			border-radius: var(--border-radius);
-			border: calc(var(--inputs-border-width) * 2) solid var(--inputs-border-color);
+			border: var(--inputs-border-width) solid var(--inputs-border-color);
 			background-color: var(--inputs-background-color);
-
 			&::after {
 				content: '';
 				position: absolute;
@@ -171,7 +170,7 @@
 				transform: translate(-50%, -50%);
 				width: calc(100% - var(--inputs-border-width) * 8);
 				height: calc(100% - var(--inputs-border-width) * 8);
-				border-radius: 50%;
+				border-radius: calc(var(--border-radius) - var(--inputs-border-width) * 2);
 				background-color: var(--thumb-color, var(--inputs-on-background-color));
 			}
 		}
