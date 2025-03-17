@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { aboutWebpalsDialog } from '$lib/components/NavBar/AccountMenu.svelte';
-	import { dialogPortal } from '$lib/portals/dialog.svelte';
+	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
 	import { Bell, DoorOpen, EyeSlash, Numpad, Palette, User } from 'phosphor-svelte';
 	import './layout.scss';
 	import type { Component } from 'svelte';

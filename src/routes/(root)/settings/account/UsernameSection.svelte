@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import Button from '$lib/components/Button.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
-	import { dialogPortal } from '$lib/portals/dialog.svelte';
+	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
 	import { At } from 'phosphor-svelte';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
