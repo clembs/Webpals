@@ -249,7 +249,8 @@
 					>
 						<Button
 							type="submit"
-							disabled={page.data.currentProfile.id === profile.id || addFriendState !== null}
+							disabled={(!editing && page.data.currentProfile.id === profile.id) ||
+								addFriendState !== null}
 						>
 							<UserPlus />
 							Add friend
