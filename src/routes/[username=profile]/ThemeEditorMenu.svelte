@@ -5,7 +5,9 @@
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/Button.svelte';
 	import { page } from '$app/state';
-	import { ArrowClockwise } from 'phosphor-svelte';
+	import { ArrowUUpLeft } from 'phosphor-svelte';
+	import { mergeThemes, plainTheme } from '$lib/themes/mergeThemes';
+	import Spinner from '$icons/Spinner.svelte';
 
 	let {
 		theme = $bindable(),
@@ -22,6 +24,9 @@
 	let formState = $state<null | 'loading' | 'success' | 'error'>(null);
 
 	let fileInput = $state<HTMLInputElement>();
+
+	// the clean theme, aka the theme before any changes were made
+	let cleanTheme = $derived(mergeThemes(plainTheme, page.data.currentProfile?.theme ?? {}));
 </script>
 
 <BaseEditBarMenu name="Theme Settings" {editBarEl} {editBarWrapperEl} bind:menuOpen>
@@ -71,23 +76,23 @@
 				variant="secondary"
 				type="button"
 				onclick={() => {
-					theme = page.data.user.theme;
+					theme = cleanTheme;
 				}}
 				disabled={formState === 'loading'}
 				aria-label="Undo all"
 			>
-				<ArrowClockwise />
+				<ArrowUUpLeft />
 			</Button>
 
-			<Button inline size="small" type="submit" disabled={formState === 'loading'}>
-				{#if formState === 'loading'}
-					Saving...
-				{:else if formState === 'success'}
-					Saved
-				{:else}
-					Save
-				{/if}
-			</Button>
+			{#if formState === 'loading'}
+				<Button icon inline size="small" disabled={formState === 'loading'}>
+					<Spinner />
+				</Button>
+			{:else if formState === 'success'}
+				<Button inline size="small" variant="success">Saved</Button>
+			{:else}
+				<Button inline size="small" type="submit">Save</Button>
+			{/if}
 		</form>
 	{/snippet}
 
