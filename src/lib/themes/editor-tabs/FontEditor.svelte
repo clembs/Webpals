@@ -1,21 +1,29 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import LineColorPicker from '$lib/components/ThemeEditor/LineColorPicker.svelte';
+	import { mergeThemes, plainTheme } from '../mergeThemes';
 	import type { Theme } from '../types';
-	import ColorPicker from 'svelte-awesome-color-picker';
 
 	let { theme = $bindable() }: { theme: Theme } = $props();
+
+	let cleanTheme = $derived(mergeThemes(plainTheme, page.data.currentProfile?.theme ?? {}));
 </script>
 
 <section>
-	<h3>Colors</h3>
+	<section class="subsection">
+		<h3>Colors</h3>
 
-	<ColorPicker
-		label="Headings color"
-		name="font.color_heading"
-		bind:hex={theme.font.color_heading}
-	/>
-	<ColorPicker
-		label="Paragraphs color"
-		name="font.color_paragraph"
-		bind:hex={theme.font.color_paragraph}
-	/>
+		<LineColorPicker
+			label="Headings color"
+			name="font.color_heading"
+			bind:value={theme.font.color_heading}
+			initialValue={cleanTheme.font.color_heading}
+		/>
+		<LineColorPicker
+			label="Paragraphs color"
+			name="font.color_paragraph"
+			bind:value={theme.font.color_paragraph}
+			initialValue={cleanTheme.font.color_paragraph}
+		/>
+	</section>
 </section>
