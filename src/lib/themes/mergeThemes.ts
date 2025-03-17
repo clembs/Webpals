@@ -9,7 +9,7 @@ export const plainTheme: Theme = {
 	avatar: {
 		size: 80,
 		border: {
-			radius: '50%',
+			radius: 9999,
 			width: 0,
 			color: '#ffffff00'
 		}
@@ -17,23 +17,23 @@ export const plainTheme: Theme = {
 	font: {
 		family: 'var(--font-family)',
 		color_paragraph: '#656565',
-		color_heading: '#000'
+		color_heading: '#000000'
 	},
 	spacing: {
 		gap: 1,
 		padding: 1
 	},
 	widgets: {
-		color_background: '#fff',
+		color_background: '#ffffff',
 		color_background_dim: '#f2f2f2',
 		background_blur: 0,
 		border: {
 			radius: 1,
 			width: 1,
-			color: '#999'
+			color: '#999999'
 		},
 		shadow: {
-			color: '#00000001',
+			color: '#0000000',
 			x: 0,
 			y: 0,
 			blur: 10,
@@ -41,20 +41,20 @@ export const plainTheme: Theme = {
 		}
 	},
 	primary_buttons: {
-		color_background: '#000',
-		color_on_background: '#fff',
+		color_background: '#000000',
+		color_on_background: '#ffffff',
 		border: {
-			color: '#000'
+			color: '#000000'
 		},
 		shadow: null
 	},
 	secondary_inputs: {
-		color_background: '#fff',
-		color_on_background: '#000',
+		color_background: '#ffffff',
+		color_on_background: '#000000',
 		border: {
 			radius: 0.5,
 			width: 1,
-			color: '#999'
+			color: '#999999'
 		},
 		shadow: null
 	}
