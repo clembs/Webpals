@@ -7,6 +7,7 @@
 		variant = 'primary',
 		href,
 		disabled = false,
+		'aria-readonly': readOnly,
 		inline = false,
 		icon = false,
 		size = 'medium',
@@ -26,7 +27,7 @@
 	} = $props();
 </script>
 
-{#if href}
+{#if href && !disabled}
 	<a
 		class:inline
 		class:icon
@@ -44,7 +45,10 @@
 		class:inline
 		class:icon
 		class="{variant} {size}"
-		{onclick}
+		onclick={() => {
+			if (readOnly || disabled) return;
+			onclick?.();
+		}}
 		{type}
 		{disabled}
 		{...restProps as HTMLButtonAttributes}
@@ -158,6 +162,10 @@
 			&:hover {
 				opacity: 0.5;
 			}
+		}
+
+		&[aria-readonly='true'] {
+			cursor: not-allowed;
 		}
 	}
 </style>
