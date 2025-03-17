@@ -15,7 +15,7 @@
 		...restProps
 	}: (HTMLButtonAttributes | HTMLAnchorAttributes) & {
 		type?: 'submit' | 'button';
-		variant?: 'primary' | 'secondary' | 'success' | 'urgent';
+		variant?: 'primary' | 'secondary' | 'success' | 'urgent' | 'link';
 		href?: string;
 		disabled?: boolean;
 		icon?: boolean;
@@ -94,7 +94,7 @@
 				var(--buttons-primary-box-shadow-color);
 
 			&:hover {
-				filter: brightness(0.95);
+				filter: brightness(0.9);
 				// opacity: 0.815;
 			}
 		}
@@ -105,8 +105,7 @@
 			border: var(--inputs-border-width) solid var(--inputs-border-color);
 
 			&:hover {
-				backdrop-filter: brightness(0.9);
-				// background-color: var(--widgets-background-color-dim);
+				filter: brightness(0.9);
 			}
 		}
 
@@ -127,6 +126,17 @@
 
 			&:hover {
 				filter: brightness(0.9);
+			}
+		}
+
+		&.link {
+			background-color: transparent;
+			color: var(--inputs-on-background-color);
+			border: none;
+			border-radius: calc(var(--inputs-border-base-radius) * 0.25);
+
+			&:hover {
+				backdrop-filter: brightness(0.95);
 			}
 		}
 
