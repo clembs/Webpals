@@ -1,0 +1,6 @@
+@font-face {
+	font-family: 'EB Garamond';
+	src: url('/fonts/EBGaramond.woff2') format('woff2');
+	font-weight: 400 700;
+	font-display: swap;
+}

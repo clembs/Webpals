@@ -10,6 +10,15 @@
 	let currentlyEditing = $state<'heading' | 'paragraph'>('heading');
 </script>
 
+<!-- Load all fonts -->
+<svelte:head>
+	{#each fontStyles as { stylesheetHref }}
+		{#if stylesheetHref}
+			<link rel="stylesheet" href={stylesheetHref} />
+		{/if}
+	{/each}
+</svelte:head>
+
 <section>
 	<Tabs
 		name="currentlyEditing"

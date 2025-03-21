@@ -76,35 +76,43 @@ const BackgroundStructure = union([
 export const fontStyles = [
 	{
 		label: 'Default',
-		value: 'Public Sans'
+		value: 'Public Sans',
+		stylesheetHref: ''
 	},
 	{
 		label: 'Fancy',
-		value: 'EB Garamond'
+		value: 'EB Garamond',
+		stylesheetHref: '/fonts/styles/EBGaramond.css'
 	},
 	{
 		label: 'Cute',
-		value: 'Playpen Sans'
+		value: 'Playpen Sans',
+		stylesheetHref: '/fonts/styles/PlaypenSans.css'
 	},
 	{
 		label: 'Handwritten',
-		value: 'Merienda'
+		value: 'Merienda',
+		stylesheetHref: '/fonts/styles/Merienda.css'
 	},
 	{
-		label: 'Retro',
-		value: 'Handjet'
+		label: 'Pixel',
+		value: 'Pixelify Sans',
+		stylesheetHref: '/fonts/styles/PixelifySans.css'
 	},
 	{
 		label: 'Gothic',
-		value: 'Grenze Gotisch'
+		value: 'Grenze Gotisch',
+		stylesheetHref: '/fonts/styles/GrenzeGotisch.css'
 	},
 	{
 		label: 'Code',
-		value: 'JetBrains Mono'
+		value: 'JetBrains Mono',
+		stylesheetHref: '/fonts/styles/JetBrainsMono.css'
 	},
 	{
 		label: 'Gummy',
-		value: 'Averia Libre'
+		value: 'Sour Gummy',
+		stylesheetHref: '/fonts/styles/SourGummy.css'
 	}
 ] as const;
 
