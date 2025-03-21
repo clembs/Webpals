@@ -1,0 +1,6 @@
+@font-face {
+	font-family: 'Grenze Gotisch';
+	src: url('/fonts/GrenzeGotisch.woff2') format('woff2');
+	font-weight: 400 700;
+	font-display: swap;
+}

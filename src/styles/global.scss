@@ -3,7 +3,7 @@
 @font-face {
 	font-family: 'Public Sans';
 	src: url('/fonts/PublicSans-VariableFont_wght.woff2') format('woff2');
-	font-weight: 100 900;
+	font-weight: 400 700;
 	font-display: swap;
 }
 
@@ -26,7 +26,7 @@ html {
 }
 
 body {
-	font-family: var(--font-family);
+	font-family: var(--font-paragraph);
 	line-height: 1.5;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
@@ -73,6 +73,7 @@ h4,
 h5,
 h6,
 .heading {
+	font-family: var(--font-heading);
 	font-weight: 500;
 	color: var(--color-heading);
 }

@@ -79,7 +79,7 @@
 			.time-string {
 				font-size: 3.25rem;
 				letter-spacing: -0.05em;
-				font-family: 'JetBrains Mono', monospace;
+				font-family: var(--font-heading);
 				margin-right: 0.1em;
 			}
 
