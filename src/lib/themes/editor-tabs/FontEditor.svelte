@@ -1,29 +1,146 @@
 <script lang="ts">
-	import { page } from '$app/state';
+	import Tabs from '$lib/components/Tabs.svelte';
+	import { CheckCircle } from 'phosphor-svelte';
+	import { fontStyles } from '../theme-structure';
+	import type { Theme } from '../types';
 	import LineColorPicker from '$lib/components/ThemeEditor/LineColorPicker.svelte';
 	import { mergeThemes, plainTheme } from '../mergeThemes';
-	import type { Theme } from '../types';
+	import { page } from '$app/state';
 
 	let { theme = $bindable() }: { theme: Theme } = $props();
 
 	let cleanTheme = $derived(mergeThemes(plainTheme, page.data.currentProfile?.theme ?? {}));
+	let currentlyEditing = $state<'heading' | 'paragraph'>('heading');
 </script>
 
-<section>
-	<section class="subsection">
-		<h3>Colors</h3>
+<!-- Load all fonts -->
+<svelte:head>
+	{#each fontStyles as { stylesheetHref }}
+		{#if stylesheetHref}
+			<link rel="stylesheet" href={stylesheetHref} />
+		{/if}
+	{/each}
+</svelte:head>
 
+<section>
+	<Tabs
+		name="currentlyEditing"
+		bind:selectedTab={currentlyEditing}
+		tabs={[
+			{ value: 'paragraph', label: 'Content text' },
+			{ value: 'heading', label: 'Titles and labels' }
+		]}
+	/>
+
+	<h3>Style</h3>
+
+	{#if currentlyEditing === 'heading'}
+		<ul class="styles-picker">
+			{#each fontStyles as { value, label }}
+				<li>
+					<input
+						type="radio"
+						id={value}
+						name="font.style_heading"
+						{value}
+						bind:group={theme.font.style_heading}
+					/>
+					<label style="--font: {value}" for={value}>
+						{label}
+					</label>
+					{#if value === theme.font.style_heading}
+						<div class="selected-mark" aria-hidden="true">
+							<CheckCircle size={20} />
+						</div>
+					{/if}
+				</li>
+			{/each}
+		</ul>
+	{:else if currentlyEditing === 'paragraph'}
+		<ul class="styles-picker">
+			{#each fontStyles as { value, label }}
+				<li>
+					<input
+						type="radio"
+						id={value}
+						name="font.style_heading"
+						{value}
+						bind:group={theme.font.style_paragraph}
+					/>
+					<label style="--font: {value}" for={value}>
+						{label}
+					</label>
+					{#if value === theme.font.style_paragraph}
+						<div class="selected-mark" aria-hidden="true">
+							<CheckCircle size={20} />
+						</div>
+					{/if}
+				</li>
+			{/each}
+		</ul>
+	{/if}
+
+	<h3>Color</h3>
+
+	{#if currentlyEditing === 'heading'}
 		<LineColorPicker
 			label="Headings color"
 			name="font.color_heading"
 			bind:value={theme.font.color_heading}
 			initialValue={cleanTheme.font.color_heading}
 		/>
+	{:else if currentlyEditing === 'paragraph'}
 		<LineColorPicker
 			label="Paragraphs color"
 			name="font.color_paragraph"
 			bind:value={theme.font.color_paragraph}
 			initialValue={cleanTheme.font.color_paragraph}
 		/>
-	</section>
+	{/if}
 </section>
+
+<style lang="scss">
+	.styles-picker {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+		gap: calc(var(--base-gap) * 0.5);
+		list-style: none;
+
+		li {
+			position: relative;
+			color: var(--inputs-on-background-color);
+
+			input {
+				position: absolute;
+				top: -1000px;
+				left: -1000px;
+
+				&:checked + label {
+					border: 2px solid var(--buttons-primary-border-color);
+				}
+			}
+
+			label {
+				display: grid;
+				place-items: center;
+				background-color: var(--widgets-background-color-dim);
+				padding: var(--base-padding) calc(var(--base-padding) * 0.75);
+				border-radius: calc(var(--widgets-border-base-radius) * 0.75);
+				cursor: pointer;
+				text-align: center;
+				font-family: var(--font);
+				width: 100%;
+				border: 2px solid transparent;
+
+				&:hover {
+					filter: brightness(0.95);
+				}
+			}
+			.selected-mark {
+				position: absolute;
+				bottom: calc(var(--base-gap) * 0.25);
+				right: calc(var(--base-gap) * 0.25);
+			}
+		}
+	}
+</style>

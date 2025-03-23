@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { Theme } from './types';
 	import { PUBLIC_STORAGE_BASE_URL } from '$env/static/public';
+	import { fontStyles } from './theme-structure';
 
 	let {
 		theme,
@@ -31,7 +32,25 @@
 					: 'none';
 		}
 	}
+
+	const defaultFont = fontStyles.find(({ label }) => label === 'Default')?.value;
+
+	let headingFontStyle = $derived(
+		fontStyles.find(({ value }) => value === theme.font.style_heading)
+	);
+	let paragraphFontStyle = $derived(
+		fontStyles.find(({ value }) => value === theme.font.style_paragraph)
+	);
 </script>
+
+<svelte:head>
+	{#if theme.font.style_paragraph !== defaultFont && paragraphFontStyle}
+		<link rel="stylesheet" href={paragraphFontStyle.stylesheetHref} />
+	{/if}
+	{#if theme.font.style_heading !== defaultFont && headingFontStyle && headingFontStyle.value !== paragraphFontStyle?.value}
+		<link rel="stylesheet" href={headingFontStyle.stylesheetHref} />
+	{/if}
+</svelte:head>
 
 <theme-provider
 	style="
@@ -55,8 +74,10 @@
 	--color-paragraph: {theme.font.color_paragraph};
   --color-heading: {theme.font.color_heading};
   color: {theme.font.color_paragraph};
-  font-family: '{theme.font.family}', var(--font-family);
-  
+	--font-paragraph: '{theme.font.style_paragraph}', var(--font-fallbacks);
+	--font-heading: '{theme.font.style_heading}', var(--font-fallbacks);
+	font-family: var(--font-paragraph); /* idk why this is needed, but it is */
+	
 	--base-padding: {theme.spacing.padding}rem;
   --base-gap: {theme.spacing.gap}rem;
   

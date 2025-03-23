@@ -1,0 +1,6 @@
+@font-face {
+	font-family: 'Playpen Sans';
+	src: url('/fonts/PlaypenSans.woff2') format('woff2');
+	font-weight: 400 700;
+	font-display: swap;
+}
