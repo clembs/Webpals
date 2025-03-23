@@ -11,19 +11,9 @@
 			component: WidgetEditor
 		},
 		font: {
-			label: 'Font',
+			label: 'Typography',
 			icon: TextAa,
 			component: FontEditor
-		},
-		primaryButtons: {
-			label: 'Primary Buttons',
-			icon: RadioButton,
-			component: PrimaryButtonsEditor
-		},
-		secondaryInputs: {
-			label: 'Secondary Inputs',
-			icon: Textbox,
-			component: SecondaryInputsEditor
 		},
 		spacing: {
 			label: 'Spacing',
@@ -43,21 +33,11 @@
 <script lang="ts">
 	import type { Theme } from './types';
 	import type { Component } from 'svelte';
-	import {
-		ArrowsInLineHorizontal,
-		Gradient,
-		RadioButton,
-		Palette,
-		Cards,
-		TextAa,
-		Textbox
-	} from 'phosphor-svelte';
+	import { ArrowsInLineHorizontal, Gradient, Palette, Cards, TextAa } from 'phosphor-svelte';
 	import BackgroundEditor from './editor-tabs/BackgroundEditor.svelte';
 	import WidgetEditor from './editor-tabs/WidgetEditor.svelte';
 	import SpacingEditor from './editor-tabs/SpacingEditor.svelte';
-	import PrimaryButtonsEditor from './editor-tabs/PrimaryButtonsEditor.svelte';
 	import FontEditor from './editor-tabs/FontEditor.svelte';
-	import SecondaryInputsEditor from './editor-tabs/SecondaryInputsEditor.svelte';
 
 	let { theme = $bindable() }: { theme: Theme } = $props();
 

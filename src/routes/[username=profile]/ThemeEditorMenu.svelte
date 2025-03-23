@@ -8,7 +8,6 @@
 	import { ArrowUUpLeft } from 'phosphor-svelte';
 	import { mergeThemes, plainTheme } from '$lib/themes/mergeThemes';
 	import Spinner from '$icons/Spinner.svelte';
-	import { mergeThemes, plainTheme } from '$lib/themes/mergeThemes';
 
 	let {
 		theme = $bindable(),
