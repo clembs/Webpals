@@ -1,0 +1,110 @@
+// Typography styles used throughout Webpals
+
+@font-face {
+	font-family: 'Public Sans';
+	src: url('/fonts/PublicSans-VariableFont_wght.woff2') format('woff2');
+	font-weight: 400 700;
+	font-display: swap;
+}
+
+.title-hero {
+	font-family: var(--font-heading);
+	font-size: 2.25rem;
+	font-weight: 700;
+	color: var(--color-heading);
+	text-wrap: balance;
+}
+
+h1,
+.heading-1 {
+	font-family: var(--font-heading);
+	font-size: 2rem;
+	font-weight: 700;
+	color: var(--color-heading);
+	text-wrap: balance;
+}
+
+h2,
+.heading-2 {
+	font-family: var(--font-heading);
+	font-size: 1.75rem;
+	font-weight: 500;
+	color: var(--color-heading);
+	text-wrap: balance;
+}
+
+h3,
+.heading-3 {
+	font-family: var(--font-heading);
+	font-size: 1.5rem;
+	font-weight: 500;
+	color: var(--color-heading);
+	text-wrap: balance;
+}
+
+h4,
+.headline {
+	font-family: var(--font-heading);
+	font-size: 1.25rem;
+	font-weight: 500;
+	text-wrap: balance;
+}
+
+.clickable {
+	font-family: var(--font-paragraph);
+	font-size: 1rem;
+	font-weight: 500;
+	overflow-wrap: break-word;
+}
+
+p,
+.paragraph {
+	font-family: var(--font-paragraph);
+	font-size: 1rem;
+	font-weight: 400;
+	color: var(--color-paragraph);
+	text-wrap: pretty;
+}
+
+.label {
+	font-family: var(--font-paragraph);
+	font-size: 0.9375rem; // aka 15px if the rem is set to 16px
+	font-weight: 700;
+	color: var(--color-paragraph);
+}
+
+.footnote {
+	font-family: var(--font-paragraph);
+	font-size: 0.75rem;
+	font-weight: 400;
+	text-wrap: pretty;
+}
+
+.link {
+	border-radius: 0.25em;
+	padding-left: 2px;
+	padding-right: 2px;
+	margin-left: -2px;
+	margin-right: -2px;
+
+	color: var(--color-heading);
+	text-decoration: underline;
+	// 50% opacity off --color-paragraph
+	text-decoration-color: color-mix(in srgb, var(--color-paragraph) 50%, transparent);
+
+	&:hover {
+		text-decoration-color: var(--color-paragraph);
+	}
+
+	// For all links not pointing to Webpals, show an icon besides the link
+	&:not(:is([href*='webpals.me'], [href^='/'], [href^='./'], [href^='../'], [href^='#']))::after,
+	&[target='_blank']::after {
+		display: inline-block;
+		width: 14px;
+		height: 14px;
+		margin-left: 3px;
+		transform: translateY(1.5px); // Kind of a hack to align it to the text better
+		// Contains the source SVG for the Phosphor Icons ArrowSquareOut icon
+		content: url("data:image/svg+xml,%3Csvg width='15' height='15' viewBox='0 0 15 15' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.772 6.15649C12.772 6.27253 12.7259 6.38381 12.6438 6.46585C12.5618 6.5479 12.4505 6.59399 12.3345 6.59399C12.2184 6.59399 12.1072 6.5479 12.0251 6.46585C11.9431 6.38381 11.897 6.27253 11.897 6.15649V3.71306L8.26955 7.34103C8.18746 7.42312 8.07612 7.46924 7.96002 7.46924C7.84392 7.46924 7.73258 7.42312 7.65049 7.34103C7.5684 7.25893 7.52228 7.14759 7.52228 7.03149C7.52228 6.9154 7.5684 6.80406 7.65049 6.72196L11.2779 3.09399H8.83447C8.71844 3.09399 8.60716 3.0479 8.52511 2.96585C8.44307 2.88381 8.39697 2.77253 8.39697 2.65649C8.39697 2.54046 8.44307 2.42918 8.52511 2.34714C8.60716 2.26509 8.71844 2.21899 8.83447 2.21899H12.3345C12.4505 2.21899 12.5618 2.26509 12.6438 2.34714C12.7259 2.42918 12.772 2.54046 12.772 2.65649V6.15649ZM10.5845 7.46899C10.4684 7.46899 10.3572 7.51509 10.2751 7.59713C10.1931 7.67918 10.147 7.79046 10.147 7.90649V11.844H3.14697V4.84399H7.08447C7.2005 4.84399 7.31178 4.7979 7.39383 4.71585C7.47588 4.63381 7.52197 4.52253 7.52197 4.40649C7.52197 4.29046 7.47588 4.17918 7.39383 4.09714C7.31178 4.01509 7.2005 3.96899 7.08447 3.96899H3.14697C2.91491 3.96899 2.69235 4.06118 2.52825 4.22528C2.36416 4.38937 2.27197 4.61193 2.27197 4.84399V11.844C2.27197 12.0761 2.36416 12.2986 2.52825 12.4627C2.69235 12.6268 2.91491 12.719 3.14697 12.719H10.147C10.379 12.719 10.6016 12.6268 10.7657 12.4627C10.9298 12.2986 11.022 12.0761 11.022 11.844V7.90649C11.022 7.79046 10.9759 7.67918 10.8938 7.59713C10.8118 7.51509 10.7005 7.46899 10.5845 7.46899Z' fill='currentColor'/%3E%3C/svg%3E%0A");
+	}
+}
