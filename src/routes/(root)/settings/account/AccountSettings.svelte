@@ -47,5 +47,5 @@
 		proceeding.
 	</p>
 
-	<Button inline variant="urgent">Delete account</Button>
+	<Button variant="urgent">Delete account</Button>
 </section>

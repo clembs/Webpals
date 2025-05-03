@@ -66,13 +66,12 @@
 		</TextInput>
 
 		<div class="buttons">
-			<Button type="button" onclick={() => dialogPortal.closeDialog()} variant="secondary" inline>
+			<Button type="button" onclick={() => dialogPortal.closeDialog()} variant="secondary">
 				Cancel
 			</Button>
 
 			<Button
 				type="submit"
-				inline
 				disabled={username === data.currentProfile.username ||
 					isLoading ||
 					!username ||
@@ -98,9 +97,7 @@
 		</span>).
 	</p>
 
-	<Button inline onclick={() => dialogPortal.openDialog(changeUsernameDialog)}>
-		Change username
-	</Button>
+	<Button onclick={() => dialogPortal.openDialog(changeUsernameDialog)}>Change username</Button>
 
 	<p>
 		Looking to change your display name? Check your <a href="/{data.currentProfile.username}">

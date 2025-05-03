@@ -176,9 +176,8 @@
 
 			{@render nonInteractive()}
 
-			<Button type="submit" disabled={isLoading}>
+			<Button loading={isLoading} type="submit" disabled={isLoading}>
 				{#if isLoading}
-					<Spinner />
 					Saving...
 				{:else}
 					Save
@@ -210,27 +209,16 @@
 		<div class="buttons-wrapper">
 			<div class="buttons">
 				<!-- TODO: adding friends, more options menu -->
-				<Button inline icon variant="secondary">
-					<DotsThree weight="regular" />
-				</Button>
+				<Button icon={DotsThree} iconProps={{ weight: 'regular' }} variant="secondary" />
 				{#if relationship === RelationshipTypes.FriendPending}
 					<!-- TODO: remove request -->
-					<Button variant="secondary" disabled>
-						<Clock />
-						Requested
-					</Button>
+					<Button icon={Clock} variant="secondary" disabled>Requested</Button>
 				{:else if relationship === RelationshipTypes.Friend}
 					<!-- TODO: unfriend -->
-					<Button variant="secondary">
-						<Users />
-						Friends
-					</Button>
+					<Button icon={Users} variant="secondary">Friends</Button>
 				{:else if relationship === RelationshipTypes.Blocked}
 					<!-- TODO: unblock -->
-					<Button variant="secondary">
-						<Prohibit />
-						Blocked
-					</Button>
+					<Button icon={Prohibit} variant="secondary">Blocked</Button>
 				{:else}
 					<form
 						use:enhance={() => {
@@ -249,9 +237,10 @@
 					>
 						<Button
 							type="submit"
+							icon={UserPlus}
+							loading={addFriendState === 'loading'}
 							disabled={page.data.currentProfile.id === profile.id || addFriendState !== null}
 						>
-							<UserPlus />
 							Add friend
 						</Button>
 					</form>

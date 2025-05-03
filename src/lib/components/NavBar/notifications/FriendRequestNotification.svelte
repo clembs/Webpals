@@ -43,16 +43,15 @@
 		method="post"
 	>
 		<Button
-			size="small"
-			inline
-			icon
+			size="sm"
 			variant="success"
 			aria-label="Accept friend request"
 			title="Accept friend request"
 			disabled={acceptIsLoading}
-		>
-			<Check weight="regular" />
-		</Button>
+			icon={Check}
+			iconProps={{ weight: 'regular' }}
+			type="submit"
+		/>
 	</form>
 	<form
 		use:enhance={() => {
@@ -66,16 +65,14 @@
 		method="post"
 	>
 		<Button
-			size="small"
-			inline
-			icon
+			size="sm"
 			variant="urgent"
 			aria-label="Decline friend request"
 			title="Decline friend request"
-			type="submit"
 			disabled={declineIsLoading}
-		>
-			<X weight="regular" />
-		</Button>
+			icon={X}
+			iconProps={{ weight: 'regular' }}
+			type="submit"
+		/>
 	</form>
 </div>

@@ -34,14 +34,13 @@
 		method="post"
 	>
 		<Button
-			size="small"
-			inline
-			icon
-			variant="secondary"
+			size="sm"
+			variant="success"
 			aria-label="Dismiss notification"
 			title="Dismiss notification"
-		>
-			<Check weight="regular" />
-		</Button>
+			icon={Check}
+			iconProps={{ weight: 'regular' }}
+			type="submit"
+		/>
 	</form>
 </div>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/Button.svelte';
-	import type { Notification } from '$lib/db/schema/notifications';
+	import type { Notification } from '$lib/db/types';
 	import { Check } from 'phosphor-svelte';
 
 	let {
@@ -20,14 +20,13 @@
 		method="post"
 	>
 		<Button
-			size="small"
-			inline
-			icon
-			variant="secondary"
+			size="sm"
+			variant="success"
 			aria-label="Dismiss notification"
 			title="Dismiss notification"
-		>
-			<Check weight="regular" />
-		</Button>
+			icon={Check}
+			iconProps={{ weight: 'regular' }}
+			type="submit"
+		/>
 	</form>
 </div>

@@ -58,7 +58,7 @@
 			Back
 		</Button>
 
-		<Button type="submit" tabindex={2} disabled={isLoading}>
+		<Button loading={isLoading} type="submit" tabindex={2} disabled={isLoading}>
 			{isLoading ? 'Sending code...' : 'Send verification code'}
 		</Button>
 	</div>

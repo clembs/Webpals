@@ -46,9 +46,7 @@
 					Back
 				</Button>
 
-				<Button type="submit" tabindex={2} disabled={isLoading}>
-					{isLoading ? 'Loading...' : 'Log in'}
-				</Button>
+				<Button loading={isLoading} type="submit" tabindex={2} disabled={isLoading}>Log in</Button>
 			</div>
 		</form>
 	</Card>

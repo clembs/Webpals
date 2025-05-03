@@ -86,9 +86,7 @@
 				bind:value={data.login}
 			/>
 
-			<Button disabled={isLoading} type="submit">
-				{isLoading ? 'Loading...' : 'Continue'}
-			</Button>
+			<Button loading={isLoading} disabled={isLoading} type="submit">Continue</Button>
 		</form>
 	</Card>
 </main>

@@ -178,10 +178,10 @@
 		</p>
 
 		<div class="buttons">
-			<Button inline type="button" variant="secondary" onclick={() => dialogPortal.closeDialog()}>
+			<Button type="button" variant="secondary" onclick={() => dialogPortal.closeDialog()}>
 				Cancel
 			</Button>
-			<Button inline type="submit" variant="urgent">Delete widget</Button>
+			<Button type="submit" variant="urgent">Delete widget</Button>
 		</div>
 	</form>
 {/snippet}

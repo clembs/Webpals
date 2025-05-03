@@ -57,9 +57,7 @@
 
 	<div class="buttons">
 		<Button variant="secondary" href="/login" tabindex={3}>Back to login</Button>
-		<Button disabled={isLoading} type="submit" tabindex={2}>
-			{isLoading ? 'Loading...' : 'Continue'}
-		</Button>
+		<Button loading={isLoading} type="submit" tabindex={2} disabled={isLoading}>Continue</Button>
 	</div>
 </form>
 

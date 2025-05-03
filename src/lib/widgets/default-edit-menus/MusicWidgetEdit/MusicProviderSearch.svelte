@@ -48,13 +48,14 @@
 	>
 		<TextInput name="query" placeholder="Search {selectedProviderData.label}">
 			{#snippet suffixButton()}
-				<Button disabled={isLoading} type="submit" icon aria-label="Search">
-					{#if isLoading}
-						<Spinner />
-					{:else}
-						<MagnifyingGlass weight="regular" />
-					{/if}
-				</Button>
+				<Button
+					loading={isLoading}
+					disabled={isLoading}
+					type="submit"
+					icon={MagnifyingGlass}
+					iconProps={{ weight: 'regular' }}
+					aria-label="Search"
+				/>
 			{/snippet}
 		</TextInput>
 	</form>

@@ -66,9 +66,8 @@
 			<input type="hidden" name="theme" value={JSON.stringify(theme)} />
 
 			<Button
-				inline
-				size="small"
-				icon
+				size="sm"
+				icon={ArrowClockwise}
 				variant="secondary"
 				type="button"
 				onclick={() => {
@@ -78,11 +77,9 @@
 				}}
 				disabled={formState === 'loading'}
 				aria-label="Undo all"
-			>
-				<ArrowClockwise />
-			</Button>
+			/>
 
-			<Button inline size="small" type="submit" disabled={formState === 'loading'}>
+			<Button size="sm" type="submit" disabled={formState === 'loading'}>
 				{#if formState === 'loading'}
 					Saving...
 				{:else if formState === 'success'}

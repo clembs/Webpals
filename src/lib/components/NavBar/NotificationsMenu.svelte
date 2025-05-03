@@ -30,9 +30,7 @@
 		<h2>Notifications ({user.notifications.length})</h2>
 
 		<form use:enhance action="/api/notifications?/deleteAllNotifications" method="post">
-			<Button disabled={!user.notifications.length} size="small" inline variant="secondary">
-				Clear all
-			</Button>
+			<Button disabled={!user.notifications.length} size="sm" variant="secondary">Clear all</Button>
 		</form>
 	</div>
 

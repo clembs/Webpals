@@ -188,13 +188,14 @@
 					<Globe />
 				{/snippet}
 				{#snippet suffixButton()}
-					<Button size="small" icon type="submit" disabled={isLoading}>
-						{#if isLoading}
-							<Spinner />
-						{:else}
-							<MagnifyingGlass weight="regular" />
-						{/if}
-					</Button>
+					<Button
+						size="sm"
+						loading={isLoading}
+						icon={MagnifyingGlass}
+						iconProps={{ weight: 'regular' }}
+						type="submit"
+						disabled={isLoading}
+					/>
 				{/snippet}
 			</TextInput>
 		</form>

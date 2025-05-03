@@ -103,57 +103,49 @@
 				<Button
 					onclick={() => (editingConnectionId = undefined)}
 					aria-label="Cancel changes"
-					icon
-					size="small"
+					icon={X}
+					iconProps={{ weight: 'regular' }}
+					size="sm"
 					variant="secondary"
-					inline
 					type="button"
-				>
-					<X weight="regular" size={20} />
-				</Button>
-				<Button aria-label="Save changes" icon size="small" inline>
-					<Check weight="regular" size={20} />
-				</Button>
+				/>
+				<Button
+					aria-label="Save changes"
+					icon={Check}
+					iconProps={{ weight: 'regular' }}
+					size="sm"
+				/>
 			{:else}
 				{#if !connection.verified && provider && provider.verifiable}
 					<Button
 						aria-label="Verify connection"
 						disabled
-						icon
-						size="small"
+						icon={SealCheck}
+						size="sm"
 						variant="secondary"
-						inline
 						type="button"
-					>
-						<SealCheck size={20} />
-					</Button>
+					/>
 				{/if}
 				{#if isPressingShift}
 					<Button
 						aria-label="Delete connection"
-						icon
-						size="small"
+						icon={Trash}
+						size="sm"
 						variant="urgent"
-						inline
 						type="submit"
 						formaction="/api/profile?/deleteConnection&connection-id={connection.id}"
-					>
-						<Trash size={20} />
-					</Button>
+					/>
 				{:else}
 					<Button
 						aria-label="Delete connection"
-						icon
-						size="small"
+						icon={Trash}
+						size="sm"
 						variant="secondary"
-						inline
 						type="button"
 						onclick={() => {
-							if (!isPressingShift) dialogPortal.openDialog(confirmDeleteDialog);
+							dialogPortal.openDialog(confirmDeleteDialog);
 						}}
-					>
-						<Trash size={20} />
-					</Button>
+					/>
 				{/if}
 			{/if}
 		</div>
@@ -184,14 +176,13 @@
 			<Button
 				aria-label="Delete connection"
 				variant="secondary"
-				inline
 				type="button"
 				onclick={() => dialogPortal.closeDialog()}
 			>
 				Cancel
 			</Button>
 
-			<Button aria-label="Delete connection" variant="urgent" inline type="submit">
+			<Button aria-label="Delete connection" variant="urgent" type="submit">
 				Delete connection
 			</Button>
 		</div>

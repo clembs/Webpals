@@ -43,14 +43,12 @@
 								onclick={() => {
 									navigator.clipboard.writeText(code.code);
 								}}
-								inline
-								icon
-								size="small"
+								icon={Clipboard}
+								iconProps={{ weight: 'regular' }}
+								size="sm"
 								variant="secondary"
 								disabled={!!code.claimedAt}
-							>
-								<Clipboard weight="regular" size={18} />
-							</Button>
+							/>
 						</div>
 					</td>
 					<td>
