@@ -19,7 +19,7 @@
 	--background: var(--plain-90);
 	// Avatar
 	--avatar-size: 80px;
-	--avatar-border-radius: 50%;
+	--avatar-border-radius: 999px;
 	// Font
 	--font-paragraph: var(--font-fallbacks);
 	--font-heading: var(--font-fallbacks);
@@ -35,11 +35,12 @@
 	--widgets-border-width: 1px;
 	--widgets-border-color: var(--plain-60);
 	--widgets-border-base-radius: 1.5rem;
-	--widgets-box-shadow-x: 0;
-	--widgets-box-shadow-y: 0;
-	--widgets-box-shadow-blur: 10px;
-	--widgets-box-shadow-spread: 0;
-	--widgets-box-shadow-color: rgba(0, 0, 0, 0.1);
+	--widgets-box-shadow-x: 0px;
+	--widgets-box-shadow-y: 16px;
+	--widgets-box-shadow-blur: 32px;
+	--widgets-box-shadow-spread: -4px;
+	--widgets-box-shadow-color: color-mix(in srgb, var(--plain-10) 7%, transparent);
+
 	// Primary buttons
 	--buttons-primary-background-color: var(--plain-0);
 	--buttons-primary-on-background-color: var(--plain-100);
