@@ -6,7 +6,8 @@
 	import Button from '$lib/components/Button.svelte';
 	import { page } from '$app/state';
 	import { ArrowClockwise } from 'phosphor-svelte';
-	import { mergeThemes, plainTheme } from '$lib/themes/mergeThemes';
+	import { mergeThemes } from '$lib/themes/merge-themes';
+	import { plainTheme } from '$lib/themes/plain-theme';
 
 	let {
 		theme = $bindable(),
@@ -72,7 +73,7 @@
 				type="button"
 				onclick={() => {
 					theme = page.data.currentProfile?.theme
-						? mergeThemes(plainTheme, page.data.currentProfile?.theme)
+						? mergeThemes(page.data.currentProfile?.theme)
 						: plainTheme;
 				}}
 				disabled={formState === 'loading'}

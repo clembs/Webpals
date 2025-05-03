@@ -3,7 +3,8 @@
 	import { type Profile } from '$lib/db/types';
 	import { HEARTBEAT_INTERVAL } from '$lib/helpers/constants';
 	import { formatDate, formatRelativeTime } from '$lib/helpers/text';
-	import { mergeThemes, plainTheme } from '$lib/themes/mergeThemes';
+	import { mergeThemes } from '$lib/themes/merge-themes';
+	import { plainTheme } from '$lib/themes/plain-theme';
 
 	import ThemeProvider from '$lib/themes/ThemeProvider.svelte';
 	import { Cake, Circle, CircleDashed, Prohibit } from 'phosphor-svelte';
@@ -14,7 +15,7 @@
 </script>
 
 {#snippet renderProfile(profile: Profile)}
-	<ThemeProvider theme={usePlainTheme ? plainTheme : mergeThemes(plainTheme, profile.theme || {})}>
+	<ThemeProvider theme={usePlainTheme ? plainTheme : mergeThemes(profile.theme || {})}>
 		{@const userAlive =
 			profile.status !== 'offline' &&
 			profile.lastHeartbeat.getTime() > Date.now() - HEARTBEAT_INTERVAL + 1000}

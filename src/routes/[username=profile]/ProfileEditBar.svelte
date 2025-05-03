@@ -6,9 +6,9 @@
 	import AccountSettingsMenu from './AccountSettingsMenu.svelte';
 	import ThemeEditorMenu from './ThemeEditorMenu.svelte';
 	import ThemeProvider from '$lib/themes/ThemeProvider.svelte';
-	import { plainTheme } from '$lib/themes/mergeThemes';
 	import { replaceState } from '$app/navigation';
 	import type { User } from '@supabase/supabase-js';
+	import { plainTheme } from '$lib/themes/plain-theme';
 
 	let {
 		editing = $bindable(),

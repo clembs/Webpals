@@ -14,7 +14,8 @@ import {
 	minValue,
 	maxValue,
 	partial,
-	optional
+	optional,
+	transform
 } from 'valibot';
 
 const HexColorStructure = pipe(string(), hexColor());
@@ -142,16 +143,32 @@ export const ThemeStructure = strictObject({
 		shadow: nullable(ShadowStructure),
 		background_blur: pipe(number(), minValue(0), maxValue(10))
 	}),
-	primary_buttons: strictObject({
-		color_background: HexColorStructure,
-		color_on_background: HexColorStructure,
-		border: omit(BorderStructure, ['radius', 'width']),
-		shadow: nullable(ShadowStructure)
-	}),
-	secondary_inputs: strictObject({
-		color_background: HexColorStructure,
-		color_on_background: HexColorStructure,
-		border: BorderStructure,
-		shadow: nullable(ShadowStructure)
-	})
+	primary_buttons: pipe(
+		strictObject({
+			color_background: HexColorStructure,
+			color_on_background: HexColorStructure,
+			border: omit(BorderStructure, ['radius', 'width']),
+			shadow: optional(nullable(ShadowStructure))
+		}),
+		// strip shadows since they're unused now
+		transform((input) => ({
+			color_background: input.color_background,
+			color_on_background: input.color_on_background,
+			border: input.border
+		}))
+	),
+	secondary_inputs: pipe(
+		strictObject({
+			color_background: HexColorStructure,
+			color_on_background: HexColorStructure,
+			border: BorderStructure,
+			shadow: optional(nullable(ShadowStructure))
+		}),
+		// strip shadows since they're unused now
+		transform((input) => ({
+			color_background: input.color_background,
+			color_on_background: input.color_on_background,
+			border: input.border
+		}))
+	)
 });

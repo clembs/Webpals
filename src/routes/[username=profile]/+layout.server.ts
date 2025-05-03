@@ -3,7 +3,7 @@ import { error, redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { sql } from 'drizzle-orm';
 import { publicProfileQuery } from '$lib/db/schema/profiles';
-import { mergeThemes, plainTheme } from '$lib/themes/mergeThemes';
+import { mergeThemes } from '$lib/themes/merge-themes';
 
 export const load: LayoutServerLoad = async ({
 	locals: { getCurrentProfile, getSession },
@@ -45,7 +45,7 @@ export const load: LayoutServerLoad = async ({
 
 	return {
 		currentUser,
-		profile: { ...profile, theme: mergeThemes(plainTheme, profile?.theme || {}) },
+		profile: { ...profile, theme: mergeThemes(profile?.theme || {}) },
 		editable: isCurrentProfile,
 		editing: !!(!url.searchParams.has('view') && isCurrentProfile)
 	};

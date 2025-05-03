@@ -1,4 +1,3 @@
-import type { PartialTheme } from '$lib/themes/mergeThemes';
 import { connectionProviderKeys, type AnyWidget } from '../../widgets/types';
 import { eq, relations, sql } from 'drizzle-orm';
 import {
@@ -25,6 +24,7 @@ import {
 } from '../../widgets/default-widgets';
 import { authenticatedRole, authUid, authUsers } from 'drizzle-orm/supabase';
 import type { Profile } from '../types';
+import type { PartialTheme } from '$lib/themes/types';
 
 export const USERNAME_REGEX = /^([a-zA-Z0-9_]{2,24})$/;
 
