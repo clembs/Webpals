@@ -167,38 +167,58 @@
 	}
 
 	.icon-button {
+		// Layout
 		display: grid;
 		place-items: center;
-		border-radius: 99px;
+
+		// Gaps, paddings, margins
 		height: var(--navbar-button-size);
 		width: var(--navbar-button-size);
+
+		// Visual flair
+		border-radius: 99px;
 		background-color: transparent;
 		color: var(--color-heading);
+
+		// Misc
 		cursor: pointer;
 		border: none;
 		position: relative;
 
-		&[aria-current='true'] {
-			background-color: var(--widgets-background-color-dim);
-		}
-
+		// Hover state
 		&:hover {
 			backdrop-filter: brightness(0.95);
 		}
 
+		// If the item has a submenu & is selected
+		&[aria-current='true'] {
+			background-color: var(--widgets-background-color-dim);
+
+			&:hover {
+				filter: brightness(0.95);
+			}
+		}
+
 		.badge {
+			// Layout & position
+			display: grid;
+			place-items: center;
 			position: absolute;
 			top: -2px;
 			right: -2px;
-			font-weight: bold;
+
+			// Gaps, paddings, margins
+			height: calc(var(--base-padding) * 1.25);
+			width: calc(var(--base-padding) * 1.25);
+
+			// Visual flair
 			background-color: var(--color-urgent);
 			color: var(--background);
 			border-radius: 99px;
-			display: grid;
-			place-items: center;
-			height: calc(var(--base-padding) * 1.25);
-			width: calc(var(--base-padding) * 1.25);
-			font-size: 14px;
+
+			// Typography
+			font-weight: 700;
+			font-size: 0.875rem;
 		}
 	}
 

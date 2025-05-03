@@ -83,16 +83,14 @@
 	button {
 		// Layout
 		display: inline-flex;
-		gap: calc(var(--base-gap) * 0.5);
-
-		// Alignment
 		text-align: center;
 		justify-content: center;
 		align-items: center;
 
-		// Size & padding
+		// Gaps, paddings, margins
 		height: var(--button-size);
 		padding: var(--padding);
+		gap: calc(var(--base-gap) * 0.5);
 
 		// Visual flair
 		border: var(--border-style);
@@ -100,7 +98,7 @@
 		color: var(--on-background-color);
 		border-radius: var(--border-radius);
 
-		// Font
+		// Typography
 		font-weight: 500;
 
 		// Misc
