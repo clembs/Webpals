@@ -58,3 +58,24 @@
 		/>
 	</div>
 </section>
+
+<section>
+	<h3>Loading buttons</h3>
+
+	<div class="flex">
+		<Button loading>Loading</Button>
+
+		<Button loading disabled variant="secondary" icon={Heart}>
+			Loading disabled secondary with icon
+		</Button>
+
+		<Button
+			loading
+			disabled
+			variant="urgent"
+			size="sm"
+			icon={Heart}
+			aria-label="Loading disabled urgent small (icon only)"
+		/>
+	</div>
+</section>

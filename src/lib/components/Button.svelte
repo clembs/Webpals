@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Spinner from '$icons/Spinner.svelte';
+	import type { IconComponentProps } from 'phosphor-svelte';
 	import type { Component, Snippet } from 'svelte';
 	import type { HTMLButtonAttributes, HTMLAnchorAttributes } from 'svelte/elements';
 
@@ -9,7 +11,9 @@
 		variant = 'primary',
 		disabled = false,
 		icon: Icon,
+		iconProps,
 		size = 'md',
+		loading = false,
 		children,
 		...restProps
 	}: (HTMLButtonAttributes | HTMLAnchorAttributes) & {
@@ -18,8 +22,10 @@
 		type?: 'submit' | 'button';
 		variant?: 'primary' | 'secondary' | 'text' | 'success' | 'urgent';
 		disabled?: boolean;
-		icon?: Component;
+		icon?: Component<IconComponentProps>;
+		iconProps?: IconComponentProps;
 		size?: 'sm' | 'md';
+		loading?: boolean;
 		children?: Snippet;
 	} = $props();
 
@@ -43,8 +49,10 @@
 		draggable="false"
 		{...restProps as HTMLAnchorAttributes}
 	>
-		{#if Icon}
-			<Icon />
+		{#if loading}
+			<Spinner />
+		{:else if Icon}
+			<Icon {...iconProps} />
 		{/if}
 
 		{@render children?.()}
@@ -60,8 +68,10 @@
 		draggable="false"
 		{...restProps as HTMLButtonAttributes}
 	>
-		{#if Icon}
-			<Icon />
+		{#if loading}
+			<Spinner />
+		{:else if Icon}
+			<Icon {...iconProps} />
 		{/if}
 
 		{@render children?.()}
