@@ -110,26 +110,28 @@
 {/snippet}
 
 <ThemeProvider {theme}>
-	<NavBar />
+	<div id="profile-root">
+		<NavBar />
 
-	<main>
-		{#each userWidgets as column, index}
-			<div class="column-outer">
-				{#if index === 0}
-					<ProfileWidgetComponent {...data} {editing} />
-				{/if}
-				{#if editing}
-					{@render draggableWidgetColumns(column, index)}
-				{:else}
-					<div class="column">
-						{#each column as widget (widget.id)}
-							{@render widgetEl(widget)}
-						{/each}
-					</div>
-				{/if}
-			</div>
-		{/each}
-	</main>
+		<main>
+			{#each userWidgets as column, index}
+				<div class="column-outer">
+					{#if index === 0}
+						<ProfileWidgetComponent {...data} {editing} />
+					{/if}
+					{#if editing}
+						{@render draggableWidgetColumns(column, index)}
+					{:else}
+						<div class="column">
+							{#each column as widget (widget.id)}
+								{@render widgetEl(widget)}
+							{/each}
+						</div>
+					{/if}
+				</div>
+			{/each}
+		</main>
+	</div>
 </ThemeProvider>
 
 {#if data.editable && data.currentProfile && data.currentUser}
@@ -142,20 +144,24 @@
 {/if}
 
 <style lang="scss">
-	main {
+	#profile-root {
 		background: var(--background);
 		background-size: var(--background-size);
 		background-position: var(--background-position);
 		background-repeat: var(--background-repeat);
 		background-attachment: var(--background-attachment);
 		image-rendering: var(--background-rendering);
+		flex: 1;
+	}
 
+	main {
 		display: grid;
-		padding: clamp(calc(var(--base-padding) / 2), 2vw, calc(var(--base-padding) * 2));
 		gap: var(--base-gap);
 		grid-template-columns: 1fr 1.5fr;
 		grid-template-rows: 1fr auto; // thx kevin powell https://stackoverflow.com/a/45897789
-		flex: 1;
+		max-width: 60rem;
+		margin: 0 auto;
+		width: calc(100% - calc(var(--base-padding) * 2));
 
 		.column-outer {
 			display: flex;
