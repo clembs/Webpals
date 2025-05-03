@@ -1,58 +1,57 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-	import type { HTMLInputAttributes, HTMLTextareaAttributes } from 'svelte/elements';
+	import type { IconComponentProps } from 'phosphor-svelte';
+	import type { Component, Snippet } from 'svelte';
+	import type { HTMLInputAttributes } from 'svelte/elements';
 
 	let {
-		label,
-		error,
 		name,
-		required = true,
-		multiline = false,
-		prefixIcon,
-		suffixButton,
+		label,
+		supportingText,
+		error,
 		value = $bindable(''),
+		icon: Icon,
+		iconProps,
+		required = true,
+		disabled = false,
 		...restProps
-	}: HTMLInputAttributes &
-		HTMLTextareaAttributes & {
-			name: string;
-			label?: string;
-			error?: string;
-			value?: string;
-			multiline?: boolean;
-			prefixIcon?: Snippet<[number]>;
-			suffixButton?: Snippet;
-		} = $props();
+	}: HTMLInputAttributes & {
+		name?: string;
+		label?: string;
+		supportingText?: Snippet;
+		error?: Snippet;
+		value?: string;
+		icon?: Component<IconComponentProps>;
+		iconProps?: IconComponentProps;
+	} = $props();
 </script>
 
-<label class="text-input" for={name}>
+<label class="text-input" for={name} aria-disabled={disabled}>
 	{#if label}
-		<div class="label-text">
+		<div class="label label-text">
 			{label}
 		</div>
 	{/if}
 
-	<div class="input" class:error>
-		{#if prefixIcon}
-			<div class="prefix-icon">
-				{@render prefixIcon(24)}
+	<div class="input">
+		{#if Icon}
+			<div class="icon">
+				<Icon size="24" {...iconProps} />
 			</div>
 		{/if}
-		{#if !multiline}
-			<input id={name} {name} {required} {...restProps} bind:value />
-		{:else}
-			<textarea id={name} {name} {required} {...restProps} bind:value></textarea>
-		{/if}
-		{#if suffixButton}
-			<div class="suffix-button">
-				{@render suffixButton()}
-			</div>
-		{/if}
+
+		<input id={name} {name} {required} {disabled} {...restProps} bind:value />
 	</div>
 
-	{#if error || restProps.maxlength}
+	{#if error || supportingText || restProps.maxlength}
 		<div class="bottom">
 			{#if error}
-				<p class="error">{error}</p>
+				<p class="error">
+					{@render error()}
+				</p>
+			{:else if supportingText}
+				<p class="supporting-text">
+					{@render supportingText()}
+				</p>
 			{/if}
 
 			<!-- Whitespace char to always align the max length to the right -->
@@ -69,59 +68,78 @@
 
 <style lang="scss">
 	.text-input {
+		--border-color: var(--inputs-border-color);
+		--input-height: calc(24px + var(--base-padding) * 0.75 * 2); // Icon size + padding
+
+		// Layout
 		display: flex;
 		flex-direction: column;
-		width: 100%;
-		position: relative;
 
-		.label-text,
-		.error {
-			font-weight: 600;
-			font-size: 0.815rem;
-			margin-left: calc(var(--base-padding) * 0.25);
-			margin-bottom: calc(var(--base-gap) * 0.5);
+		// Gaps, paddings, margins
+		gap: calc(var(--base-gap) * 0.5);
+		width: 100%;
+
+		// If there's an error, set the border color to color-urgent
+		&:has(.error) {
+			--border-color: var(--color-urgent);
+		}
+
+		&[aria-disabled='true'] {
+			.label {
+				color: var(--color-paragraph);
+			}
+			.input {
+				color: var(--color-paragraph);
+			}
 		}
 
 		.input {
+			// Layout & position
 			display: flex;
 			align-items: center;
-			border: var(--inputs-border-width) solid var(--inputs-border-color);
+			position: relative;
+
+			// Gaps, paddings, margins
+			height: var(--input-height);
+
+			// Visual flair
 			border-radius: var(--inputs-border-base-radius);
 
-			&.error {
-				border-color: var(--color-urgent);
-				outline: var(--inputs-border-width) solid var(--color-urgent);
-			}
-
-			.prefix-icon {
+			.icon {
+				// Layout & position
 				display: grid;
 				place-items: center;
-				padding: calc(var(--base-padding) * 0.5);
-				border-radius: var(--inputs-border-base-radius) 0 0 var(--inputs-border-base-radius);
-				border-right: var(--inputs-border-width) solid var(--inputs-border-color);
-				background-color: var(--widgets-background-color-dim);
-				color: var(--inputs-on-background-color);
-				height: calc(var(--base-padding) * 3);
-				width: calc(var(--base-padding) * 3);
-			}
-
-			.suffix-button {
 				position: absolute;
-				right: 0;
+
+				// Gaps, paddings, margins
+				height: var(--input-height);
+				width: var(--input-height);
+				margin-left: var(--inputs-border-width); // So it doesn't collide with the input's border
+
+				// Visual flair
+				background-color: var(--inputs-background-color);
+				border-radius: var(--inputs-border-base-radius) 0 0 var(--inputs-border-base-radius);
+				border-right: var(--inputs-border-width) solid var(--border-color);
 			}
 
-			input,
-			textarea {
-				padding: calc(var(--base-padding) * 0.75) var(--base-padding);
-				border-radius: var(--inputs-border-base-radius);
+			// Add padding so the input isn't hidden by the icon
+			&:has(.icon) input {
+				padding-left: calc(var(--input-height) + var(--base-padding));
+			}
+
+			input {
+				// Gaps, paddings, margins
 				width: 100%;
-				border: transparent;
-				background-color: var(--color-input);
-				font-weight: 400;
-			}
+				padding: calc(var(--base-padding) * 0.75) var(--base-padding);
 
-			.prefix-icon + input {
-				border-radius: 0 var(--inputs-border-base-radius) var(--inputs-border-base-radius) 0;
+				// Visual flair
+				background-color: var(--color-input);
+				color: inherit;
+				border: var(--inputs-border-width) solid var(--border-color);
+
+				// Typography
+				font-weight: 400;
+				border-radius: var(--inputs-border-base-radius);
 			}
 		}
 
