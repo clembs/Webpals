@@ -40,7 +40,7 @@
 	});
 </script>
 
-<BaseWidget {widget} editingMode={editing}>
+<BaseWidget {widget} {editing}>
 	<!-- {#snippet editMenu()}
 		<ClockWidgetEdit bind:modalOpened {widget} {editing} />
 	{/snippet} -->

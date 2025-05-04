@@ -9,7 +9,7 @@
 	let { widget, editing }: WidgetComponentProps<MusicJSON> = $props();
 </script>
 
-<BaseWidget {widget} editingMode={editing}>
+<BaseWidget {widget} {editing}>
 	<!-- {#snippet editMenu()}
 		<MusicEditWidgetComponent {widget} {editing} bind:modalOpened />
 	{/snippet} -->

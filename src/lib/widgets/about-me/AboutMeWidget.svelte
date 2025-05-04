@@ -6,24 +6,21 @@
 	import { parseMarkdown } from '$lib/helpers/text';
 
 	let { widget, editing }: WidgetComponentProps<AboutMeJSON> = $props();
-
-	let modalOpened = $state(false);
 </script>
 
-<BaseWidget bind:isWidgetEditing={modalOpened} {widget} editingMode={editing}>
-	{#snippet editMenu()}
+<BaseWidget {widget} {editing}>
+	{#snippet settingsDialog()}
 		<form
 			use:enhance={() =>
 				({ update }) => {
 					update({ reset: false });
-					modalOpened = false;
 				}}
 			class="about-me-edit"
 			action="/api/profile?/editAboutMe"
 			method="post"
 		>
 			<h2>About me</h2>
-			<textarea class:big-text={modalOpened} name="content" value={widget.content}></textarea>
+			<textarea name="content" value={widget.content}></textarea>
 			<Button type="submit">Save</Button>
 		</form>
 	{/snippet}
@@ -57,10 +54,6 @@
 			transition: font-size 200ms;
 			resize: vertical;
 			min-height: 10rem;
-
-			&.big-text {
-				font-size: 1.1rem;
-			}
 		}
 	}
 </style>

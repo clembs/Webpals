@@ -2,8 +2,9 @@
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/Button.svelte';
 	import BaseWidget from '../BaseWidget.svelte';
-	import type { CustomWidgetJSON, WidgetComponentProps } from './types';
+	import type { CustomWidgetJSON } from './types';
 	import LayoutBlockComponent from './blocks/LayoutBlockComponent.svelte';
+	import type { WidgetComponentProps } from '../types';
 
 	let {
 		profile,
@@ -12,17 +13,14 @@
 	}: WidgetComponentProps<CustomWidgetJSON> & {
 		profile: { id: string };
 	} = $props();
-
-	let modalOpened = $state(false);
 </script>
 
-<BaseWidget bind:isWidgetEditing={modalOpened} {widget} editingMode={editing}>
-	{#snippet editMenu()}
+<BaseWidget {widget} {editing}>
+	{#snippet settingsDialog()}
 		<form
 			use:enhance={() =>
 				({ update }) => {
 					update({ reset: false });
-					modalOpened = false;
 				}}
 			method="post"
 			action="/api/profile?/editCustomWidget&id={widget.id}"

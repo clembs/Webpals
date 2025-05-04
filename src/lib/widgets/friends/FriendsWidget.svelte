@@ -13,7 +13,7 @@
 	);
 </script>
 
-<BaseWidget {widget} editingMode={editing}>
+<BaseWidget {widget} {editing}>
 	<h2>Friends ({friends.length})</h2>
 
 	<div class="friends-wrapper">

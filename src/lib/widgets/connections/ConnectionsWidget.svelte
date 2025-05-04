@@ -51,7 +51,7 @@
 	{/if}
 {/snippet}
 
-<BaseWidget {widget} editingMode={editing}>
+<BaseWidget {widget} {editing}>
 	<!-- {#snippet editMenu()}
 		<ConnectionsWidgetEditComponent user={profile} />
 	{/snippet} -->

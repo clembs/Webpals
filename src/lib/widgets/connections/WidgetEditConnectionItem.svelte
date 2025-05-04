@@ -5,7 +5,7 @@
 	import InlineTextInput from '$lib/components/InlineTextInput.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { enhance } from '$app/forms';
-	import { dialogPortal } from '$lib/portals/dialog.svelte';
+	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
 	import { slide } from 'svelte/transition';
 
 	let {

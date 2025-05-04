@@ -12,20 +12,19 @@
 	import type { AnyWidgetJSON } from '$lib/widgets/types';
 	import { type Snippet } from 'svelte';
 	import { enhance } from '$app/forms';
-	import { PencilSimple, TrashSimple } from 'phosphor-svelte';
+	import { GearSix, TrashSimple } from 'phosphor-svelte';
 	import Button from '$lib/components/Button.svelte';
-	import { dialogPortal } from '$lib/portals/dialog.svelte';
-	import { fly } from 'svelte/transition';
+	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
 
 	let {
-		editingMode,
+		editing,
 		widget,
-		editMenu,
+		settingsDialog,
 		children
 	}: {
-		editingMode?: boolean;
+		editing?: boolean;
 		widget?: AnyWidgetJSON;
-		editMenu?: Snippet;
+		settingsDialog?: Snippet;
 		children: Snippet;
 	} = $props();
 
@@ -43,12 +42,9 @@
 		method="post"
 		class="confirm-delete"
 	>
-		<h2>Are you sure you want to delete this widget?</h2>
+		<h1>Delete this widget?</h1>
 
-		<p>
-			Contents of the widget will be lost. You can bring it back with the + menu, but it will be
-			blank.
-		</p>
+		<p>Any settings to this widget will be lost if you change your mind and add it again later.</p>
 
 		<div class="buttons">
 			<Button type="button" variant="secondary" onclick={() => dialogPortal.closeDialog()}>
@@ -60,35 +56,38 @@
 {/snippet}
 
 <div class="widget-wrapper" bind:this={wrapperEl}>
-	{#if editingMode}
-		<div class="hover-menu" transition:fly={{ duration: 150, y: -10 }}>
-			{#if editMenu}
-				<button aria-label="Edit widget" onclick={() => dialogPortal.openDialog(editMenu)}>
-					<PencilSimple size={20} />
-				</button>
+	{#if editing}
+		<div class="hover-menu">
+			{#if settingsDialog}
+				<Button
+					icon={GearSix}
+					size="sm"
+					aria-label="Open widget settings"
+					onclick={() => dialogPortal.openDialog(settingsDialog)}
+				/>
 			{/if}
 			{#if widget}
 				<!-- if the menu is editable, open the dialog to confirm deletion -->
-				{#if editMenu}
-					<button
-						onclick={() => dialogPortal.openDialog(confirmDeleteDialog)}
-						aria-label="Delete widget"
-					>
-						<TrashSimple size={20} />
-					</button>
-					<!-- otherwise we dont really care and can delete right away -->
-				{:else}
+				<!-- {#if editMenu} -->
+				<Button
+					icon={TrashSimple}
+					size="sm"
+					aria-label="Delete widget"
+					onclick={() => dialogPortal.openDialog(confirmDeleteDialog)}
+				/>
+				<!-- otherwise we dont really care and can delete right away -->
+				<!-- {:else}
 					<form use:enhance action="/api/profile?/deleteWidget&id={widget.id}" method="post">
 						<button aria-label="Delete widget">
 							<TrashSimple size={20} />
 						</button>
 					</form>
-				{/if}
+				{/if} -->
 			{/if}
 		</div>
 	{/if}
 
-	<div class="inner-widget" inert={editingMode}>
+	<div class="inner-widget">
 		{@render children()}
 	</div>
 </div>
@@ -106,34 +105,6 @@
 			top: calc(var(--base-padding) * 0.25);
 			padding: calc(var(--base-padding) * 0.25);
 			z-index: 2;
-
-			button {
-				border: none;
-				border: var(--inputs-border-width) solid var(--inputs-border-color);
-				background: var(--widgets-background-color-dim);
-				padding: calc(var(--base-padding) * 0.375);
-				color: var(--inputs-on-background-color);
-				cursor: pointer;
-
-				&:first-child {
-					border-radius: var(--inputs-border-base-radius) 0 0 var(--inputs-border-base-radius);
-					border-right: none;
-				}
-
-				&:last-child {
-					border-radius: 0 var(--inputs-border-base-radius) var(--inputs-border-base-radius) 0;
-				}
-
-				&:first-child:last-child {
-					border-radius: var(--inputs-border-base-radius);
-					border-right: var(--inputs-border-width) solid var(--inputs-border-color);
-				}
-
-				&:hover,
-				&:focus-within {
-					filter: brightness(0.9);
-				}
-			}
 		}
 
 		.inner-widget {

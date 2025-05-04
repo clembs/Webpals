@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
-	import { dialogPortal } from '$lib/portals/dialog.svelte';
+	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
 	import { Funnel, Plus } from 'phosphor-svelte';
 	import { connectionProvidersArray } from './connection-providers';
 	import TextInput from '$lib/components/TextInput.svelte';
