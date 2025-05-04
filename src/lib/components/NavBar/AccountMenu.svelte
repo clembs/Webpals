@@ -7,7 +7,7 @@
 	import XLogo from '$icons/brands/XLogo.svelte';
 	import DiscordLogo from '$icons/brands/DiscordLogo.svelte';
 	import Webpals from '$icons/Webpals.svelte';
-	import type { FullProfile } from '$lib/db/types';
+	import type { CurrentProfile } from '$lib/db/types';
 	import { dialogPortal } from '$lib/portals/dialog.svelte';
 	import { ArrowSquareOut, DoorOpen, Gear, UserSquare } from 'phosphor-svelte';
 	import { fly } from 'svelte/transition';
@@ -20,7 +20,7 @@
 		user
 	}: {
 		menuOpen: boolean;
-		user: FullProfile;
+		user: CurrentProfile;
 	} = $props();
 </script>
 

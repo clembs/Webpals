@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { NotificationTypes } from '$lib/db/schema/notifications';
-	import type { FullProfile } from '$lib/db/types';
+	import type { CurrentProfile } from '$lib/db/types';
 	import Button from '../Button.svelte';
 	import { fly } from 'svelte/transition';
 	import FriendRequestNotification from './notifications/FriendRequestNotification.svelte';
@@ -13,7 +13,7 @@
 		user
 	}: {
 		menuOpen: boolean;
-		user: FullProfile;
+		user: CurrentProfile;
 	} = $props();
 </script>
 

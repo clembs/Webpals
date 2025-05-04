@@ -1,4 +1,4 @@
-import type { FullProfile } from '$lib/db/types';
+import type { CurrentProfile } from '$lib/db/types';
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 
 declare global {
@@ -10,10 +10,10 @@ declare global {
 				session: Session | null;
 				user: User | null;
 			};
-			getCurrentProfile: () => FullProfile | null | undefined;
+			getCurrentProfile: () => CurrentProfile | null | undefined;
 		}
 		interface PageData {
-			currentProfile: FullProfile | null | undefined;
+			currentProfile: CurrentProfile | null | undefined;
 		}
 		// interface PageState {}
 		// interface Platform {}
