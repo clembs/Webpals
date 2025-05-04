@@ -6,7 +6,7 @@
 	import { At } from 'phosphor-svelte';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
-	import { USERNAME_REGEX } from '$lib/db/schema/profiles';
+	import { USERNAME_REGEX } from '$lib/helpers/constants';
 	import type { LayoutServerData } from '../$types';
 
 	let { data }: { data: LayoutServerData } = $props();
@@ -60,7 +60,7 @@
 			maxlength={24}
 			error={page.form?.message}
 		>
-			{#snippet prefixIcon(size: number)}
+			{#snippet icon(size: number)}
 				<At {size} weight="regular" />
 			{/snippet}
 		</TextInput>

@@ -3,7 +3,7 @@ import type { RequestEvent } from './$types';
 import { db } from '$lib/db';
 import { profiles } from '$lib/db/schema/profiles';
 import { eq } from 'drizzle-orm';
-import { getSpotifyToken, type Track } from '$lib/helpers/music';
+import { getSpotifyToken, type Track } from '$lib/widgets/music/music';
 
 export async function setExternalMusic({ locals: { getCurrentProfile }, url }: RequestEvent) {
 	const user = await getCurrentProfile();

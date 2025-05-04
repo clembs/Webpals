@@ -1,11 +1,11 @@
 <script lang="ts">
 	import BaseWidget from '$lib/widgets/BaseWidget.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import type { AboutMeWidget, WidgetComponentProps } from '../types';
+	import type { AboutMeJSON, WidgetComponentProps } from '../types';
 	import { enhance } from '$app/forms';
 	import { parseMarkdown } from '$lib/helpers/text';
 
-	let { widget, editing }: WidgetComponentProps<AboutMeWidget> = $props();
+	let { widget, editing }: WidgetComponentProps<AboutMeJSON> = $props();
 
 	let modalOpened = $state(false);
 </script>

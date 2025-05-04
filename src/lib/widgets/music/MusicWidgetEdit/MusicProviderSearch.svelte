@@ -5,7 +5,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import ButtonGroup from '$lib/components/ButtonGroup.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
-	import { musicProviders, type MusicProvider, type Track } from '$lib/helpers/music';
+	import { musicProviders, type MusicProvider, type Track } from '$lib/widgets/music/music';
 	import { MagnifyingGlass, ArrowSquareOut, Pause, Play, MusicNote } from 'phosphor-svelte';
 	import { onDestroy } from 'svelte';
 	import { slide } from 'svelte/transition';

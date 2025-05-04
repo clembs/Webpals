@@ -1,20 +1,18 @@
 <script lang="ts">
 	import { MusicNote, PencilSimple, Warning } from 'phosphor-svelte';
 	import BaseWidget from '../BaseWidget.svelte';
-	import type { MusicWidget, WidgetComponentProps } from '../types';
-	import MusicEditWidgetComponent from '../default-edit-menus/MusicWidgetEdit/MusicWidgetEditComponent.svelte';
+	import type { MusicJSON, WidgetComponentProps } from '../types';
+	// import MusicEditWidgetComponent from './MusicWidgetEdit/MusicWidgetEditComponent.svelte';
 	import AudioPlayer from '$lib/components/AudioPlayer/AudioPlayer.svelte';
 	import { PUBLIC_STORAGE_BASE_URL } from '$env/static/public';
 
-	let { widget, editing }: WidgetComponentProps<MusicWidget> = $props();
-
-	let modalOpened = $state(false);
+	let { widget, editing }: WidgetComponentProps<MusicJSON> = $props();
 </script>
 
-<BaseWidget bind:isWidgetEditing={modalOpened} {widget} editingMode={editing}>
-	{#snippet editMenu()}
+<BaseWidget {widget} editingMode={editing}>
+	<!-- {#snippet editMenu()}
 		<MusicEditWidgetComponent {widget} {editing} bind:modalOpened />
-	{/snippet}
+	{/snippet} -->
 	<div class="music-widget">
 		<div class="heading">
 			{#if widget.album_art_url}

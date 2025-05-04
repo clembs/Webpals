@@ -1,5 +1,5 @@
 import { fail, type Actions } from '@sveltejs/kit';
-import { getSpotifyToken } from '$lib/helpers/music';
+import { getSpotifyToken } from '$lib/widgets/music/music';
 
 export const actions: Actions = {
 	async default({ request, fetch }) {

@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import BaseWidget from '../BaseWidget.svelte';
-	import type { ClockWidget, WidgetComponentProps } from '../types';
+	import type { ClockJSON, WidgetComponentProps } from '../types';
 	import { Globe } from 'phosphor-svelte';
-	import ClockWidgetEdit from '../default-edit-menus/ClockWidgetEdit.svelte';
+	// import ClockWidgetEdit from './ClockWidgetEdit.svelte';
 
-	let { widget, editing }: WidgetComponentProps<ClockWidget> = $props();
+	let { widget, editing }: WidgetComponentProps<ClockJSON> = $props();
 
-	let modalOpened = $state(false);
 	let date = $state(new Date());
 
 	let timeParts = $derived(
@@ -41,10 +40,10 @@
 	});
 </script>
 
-<BaseWidget bind:isWidgetEditing={modalOpened} {widget} editingMode={editing}>
-	{#snippet editMenu()}
+<BaseWidget {widget} editingMode={editing}>
+	<!-- {#snippet editMenu()}
 		<ClockWidgetEdit bind:modalOpened {widget} {editing} />
-	{/snippet}
+	{/snippet} -->
 
 	<div class="clock">
 		<time datetime={date.toISOString()}>

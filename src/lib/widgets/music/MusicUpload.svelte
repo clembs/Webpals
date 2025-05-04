@@ -3,15 +3,15 @@
 	import Button from '$lib/components/Button.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 	import { validateFileSignatures, type MimeTypes } from '$lib/helpers/files';
-	import MusicWidgetComponent from '$lib/widgets/default/MusicWidgetComponent.svelte';
-	import type { MusicWidget, WidgetComponentProps } from '$lib/widgets/types';
+	import MusicWidgetComponent from '$lib/widgets/music/MusicWidget.svelte';
+	import type { MusicJSON, WidgetComponentProps } from '$lib/widgets/types';
 	import { parseWebStream } from 'music-metadata';
 	import { slide } from 'svelte/transition';
 
 	let {
 		modalOpened = $bindable(),
 		widget
-	}: WidgetComponentProps<MusicWidget> & {
+	}: WidgetComponentProps<MusicJSON> & {
 		modalOpened: boolean;
 	} = $props();
 

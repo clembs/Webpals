@@ -1,25 +1,15 @@
 <script lang="ts">
 	import Meta from '$lib/components/Meta.svelte';
 	import ThemeProvider from '$lib/themes/ThemeProvider.svelte';
-	import CustomWidgetComponent from '$lib/widgets/blocks/CustomWidgetComponent.svelte';
-	import AboutMeWidgetComponent from '$lib/widgets/default/AboutMeWidgetComponent.svelte';
-	import ConnectionsWidgetComponent from '$lib/widgets/default/ConnectionsWidgetComponent.svelte';
-	import FriendsWidgetComponent from '$lib/widgets/default/FriendsWidgetComponent.svelte';
-	import MusicWidgetComponent from '$lib/widgets/default/MusicWidgetComponent.svelte';
-	import ProfileWidgetComponent from '$lib/widgets/default/ProfileWidgetComponent.svelte';
-	import type {
-		AboutMeWidget,
-		AnyWidget,
-		ConnectionsWidget,
-		FriendsWidget
-	} from '$lib/widgets/types';
+	import ProfileWidget from '$lib/widgets/profile/ProfileWidget.svelte';
 	import { flip } from 'svelte/animate';
 	import ProfileEditBar from './ProfileEditBar.svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import { invalidateAll } from '$app/navigation';
 	import BaseWidget, { isAnyWidgetEditing } from '$lib/widgets/BaseWidget.svelte';
 	import NavBar from '$lib/components/NavBar/NavBar.svelte';
-	import ClockWidgetComponent from '$lib/widgets/default/ClockWidgetComponent.svelte';
+	import { defaultWidgets } from '$lib/widgets/widget-metadata';
+	import type { AnyWidgetJSON, AboutMeJSON } from '$lib/widgets/types';
 
 	let { data } = $props();
 
@@ -58,23 +48,15 @@
 	description={(
 		userWidgets
 			.find((c) => c.find((w) => w.id === 'about_me'))
-			?.find((w) => w.id === 'about_me') as AboutMeWidget
+			?.find((w) => w.id === 'about_me') as AboutMeJSON
 	)?.content}
 />
 
-{#snippet widgetEl(widget: AnyWidget)}
-	{#if widget.id === 'about_me' && 'content' in widget}
-		<AboutMeWidgetComponent {widget} {...data} {editing} />
-	{:else if widget.id === 'music' && 'content_url' in widget && (!editing ? widget.content_url : true)}
-		<MusicWidgetComponent {widget} {...data} {editing} />
-	{:else if widget.id === 'connections'}
-		<ConnectionsWidgetComponent widget={widget as ConnectionsWidget} {...data} {editing} />
-	{:else if widget.id === 'clock' && 'hour_format' in widget}
-		<ClockWidgetComponent {widget} {...data} {editing} />
-	{:else if 'blocks' in widget}
-		<CustomWidgetComponent {widget} {...data} {editing} />
-	{:else if widget.id === 'friends'}
-		<FriendsWidgetComponent widget={widget as FriendsWidget} {...data} {editing} />
+{#snippet widgetEl(widget: AnyWidgetJSON)}
+	{@const WidgetComponent = defaultWidgets.find((w) => widget.id === w.id)?.component}
+
+	{#if WidgetComponent}
+		<WidgetComponent profile={data.profile} {editing} widget={widget as AnyWidgetJSON} />
 	{:else if editing}
 		<BaseWidget editingMode={editing} {widget}>
 			I didn't code this widget in yet (type {widget.id}).<br />
@@ -83,7 +65,7 @@
 	{/if}
 {/snippet}
 
-{#snippet draggableWidgetColumns(widgets: AnyWidget[], index: number)}
+{#snippet draggableWidgetColumns(widgets: AnyWidgetJSON[], index: number)}
 	<div
 		class="column"
 		use:dndzone={{
@@ -117,7 +99,7 @@
 			{#each userWidgets as column, index}
 				<div class="column-outer">
 					{#if index === 0}
-						<ProfileWidgetComponent {...data} {editing} />
+						<ProfileWidget {...data} {editing} />
 					{/if}
 					{#if editing}
 						{@render draggableWidgetColumns(column, index)}

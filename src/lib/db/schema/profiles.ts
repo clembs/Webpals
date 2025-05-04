@@ -1,4 +1,3 @@
-import { connectionProviderKeys, type AnyWidget } from '../../widgets/types';
 import { eq, relations, sql } from 'drizzle-orm';
 import {
 	boolean,
@@ -16,17 +15,12 @@ import {
 } from 'drizzle-orm/pg-core';
 import { inviteCodes } from './auth';
 import { notifications, notificationsMentionedProfiles } from './notifications';
-import {
-	defaultAboutMeWidget,
-	defaultCommentsWidget,
-	defaultFriendsWidget,
-	defaultMusicWidget
-} from '../../widgets/default-widgets';
 import { authenticatedRole, authUid, authUsers } from 'drizzle-orm/supabase';
 import type { Profile } from '../types';
 import type { PartialTheme } from '$lib/themes/types';
-
-export const USERNAME_REGEX = /^([a-zA-Z0-9_]{2,24})$/;
+import type { AnyWidgetJSON } from '$lib/widgets/types';
+import { connectionProviderKeys } from '$lib/widgets/connections/connection-providers';
+import { USERNAME_REGEX } from '$lib/helpers/constants';
 
 export const profileStatus = pgEnum('profile_status', ['online', 'dnd', 'offline']);
 
@@ -44,17 +38,7 @@ export const profiles = pgTable(
 		createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
 		lastHeartbeat: timestamp({ withTimezone: true }).notNull().defaultNow(),
 		status: profileStatus().notNull().default('online'),
-		widgets: jsonb()
-			.notNull()
-			.default([
-				[defaultMusicWidget.generateDefault()],
-				[
-					defaultAboutMeWidget.generateDefault(),
-					defaultFriendsWidget.generateDefault(),
-					defaultCommentsWidget.generateDefault()
-				]
-			] as AnyWidget[][])
-			.$type<AnyWidget[][]>(),
+		widgets: jsonb().notNull().$type<AnyWidgetJSON[][]>(),
 		theme: jsonb('theme').$type<PartialTheme>()
 	},
 	(table) => [

@@ -1,15 +1,13 @@
 <script lang="ts">
 	import BaseWidget from '$lib/widgets/BaseWidget.svelte';
-	import type { ConnectionsWidget, WidgetComponentProps } from '../types';
-	import { connectionProviders } from '../connections';
+	import type { ConnectionsJSON, WidgetComponentProps } from '../types';
+	import { connectionProviders } from './connection-providers';
 	import { ArrowSquareOut, Check, CopySimple, SealCheck, TextAlignLeft } from 'phosphor-svelte';
-	import ConnectionsWidgetEditComponent from '../default-edit-menus/ConnectionsWidgetEditComponent.svelte';
+	// import ConnectionsWidgetEditComponent from '../default-edit-menus/ConnectionsWidgetEditComponent.svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import type { Connection } from '$lib/db/types';
 
-	let { profile, widget, editing }: Required<WidgetComponentProps<ConnectionsWidget>> = $props();
-
-	let modalOpened = $state(false);
+	let { profile, widget, editing }: WidgetComponentProps<ConnectionsJSON> = $props();
 
 	let copiedConnections = new SvelteMap(profile.connections.map((_, index) => [index, false]));
 
@@ -53,10 +51,10 @@
 	{/if}
 {/snippet}
 
-<BaseWidget bind:isWidgetEditing={modalOpened} {widget} editingMode={editing}>
-	{#snippet editMenu()}
+<BaseWidget {widget} editingMode={editing}>
+	<!-- {#snippet editMenu()}
 		<ConnectionsWidgetEditComponent user={profile} />
-	{/snippet}
+	{/snippet} -->
 
 	<div class="connections">
 		<h2>Connections</h2>

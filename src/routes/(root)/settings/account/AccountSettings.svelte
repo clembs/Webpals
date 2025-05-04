@@ -18,7 +18,7 @@
 		<Envelope {size} weight="regular" />
 	{/snippet}
 
-	<TextInput name="email" value={data.currentUser.email} prefixIcon={email} />
+	<TextInput name="email" value={data.currentUser.email} icon={email} />
 
 	<p>
 		Your email is used to log in and receive notifications. I won't share your email address with

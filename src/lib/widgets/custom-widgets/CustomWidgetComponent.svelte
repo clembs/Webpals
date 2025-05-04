@@ -2,14 +2,14 @@
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/Button.svelte';
 	import BaseWidget from '../BaseWidget.svelte';
-	import type { CustomWidget, WidgetComponentProps } from '../types';
-	import LayoutBlockComponent from './LayoutBlockComponent.svelte';
+	import type { CustomWidgetJSON, WidgetComponentProps } from './types';
+	import LayoutBlockComponent from './blocks/LayoutBlockComponent.svelte';
 
 	let {
 		profile,
 		widget,
 		editing
-	}: WidgetComponentProps<CustomWidget> & {
+	}: WidgetComponentProps<CustomWidgetJSON> & {
 		profile: { id: string };
 	} = $props();
 

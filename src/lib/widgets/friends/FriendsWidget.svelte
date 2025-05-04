@@ -1,21 +1,10 @@
 <script lang="ts">
 	import Avatar from '$lib/components/Avatar.svelte';
-	import type { Profile, Relationship } from '$lib/db/types';
 	import { RelationshipTypes } from '$lib/db/schema/profiles';
 	import BaseWidget from '../BaseWidget.svelte';
-	import type { FriendsWidget, WidgetComponentProps } from '../types';
+	import type { FriendsJSON, WidgetComponentProps } from '../types';
 
-	let {
-		profile,
-		widget,
-		editing
-	}: WidgetComponentProps<FriendsWidget> & {
-		profile: Profile & {
-			initiatedRelationships: (Relationship & {
-				recipient: Profile;
-			})[];
-		};
-	} = $props();
+	let { profile, widget, editing }: WidgetComponentProps<FriendsJSON> = $props();
 
 	let friends = $derived(
 		profile.initiatedRelationships

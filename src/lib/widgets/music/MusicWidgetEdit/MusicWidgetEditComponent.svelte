@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { MusicNote } from 'phosphor-svelte';
-	import { type MusicProvider, musicProviders } from '$lib/helpers/music';
-	import type { MusicWidget, WidgetComponentProps } from '../../types';
+	import { type MusicProvider, musicProviders } from '$lib/widgets/music/music';
+	import type { MusicJSON, WidgetComponentProps } from '../../types';
 	import MusicProviderSearch from './MusicProviderSearch.svelte';
-	import MusicUpload from './MusicUpload.svelte';
+	import MusicUpload from '../MusicUpload.svelte';
 
 	let {
 		widget,
 		modalOpened = $bindable(false)
-	}: WidgetComponentProps<MusicWidget> & {
+	}: WidgetComponentProps<MusicJSON> & {
 		modalOpened: boolean;
 	} = $props();
 

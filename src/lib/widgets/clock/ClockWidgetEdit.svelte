@@ -5,19 +5,19 @@
 	import TextInput from '$lib/components/TextInput.svelte';
 	import { enhance } from '$app/forms';
 	import { type CityData } from 'city-timezones';
-	import type { ClockWidget, WidgetComponentProps } from '../types';
+	import type { ClockJSON, WidgetComponentProps } from '../types';
 	import { ArrowLeft, CaretLeft, CaretRight, Globe, MagnifyingGlass } from 'phosphor-svelte';
 
 	let {
 		widget,
 		modalOpened = $bindable(false)
-	}: WidgetComponentProps<ClockWidget> & {
+	}: WidgetComponentProps<ClockJSON> & {
 		modalOpened: boolean;
 	} = $props();
 
 	let date = $state(new Date());
 	let cities = $state<CityData[]>([]);
-	let error = $state('');
+	let errorMessage = $state('');
 	let isLoading = $state(false);
 
 	let stepsWrapperEl = $state<HTMLElement>();
@@ -31,7 +31,7 @@
 	function nextStep() {
 		if (!stepsWrapperEl || !stepOptionsEl || !stepTimezoneEl) return;
 
-		error = '';
+		errorMessage = '';
 
 		stepsWrapperEl.scroll({
 			left: stepWidth,
@@ -92,11 +92,11 @@
 
 		<form
 			use:enhance={() => {
-				error = '';
+				errorMessage = '';
 				return async ({ result, update }) => {
 					await update({ reset: false, invalidateAll: true });
 					if (result.type === 'failure' && typeof result.data?.message === 'string') {
-						error = result.data.message;
+						errorMessage = result.data.message;
 					}
 				};
 			}}
@@ -147,7 +147,7 @@
 
 		<form
 			use:enhance={() => {
-				error = '';
+				errorMessage = '';
 				isLoading = true;
 				return async ({ update, result }) => {
 					await update({ reset: false });
@@ -166,7 +166,7 @@
 						'message' in result.data &&
 						typeof result.data.message === 'string'
 					) {
-						error = result.data.message;
+						errorMessage = result.data.message;
 					}
 					isLoading = false;
 				};
@@ -178,13 +178,15 @@
 				placeholder="Search cities or countries to set the clock"
 				name="query"
 				defaultValue={widget.city}
-				{error}
 				oninput={() => {
-					error = '';
+					errorMessage = '';
 					resizeStepsWrapper(stepTimezoneEl!);
 				}}
 			>
-				{#snippet prefixIcon()}
+				{#snippet error()}
+					{errorMessage}
+				{/snippet}
+				{#snippet icon()}
 					<Globe />
 				{/snippet}
 				{#snippet suffixButton()}

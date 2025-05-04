@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { FullProfile } from '$lib/db/types';
+	import type { CurrentProfile } from '$lib/db/types';
 	import type { Theme } from '$lib/themes/types';
 	import { Eye, PencilSimple, Plus, Gear, Palette, Hexagon } from 'phosphor-svelte';
-	import WidgetPickerMenu from './WidgetPickerMenu.svelte';
+	// import WidgetPickerMenu from './WidgetPickerMenu.svelte';
 	import AccountSettingsMenu from './AccountSettingsMenu.svelte';
 	import ThemeEditorMenu from './ThemeEditorMenu.svelte';
 	import ThemeProvider from '$lib/themes/ThemeProvider.svelte';
@@ -17,7 +17,7 @@
 		currentUser
 	}: {
 		editing: boolean;
-		profile: FullProfile;
+		profile: CurrentProfile;
 		theme: Theme;
 		currentUser: User;
 	} = $props();
@@ -84,7 +84,7 @@
 
 <ThemeProvider theme={plainTheme}>
 	<div id="edit-bar-wrapper" bind:this={editBarWrapperEl} class:viewing={!editing}>
-		<WidgetPickerMenu {profile} {editBarEl} {editBarWrapperEl} bind:menuOpen={widgetPickerOpen} />
+		<!-- <WidgetPickerMenu {profile} {editBarEl} {editBarWrapperEl} bind:menuOpen={widgetPickerOpen} /> -->
 
 		<ThemeEditorMenu bind:theme {editBarEl} {editBarWrapperEl} bind:menuOpen={themeEditorOpen} />
 

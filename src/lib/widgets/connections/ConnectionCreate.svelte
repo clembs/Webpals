@@ -2,7 +2,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import { dialogPortal } from '$lib/portals/dialog.svelte';
 	import { Funnel, Plus } from 'phosphor-svelte';
-	import { connectionProvidersArray } from '../connections';
+	import { connectionProvidersArray } from './connection-providers';
 	import TextInput from '$lib/components/TextInput.svelte';
 	import InlineTextInput from '$lib/components/InlineTextInput.svelte';
 	import { enhance } from '$app/forms';
@@ -130,7 +130,7 @@
 					placeholder="Filter connections"
 					name="filter"
 					bind:value={filter}
-					prefixIcon={filterIcon}
+					icon={filterIcon}
 					required={false}
 				/>
 

@@ -2,8 +2,10 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from './$types';
 import { db } from '$lib/db';
 import { connections } from '$lib/db/schema/profiles';
-import { connectionProviders } from '$lib/widgets/connections';
-import type { ConnectionProvider } from '$lib/widgets/types';
+import {
+	connectionProviders,
+	type ConnectionProvider
+} from '$lib/widgets/connections/connection-providers';
 
 export async function createConnection({ locals: { getCurrentProfile }, request }: RequestEvent) {
 	const user = getCurrentProfile();

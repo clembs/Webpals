@@ -1,8 +1,7 @@
 // note: some of the more complex regex has been AI-generated and im kind of ashamed of myself but regex is kinda hard and i mean ive tested a few edge cases for each and they work fine.
 // if you're a regex wizard reading this and something doesn't work, help me by submitting an issue.
 
-import type { ConnectionProvider } from './types';
-import { Envelope, Globe, Phone, type IconContextProps } from 'phosphor-svelte';
+import { Envelope, Globe, Phone, type IconComponentProps } from 'phosphor-svelte';
 import DiscordLogo from '$icons/brands/DiscordLogo.svelte';
 import { EMAIL_REGEX } from 'valibot';
 import PretendoLogo from '$icons/brands/PretendoLogo.svelte';
@@ -24,15 +23,46 @@ import MastodonLogo from '$icons/brands/MastodonLogo.svelte';
 import PatreonLogo from '$icons/brands/PatreonLogo.svelte';
 import StartGgLogo from '$icons/brands/StartGgLogo.svelte';
 import ThreadsLogo from '$icons/brands/ThreadsLogo.svelte';
-import { USERNAME_REGEX } from '$lib/db/schema/profiles';
+import { USERNAME_REGEX } from '$lib/helpers/constants';
 import Webpals from '$icons/Webpals.svelte';
+import type { Component } from 'svelte';
+
+export const connectionProviderKeys = [
+	'bluesky',
+	'discord',
+	'domain',
+	'email',
+	'facebook',
+	'github',
+	'instagram',
+	'kofi',
+	'lastfm',
+	'linkedin',
+	'mastodon',
+	'patreon',
+	// 'pixelfed',
+	'phone',
+	'pretendo',
+	'reddit',
+	'signal',
+	'spotify',
+	'startgg',
+	'steam',
+	'threads',
+	'twitch',
+	'twitter',
+	'webpals',
+	'youtube'
+] as const;
+
+export type ConnectionProvider = (typeof connectionProviderKeys)[number];
 
 export const connectionProviders: Record<
 	ConnectionProvider,
 	{
 		name: string;
-		icon: typeof Globe | typeof DiscordLogo;
-		iconProps?: IconContextProps['values'];
+		icon: Component<IconComponentProps>;
+		iconProps?: IconComponentProps;
 		identifiablePattern?: RegExp; // the regex pattern to match the identifiable part of the connection
 		identifiablePlaceholder?: string; // the placeholder for the identifiable input
 		identifiablePrefix?: string;

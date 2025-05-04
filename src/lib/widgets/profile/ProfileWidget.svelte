@@ -1,49 +1,25 @@
 <script lang="ts">
+	import AddFriend from './AddFriendButton.svelte';
 	import { type Profile } from '$lib/db/types';
 	import { formatDate, formatRelativeTime } from '$lib/helpers/text';
-	import {
-		PencilSimple,
-		Cake,
-		Circle,
-		CircleDashed,
-		Prohibit,
-		UserPlus,
-		DotsThree,
-		Clock,
-		Users,
-		WarningCircle
-	} from 'phosphor-svelte';
+	import { Cake, Circle, CircleDashed, Prohibit, DotsThree, WarningCircle } from 'phosphor-svelte';
 	import BaseWidget from '../BaseWidget.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import { enhance } from '$app/forms';
-	import InlineTextInput from '$lib/components/InlineTextInput.svelte';
 	import { HEARTBEAT_INTERVAL } from '$lib/helpers/constants';
 	import { page } from '$app/state';
 	import Avatar from '$lib/components/Avatar.svelte';
 	import { scale, slide } from 'svelte/transition';
-	import { RelationshipTypes } from '$lib/db/schema/profiles';
-	import Spinner from '$icons/Spinner.svelte';
 
 	let { profile, editing }: { profile: Profile; editing: boolean } = $props();
 	let avatarInputEl = $state<HTMLInputElement>();
 	let temporaryAvatarSrc = $state<string>();
 
 	let error = $state<string>();
-	let isLoading = $state(false);
-
-	let modalOpened = $state(false);
-	let addFriendState = $state<null | 'loading' | 'error'>(null);
 
 	// If the user set their status to something other than offline AND that the last heartbeat was within the IN (plus a second for safety)
 	let isAlive = $derived(
 		profile.status !== 'offline' &&
 			profile.lastHeartbeat.getTime() > Date.now() - HEARTBEAT_INTERVAL + 1000
-	);
-
-	let relationship = $derived(
-		page.data.currentProfile?.initiatedRelationships.find(
-			(relationship) => relationship.recipientId === profile.id
-		)?.status
 	);
 </script>
 
@@ -85,8 +61,8 @@
 	</div>
 {/snippet}
 
-<BaseWidget bind:isWidgetEditing={modalOpened} editingMode={editing}>
-	{#snippet editMenu()}
+<BaseWidget editingMode={editing}>
+	<!-- {#snippet editMenu()}
 		<form
 			use:enhance={() => {
 				error = '';
@@ -184,7 +160,7 @@
 				{/if}
 			</Button>
 		</form>
-	{/snippet}
+	{/snippet} -->
 
 	<div class="top-part">
 		<div class="important-stuff">
@@ -208,43 +184,9 @@
 	{#if page.data.currentProfile}
 		<div class="buttons-wrapper">
 			<div class="buttons">
-				<!-- TODO: adding friends, more options menu -->
+				<!-- TODO: more options menu -->
 				<Button icon={DotsThree} iconProps={{ weight: 'regular' }} variant="secondary" />
-				{#if relationship === RelationshipTypes.FriendPending}
-					<!-- TODO: remove request -->
-					<Button icon={Clock} variant="secondary" disabled>Requested</Button>
-				{:else if relationship === RelationshipTypes.Friend}
-					<!-- TODO: unfriend -->
-					<Button icon={Users} variant="secondary">Friends</Button>
-				{:else if relationship === RelationshipTypes.Blocked}
-					<!-- TODO: unblock -->
-					<Button icon={Prohibit} variant="secondary">Blocked</Button>
-				{:else}
-					<form
-						use:enhance={() => {
-							addFriendState = 'loading';
-							return async ({ result, update }) => {
-								await update();
-								if (result.type === 'error' || result.type === 'failure') {
-									addFriendState = 'error';
-								}
-								addFriendState = null;
-							};
-						}}
-						style="display: contents;"
-						action="/api/relationships?/sendFriendRequest&id={profile.id}"
-						method="post"
-					>
-						<Button
-							type="submit"
-							icon={UserPlus}
-							loading={addFriendState === 'loading'}
-							disabled={page.data.currentProfile.id === profile.id || addFriendState !== null}
-						>
-							Add friend
-						</Button>
-					</form>
-				{/if}
+				<AddFriend {profile} />
 			</div>
 			{#if page.form?.message}
 				<div transition:scale class="error">
@@ -256,49 +198,49 @@
 </BaseWidget>
 
 <style lang="scss">
-	.update-profile {
-		display: flex;
-		flex-direction: column;
-		gap: var(--base-gap);
+	// .update-profile {
+	// 	display: flex;
+	// 	flex-direction: column;
+	// 	gap: var(--base-gap);
 
-		input#avatar {
-			position: fixed;
-			width: 1px;
-			height: 1px;
-			top: -10px;
-			left: -10px;
+	// 	input#avatar {
+	// 		position: fixed;
+	// 		width: 1px;
+	// 		height: 1px;
+	// 		top: -10px;
+	// 		left: -10px;
 
-			&:active + label .hover-text,
-			&:focus-visible + label .hover-text {
-				display: grid;
-				place-items: center;
-			}
-		}
+	// 		&:active + label .hover-text,
+	// 		&:focus-visible + label .hover-text {
+	// 			display: grid;
+	// 			place-items: center;
+	// 		}
+	// 	}
 
-		label[for='avatar'] {
-			cursor: pointer;
-			border-radius: var(--avatar-border-radius);
-			position: relative;
-			flex-shrink: 0;
+	// 	label[for='avatar'] {
+	// 		cursor: pointer;
+	// 		border-radius: var(--avatar-border-radius);
+	// 		position: relative;
+	// 		flex-shrink: 0;
 
-			&:hover .hover-text,
-			&:active .hover-text,
-			&:focus-visible .hover-text {
-				display: grid;
-				place-items: center;
-			}
+	// 		&:hover .hover-text,
+	// 		&:active .hover-text,
+	// 		&:focus-visible .hover-text {
+	// 			display: grid;
+	// 			place-items: center;
+	// 		}
 
-			.hover-text {
-				display: none;
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				background-color: rgba(0, 0, 0, 0.6);
-				color: white;
-				border-radius: var(--avatar-border-radius);
-			}
-		}
-	}
+	// 		.hover-text {
+	// 			display: none;
+	// 			position: absolute;
+	// 			width: 100%;
+	// 			height: 100%;
+	// 			background-color: rgba(0, 0, 0, 0.6);
+	// 			color: white;
+	// 			border-radius: var(--avatar-border-radius);
+	// 		}
+	// 	}
+	// }
 
 	.top-part {
 		display: flex;

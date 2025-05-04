@@ -1,6 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from './$types';
-import { connectionProviders } from '$lib/widgets/connections';
+import { connectionProviders } from '$lib/widgets/connections/connection-providers';
 import { db } from '$lib/db';
 import { connections } from '$lib/db/schema/profiles';
 import { eq } from 'drizzle-orm';

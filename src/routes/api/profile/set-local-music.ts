@@ -5,7 +5,7 @@ import { db } from '$lib/db';
 import { profiles } from '$lib/db/schema/profiles';
 import { eq } from 'drizzle-orm';
 import { parseWebStream } from 'music-metadata';
-import type { MusicWidget } from '$lib/widgets/types';
+import type { MusicJSON } from '$lib/widgets/types';
 
 export async function setLocalMusic({
 	locals: { getCurrentProfile, supabase },
@@ -29,7 +29,7 @@ export async function setLocalMusic({
 
 	const musicWidget = currentProfile.widgets
 		.find((column) => column.some((w) => w.id === 'music'))
-		?.find((w) => w.id === 'music') as MusicWidget | undefined;
+		?.find((w) => w.id === 'music') as MusicJSON | undefined;
 
 	if (!musicWidget) {
 		return fail(400, {

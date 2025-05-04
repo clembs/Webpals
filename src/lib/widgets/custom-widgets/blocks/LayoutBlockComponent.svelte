@@ -1,6 +1,6 @@
 <script lang="ts">
 	import TextBlockComponent from './TextBlockComponent.svelte';
-	import type { LayoutBlock, CustomWidget } from '../types';
+	import type { LayoutBlock, CustomWidgetJSON } from '../types';
 	import KeyValueBlockComponent from './KeyValueBlockComponent.svelte';
 	import LayoutBlockComponent from './LayoutBlockComponent.svelte';
 
@@ -14,7 +14,7 @@
 	}: {
 		edit?: boolean;
 		user: { id: string };
-		block: CustomWidget | LayoutBlock;
+		block: CustomWidgetJSON | LayoutBlock;
 		basePath?: string;
 	} = $props();
 
