@@ -30,7 +30,7 @@ export const plainTheme: Theme = {
 		border: {
 			radius: 1.5,
 			width: 1,
-			color: '#999'
+			color: '#999999'
 		},
 		shadow: {
 			color: '#19191907',
