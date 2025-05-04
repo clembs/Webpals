@@ -2,8 +2,9 @@
 	import type { Component } from 'svelte';
 	import Buttons from './Buttons.svelte';
 	import Typography from './Typography.svelte';
+	import TextInputs from './TextInputs.svelte';
 
-	const components: Record<string, Component> = { Buttons, Typography };
+	const components: Record<string, Component> = { Buttons, Typography, 'Text inputs': TextInputs };
 
 	let selected = $state(Object.keys(components)[0]);
 	let CurrentComponent = $derived(components[selected]);
@@ -22,8 +23,12 @@
 </main>
 
 <style lang="scss">
+	@use '../../styles/mixins.scss';
+
 	main {
-		margin: var(--base-gap);
+		margin: calc(var(--base-gap) * 1.5);
+		padding: calc(var(--base-padding) * 1.5);
+		@include mixins.card;
 	}
 
 	select {
@@ -35,7 +40,7 @@
 	.current-component-wrapper {
 		display: flex;
 		flex-direction: column;
-		gap: calc(var(--base-gap) * 1.25);
+		gap: calc(var(--base-gap) * 2.5);
 
 		:global {
 			section h3 {
