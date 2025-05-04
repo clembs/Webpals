@@ -26,7 +26,6 @@
 
 	{#each dialogPortal.history as dialog, i}
 		<!-- svelte-ignore a11y_autofocus -->
-		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<div
 			role="dialog"
@@ -36,12 +35,14 @@
 			style:--nested-level={dialogPortal.history.length - i}
 			autofocus
 		>
-			{@render dialog.component(dialog.props)}
+			{@render dialog.snippet(dialog.snippetProps)}
 		</div>
 	{/each}
 </dialog-portal>
 
 <style lang="scss">
+	@use '../../../styles/mixins.scss';
+
 	.dialog-backdrop {
 		position: fixed;
 		top: 0;
@@ -64,6 +65,8 @@
 	}
 
 	.dialog-window {
+		@include mixins.card;
+
 		position: fixed;
 		// ok this is a bit hacky but basically
 		// "inset: 0; margin: auto" centers the thing without resorting to
@@ -84,13 +87,8 @@
 			opacity 200ms;
 		z-index: 1001;
 
-		background-color: var(--widgets-background-color);
-		border-radius: var(--widgets-border-base-radius);
-		border: var(--widgets-border-width) solid var(--widgets-border-color);
-		box-shadow: var(--widgets-box-shadow-x) var(--widgets-box-shadow-y)
-			var(--widgets-box-shadow-blur) var(--widgets-box-shadow-spread)
-			var(--widgets-box-shadow-color);
-		padding: var(--base-padding);
+		padding: calc(var(--base-padding) * 1.5);
+		gap: calc(var(--base-gap) * 1.5);
 
 		&[inert] {
 			pointer-events: none;
@@ -105,7 +103,7 @@
 		& :global(> form) {
 			display: flex;
 			flex-direction: column;
-			gap: var(--base-gap);
+			gap: calc(var(--base-gap) * 1.5);
 
 			:global(h2) {
 				font-size: 1.5rem;

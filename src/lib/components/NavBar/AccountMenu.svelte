@@ -8,7 +8,7 @@
 	import DiscordLogo from '$icons/brands/DiscordLogo.svelte';
 	import Webpals from '$icons/Webpals.svelte';
 	import type { CurrentProfile } from '$lib/db/types';
-	import { dialogPortal } from '$lib/portals/dialog.svelte';
+	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
 	import { ArrowSquareOut, DoorOpen, Gear, UserSquare } from 'phosphor-svelte';
 	import { fly } from 'svelte/transition';
 	import WebpalsThumbup from '$icons/WebpalsThumbup.svelte';

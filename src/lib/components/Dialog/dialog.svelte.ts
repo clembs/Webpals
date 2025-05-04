@@ -1,8 +1,8 @@
 import type { Snippet } from 'svelte';
 
 type DialogStateSnapshot = {
-	component: Snippet<[unknown]>;
-	props?: Record<string, unknown>;
+	snippet: Snippet<[unknown]>;
+	snippetProps?: Record<string, unknown>;
 	options: {
 		allowClickOutside: boolean;
 	};
@@ -25,15 +25,17 @@ class DialogPortal {
 	}
 
 	openDialog(
-		component: Snippet,
+		snippet: Snippet,
 		props?: Record<string, unknown>,
 		options: DialogStateSnapshot['options'] = { allowClickOutside: true }
 	) {
-		this.current = { component, props, options };
+		this.current = { snippet: snippet, snippetProps: props, options };
 		this.history = [...this.history, this.current];
+		document.body.style.overflow = 'hidden';
 	}
 
 	closeDialog() {
+		document.body.style.overflow = '';
 		this.history = this.history.slice(0, -1);
 		this.previous = this.current;
 		this.current = this.history.at(-1);

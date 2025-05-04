@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { dialogPortal } from '$lib/portals/dialog.svelte';
+	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
 	import { ArrowsOutSimple, CaretLeft } from 'phosphor-svelte';
 	import { type Snippet } from 'svelte';
 

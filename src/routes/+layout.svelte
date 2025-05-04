@@ -3,7 +3,7 @@
 	import '../styles/global.scss';
 	import { browser } from '$app/environment';
 	import { HEARTBEAT_INTERVAL } from '$lib/helpers/constants';
-	import DialogPortal from '$lib/portals/DialogPortal.svelte';
+	import DialogPortal from '$lib/components/Dialog/DialogPortal.svelte';
 	import { ProgressBar } from '@prgm/sveltekit-progress-bar';
 
 	let { data, children } = $props();
