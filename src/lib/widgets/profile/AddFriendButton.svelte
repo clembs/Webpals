@@ -16,25 +16,27 @@
 	);
 </script>
 
+<!-- TODO: Add toast messages -->
+
 {#if relationship === RelationshipTypes.FriendPending}
 	<!-- TODO: remove request -->
-	<Button icon={Clock} variant="secondary" disabled>Requested</Button>
+	<Button style="flex: 1;" icon={Clock} variant="secondary" disabled>Requested</Button>
 {:else if relationship === RelationshipTypes.Friend}
 	<!-- TODO: unfriend -->
-	<Button icon={Users} variant="secondary">Friends</Button>
+	<Button style="flex: 1;" icon={Users} variant="secondary">Friends</Button>
 {:else if relationship === RelationshipTypes.Blocked}
 	<!-- TODO: unblock -->
-	<Button icon={Prohibit} variant="secondary">Blocked</Button>
+	<Button style="flex: 1;" icon={Prohibit} variant="secondary">Blocked</Button>
 {:else}
 	<form
 		use:enhance={() => {
 			addFriendState = 'loading';
 			return async ({ result, update }) => {
-				await update();
 				if (result.type === 'error' || result.type === 'failure') {
 					addFriendState = 'error';
 				}
 				addFriendState = null;
+				await update();
 			};
 		}}
 		style="display: contents;"
@@ -43,6 +45,7 @@
 	>
 		<Button
 			type="submit"
+			style="flex: 1;"
 			icon={UserPlus}
 			loading={addFriendState === 'loading'}
 			disabled={(page.data.currentProfile && page.data.currentProfile.id === profile.id) ||

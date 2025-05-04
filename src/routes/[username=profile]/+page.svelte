@@ -58,7 +58,7 @@
 	{#if WidgetComponent}
 		<WidgetComponent profile={data.profile} {editing} widget={widget as AnyWidgetJSON} />
 	{:else if editing}
-		<BaseWidget editingMode={editing} {widget}>
+		<BaseWidget {editing} {widget}>
 			I didn't code this widget in yet (type {widget.id}).<br />
 			Other users won't see this widget, but once it's coded it'll render properly!
 		</BaseWidget>

@@ -1,14 +1,15 @@
 <script lang="ts">
 	import AddFriend from './AddFriendButton.svelte';
 	import { type Profile } from '$lib/db/types';
-	import { formatDate, formatRelativeTime } from '$lib/helpers/text';
-	import { Cake, Circle, CircleDashed, Prohibit, DotsThree, WarningCircle } from 'phosphor-svelte';
+	import { formatDate } from '$lib/helpers/text';
+	import { Cake, Circle, CircleDashed, Prohibit, DotsThree } from 'phosphor-svelte';
 	import BaseWidget from '../BaseWidget.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { HEARTBEAT_INTERVAL } from '$lib/helpers/constants';
 	import { page } from '$app/state';
 	import Avatar from '$lib/components/Avatar.svelte';
-	import { scale, slide } from 'svelte/transition';
+	import InlineTextInput from '$lib/components/InlineTextInput.svelte';
+	import { enhance } from '$app/forms';
 
 	let { profile, editing }: { profile: Profile; editing: boolean } = $props();
 	let avatarInputEl = $state<HTMLInputElement>();
@@ -21,47 +22,68 @@
 		profile.status !== 'offline' &&
 			profile.lastHeartbeat.getTime() > Date.now() - HEARTBEAT_INTERVAL + 1000
 	);
+
+	let displayNameValue = $state(profile.displayName || profile.username);
+	let pronounsValue = $state(profile.pronouns || '');
+	let formEl = $state<HTMLFormElement>();
 </script>
 
-{#snippet nonInteractive()}
-	<div class="less-important-stuff">
-		<p class="line">
-			{#if profile.status === 'online' && isAlive}
-				<Circle color="var(--color-success)" />
-				Currently <span class="darken"> online </span>
-			{:else if profile.status === 'dnd' && isAlive}
-				<Prohibit color="var(--color-urgent)" />
-				Currently <span class="darken"> busy </span>
+{#snippet topProfileContents()}
+	<div class="top-profile">
+		<div class="avatar-status">
+			<Avatar user={profile} />
+
+			<div class="status">
+				{#if profile.status === 'online' && isAlive}
+					<Circle color="var(--color-success)" />
+				{:else if profile.status === 'dnd' && isAlive}
+					<Prohibit color="var(--color-urgent)" />
+				{:else}
+					<CircleDashed />
+				{/if}
+			</div>
+		</div>
+
+		<div class="text-bits">
+			{#if editing}
+				<InlineTextInput
+					name="display-name"
+					bind:value={displayNameValue}
+					class="heading-2"
+					maxlength={32}
+					onblur={() => formEl?.requestSubmit()}
+				/>
 			{:else}
-				<CircleDashed />
-				Last seen
-				<span class="darken">
-					<!-- if the last heartbeat was less than a day ago, use relative time -->
-					{#if profile.lastHeartbeat.getTime() > Date.now() - 24 * 60 * 60 * 1000}
-						{formatRelativeTime(profile.lastHeartbeat, 'en-US')}
-					{:else}
-						on {formatDate(profile.lastHeartbeat, 'en-US')}
-					{/if}
-				</span>
+				<h2>
+					{profile.displayName || profile.username}
+				</h2>
 			{/if}
-		</p>
-		<p class="line">
-			<Cake />
-			Joined on
-			<span class="darken">
-				{formatDate(profile.createdAt, 'en-US')}
-			</span>
-		</p>
-		{#if error}
-			<p class="line error" transition:slide>
-				<WarningCircle />
-				{error}
+			<p class="username-pronouns">
+				@{profile.username}
+
+				{#if profile.pronouns}
+					<span class="bullet"> &bull; </span>
+
+					{#if editing}
+						<InlineTextInput
+							name="pronouns"
+							bind:value={pronounsValue}
+							class="paragraph"
+							maxlength={20}
+							onblur={() => formEl?.requestSubmit()}
+						/>
+					{:else}
+						<span class="pronouns">
+							{profile.pronouns}
+						</span>
+					{/if}
+				{/if}
 			</p>
-		{/if}
+		</div>
 	</div>
 {/snippet}
 
-<BaseWidget editingMode={editing}>
+<BaseWidget {editing}>
 	<!-- {#snippet editMenu()}
 		<form
 			use:enhance={() => {
@@ -120,171 +142,119 @@
 					</span>
 					<Avatar user={profile} src={temporaryAvatarSrc} />
 				</label>
-				<div class="text-bits">
-					<InlineTextInput
-						type="text"
-						id="display-name"
-						name="display-name"
-						placeholder="Display name"
-						value={profile.displayName || profile.username}
-						font-size="1.75rem"
-						autofocus
-						required
-					/>
-					<p class="username">
-						<a href="/settings">
-							@{profile.username}
-						</a>
-
-						&bull;
-
-						<InlineTextInput
-							type="text"
-							id="pronouns"
-							name="pronouns"
-							placeholder="Set your pronouns"
-							value={profile.pronouns || ''}
-							required={false}
-						/>
-					</p>
-				</div>
-			</div>
-
-			{@render nonInteractive()}
-
-			<Button loading={isLoading} type="submit" disabled={isLoading}>
-				{#if isLoading}
-					Saving...
-				{:else}
-					Save
-				{/if}
-			</Button>
 		</form>
 	{/snippet} -->
+	<div class="profile-info">
+		{#if editing}
+			<form
+				use:enhance={() => {
+					if (
+						profile.pronouns === pronounsValue &&
+						(profile.displayName ?? profile.username) === displayNameValue
+					) {
+						console.log('no updates');
+						return;
+					}
 
-	<div class="top-part">
-		<div class="important-stuff">
-			<Avatar user={profile} />
-			<div class="text-bits">
-				<h1>{profile.displayName || profile.username}</h1>
-				<p class="username">
-					@{profile.username}
+					// TODO: add toast messages for success/error
 
-					{#if profile.pronouns}
-						&bull;
-						{profile.pronouns}
-					{/if}
-				</p>
+					return async ({ result, update }) => {
+						console.log(result);
+
+						await update({
+							reset: false,
+							invalidateAll: true
+						});
+					};
+				}}
+				action="/api/profile?/editProfile"
+				method="post"
+				enctype="multipart/form-data"
+				bind:this={formEl}
+			>
+				{@render topProfileContents()}
+			</form>
+		{:else}
+			{@render topProfileContents()}
+		{/if}
+
+		<div class="stats">
+			<div class="stat">
+				<Cake />
+
+				<div class="text">
+					Joined
+
+					<span class="darken">
+						{formatDate(profile.createdAt, 'en-US')}
+					</span>
+				</div>
 			</div>
 		</div>
 	</div>
 
-	{@render nonInteractive()}
-
 	{#if page.data.currentProfile}
-		<div class="buttons-wrapper">
-			<div class="buttons">
-				<!-- TODO: more options menu -->
-				<Button icon={DotsThree} iconProps={{ weight: 'regular' }} variant="secondary" />
-				<AddFriend {profile} />
-			</div>
-			{#if page.form?.message}
-				<div transition:scale class="error">
-					{page.form.message}
-				</div>
-			{/if}
+		<div class="actions">
+			<!-- TODO: more options menu -->
+			<Button icon={DotsThree} iconProps={{ weight: 'regular' }} variant="secondary" />
+
+			<AddFriend {profile} />
 		</div>
 	{/if}
 </BaseWidget>
 
 <style lang="scss">
-	// .update-profile {
-	// 	display: flex;
-	// 	flex-direction: column;
-	// 	gap: var(--base-gap);
-
-	// 	input#avatar {
-	// 		position: fixed;
-	// 		width: 1px;
-	// 		height: 1px;
-	// 		top: -10px;
-	// 		left: -10px;
-
-	// 		&:active + label .hover-text,
-	// 		&:focus-visible + label .hover-text {
-	// 			display: grid;
-	// 			place-items: center;
-	// 		}
-	// 	}
-
-	// 	label[for='avatar'] {
-	// 		cursor: pointer;
-	// 		border-radius: var(--avatar-border-radius);
-	// 		position: relative;
-	// 		flex-shrink: 0;
-
-	// 		&:hover .hover-text,
-	// 		&:active .hover-text,
-	// 		&:focus-visible .hover-text {
-	// 			display: grid;
-	// 			place-items: center;
-	// 		}
-
-	// 		.hover-text {
-	// 			display: none;
-	// 			position: absolute;
-	// 			width: 100%;
-	// 			height: 100%;
-	// 			background-color: rgba(0, 0, 0, 0.6);
-	// 			color: white;
-	// 			border-radius: var(--avatar-border-radius);
-	// 		}
-	// 	}
-	// }
-
-	.top-part {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
+	form {
+		display: contents;
 	}
 
-	.buttons {
+	.profile-info {
 		display: flex;
-		gap: calc(var(--base-gap) * 0.5);
+		flex-direction: column;
+		gap: calc(var(--base-gap) * 0.75);
 	}
 
-	.important-stuff {
+	.top-profile {
 		display: flex;
 		gap: var(--base-gap);
 		align-items: center;
 
+		.avatar-status {
+			position: relative;
+
+			.status {
+				position: absolute;
+				bottom: 0;
+				right: 0;
+			}
+		}
+
 		.text-bits {
 			display: flex;
 			flex-direction: column;
+		}
+	}
 
-			h1 {
-				font-size: 1.75rem;
-			}
+	.stats {
+		display: flex;
+		flex-direction: column;
+		gap: var(--base-gap);
 
-			.username {
-				font-size: 1rem;
+		.stat {
+			display: flex;
+			gap: calc(var(--base-gap) * 0.5);
+			align-items: center;
+
+			.text {
+				.darken {
+					color: var(--color-heading);
+				}
 			}
 		}
 	}
 
-	.less-important-stuff {
+	.actions {
 		display: flex;
-		flex-direction: column;
-		gap: calc(var(--base-gap) / 2);
-
-		.line {
-			display: flex;
-			gap: calc(var(--base-gap) / 4);
-			align-items: center;
-
-			&.error {
-				color: var(--color-urgent);
-			}
-		}
+		gap: calc(var(--base-gap) * 0.5);
 	}
 </style>
