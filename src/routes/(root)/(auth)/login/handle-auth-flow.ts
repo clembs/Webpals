@@ -3,8 +3,9 @@ import type { RequestEvent } from './$types';
 import { db } from '$lib/db';
 import { eq, or, sql } from 'drizzle-orm';
 import { EMAIL_REGEX } from 'valibot';
-import { profiles, USERNAME_REGEX } from '$lib/db/schema/profiles';
+import { profiles } from '$lib/db/schema/profiles';
 import { authUsers } from 'drizzle-orm/supabase';
+import { USERNAME_REGEX } from '$lib/helpers/constants';
 
 // This function:
 // Checks if the user exists (if not, onboard them)

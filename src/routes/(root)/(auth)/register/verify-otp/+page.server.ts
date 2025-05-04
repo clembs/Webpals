@@ -5,9 +5,10 @@ import { db } from '$lib/db';
 import { _getValidInviteCode } from '../verify-invite-code/+page.server';
 import { inviteCodes } from '$lib/db/schema/auth';
 import { count, eq } from 'drizzle-orm';
-import { profiles, USERNAME_REGEX } from '$lib/db/schema/profiles';
+import { profiles } from '$lib/db/schema/profiles';
 import { DISCORD_WEBHOOK_URL } from '$env/static/private';
 import { PUBLIC_STORAGE_BASE_URL } from '$env/static/public';
+import { USERNAME_REGEX } from '$lib/helpers/constants';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const username = url.searchParams.get('username')?.toString();

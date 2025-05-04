@@ -1,27 +1,28 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { replaceState } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
-	import { Envelope } from 'phosphor-svelte';
+	import { Numpad } from 'phosphor-svelte';
 
 	let { data: initialData, form } = $props();
+	let isLoading = $state(false);
 
 	// do that so you can bind the value to the input
 	let data = $state(initialData);
-
-	let isLoading = $state(false);
 </script>
 
-{#snippet emailIcon(size: number)}
-	<Envelope {size} weight="regular" />
+{#snippet numpadIcon(size: number)}
+	<Numpad {size} weight="regular" />
 {/snippet}
 
 <div class="header">
-	<div class="eyebrow">Create an account - Step 3/3</div>
-	<h1>Verify your email address</h1>
+	<div class="eyebrow">Create an account - Step 2/3</div>
+	<h1>Enter your invite code</h1>
 
-	<p>To combat spam and secure your account, your email address needs to be verified.</p>
+	<p>
+		Before Webpals releases, an invite code is required to register.<br />
+		Please enter the 5 characters-long code you were given.
+	</p>
 </div>
 
 <form
@@ -32,19 +33,17 @@
 			isLoading = false;
 		};
 	}}
-	action="?/validateEmail"
+	action="?/validateInviteCode"
 	method="post"
 >
 	<TextInput
-		name="email"
-		oninput={() => replaceState(`?username=${data.username}&email=${data.email}`, {})}
-		prefixIcon={emailIcon}
-		type="email"
-		label="Email address"
-		placeholder="clembs@clembs.com"
+		name="invite-code"
+		icon={numpadIcon}
+		label="Invite code"
+		minlength={5}
+		maxlength={5}
 		tabindex={1}
 		autofocus
-		bind:value={data.email}
 		error={form?.message}
 	/>
 
@@ -58,8 +57,8 @@
 			Back
 		</Button>
 
-		<Button loading={isLoading} type="submit" tabindex={2} disabled={isLoading}>
-			{isLoading ? 'Sending code...' : 'Send verification code'}
+		<Button disabled={isLoading} type="submit" tabindex={2}>
+			{isLoading ? 'Loading...' : 'Verify invite code'}
 		</Button>
 	</div>
 </form>
