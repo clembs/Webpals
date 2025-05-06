@@ -5,6 +5,7 @@
 	import { HEARTBEAT_INTERVAL } from '$lib/helpers/constants';
 	import DialogPortal from '$lib/components/Dialog/DialogPortal.svelte';
 	import { ProgressBar } from '@prgm/sveltekit-progress-bar';
+	import ToastPortal from '$lib/components/Toast/ToastPortal.svelte';
 
 	let { data, children } = $props();
 
@@ -28,6 +29,7 @@
 	<ProgressBar />
 
 	<DialogPortal />
+	<ToastPortal />
 
 	{@render children()}
 </IconContext>
