@@ -10,6 +10,7 @@
 	import Avatar from '$lib/components/Avatar.svelte';
 	import InlineTextInput from '$lib/components/InlineTextInput.svelte';
 	import { enhance } from '$app/forms';
+	import { toaster } from '$lib/components/Toast/toast.svelte';
 
 	let { profile, editing }: { profile: Profile; editing: boolean } = $props();
 	let avatarInputEl = $state<HTMLInputElement>();
@@ -58,7 +59,7 @@
 					{profile.displayName || profile.username}
 				</h2>
 			{/if}
-			<p class="username-pronouns">
+			<div class="username-pronouns">
 				@{profile.username}
 
 				{#if profile.pronouns}
@@ -78,7 +79,7 @@
 						</span>
 					{/if}
 				{/if}
-			</p>
+			</div>
 		</div>
 	</div>
 {/snippet}
@@ -156,10 +157,14 @@
 						return;
 					}
 
-					// TODO: add toast messages for success/error
+					const toast = toaster.load('Updating profile...');
 
 					return async ({ result, update }) => {
-						console.log(result);
+						if (result.type === 'success') {
+							toast.success('Profile updated!');
+						} else {
+							toast.error('Error updating your profile.');
+						}
 
 						await update({
 							reset: false,
