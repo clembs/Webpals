@@ -23,7 +23,7 @@
 		return {
 			duration: 200,
 			easing: quadInOut,
-			css(t, u) {
+			css(t) {
 				return `
   				transform: scale(${0.75 + 0.25 * t});
           opacity: ${t}
@@ -31,10 +31,18 @@
 			}
 		};
 	}
+
+	function pauseAllToasts() {
+		toaster.toasts.forEach((t) => t.options.autoDismiss && t.stopAutoDismiss());
+	}
+
+	function resumeAllToasts() {
+		toaster.toasts.forEach((t) => t.options.autoDismiss && t.startAutoDismiss(2000));
+	}
 </script>
 
 <toast-portal role="alert" aria-live="polite" aria-relevant="additions text">
-	<ol bind:this={toastsListEl}>
+	<ol bind:this={toastsListEl} onmouseenter={pauseAllToasts} onmouseleave={resumeAllToasts}>
 		{#each toaster.toasts as toast (toast.id)}
 			<li
 				class="toast"

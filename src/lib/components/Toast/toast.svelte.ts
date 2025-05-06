@@ -19,22 +19,23 @@ type ToastContent = ToastSnippetContent | ToastTextContent;
 
 type ToastOptions = {
 	variant?: 'primary' | 'success' | 'urgent';
-	autodismiss?: boolean;
+	autoDismiss?: boolean;
 };
 
 const defaultToastOptions: ToastOptions = {
-	autodismiss: true,
+	autoDismiss: true,
 	variant: 'primary'
 };
 
 class Toast {
 	id: number;
-	icon = $state<Component<IconComponentProps>>();
+	icon? = $state<Component<IconComponentProps>>();
 	title? = $state<string>();
 	subtitle? = $state<string>();
-	snippet?: Snippet<[unknown]>;
-	snippetProps?: Record<string, unknown>;
+	snippet? = $state<Snippet<[unknown]>>();
+	snippetProps? = $state<Record<string, unknown>>();
 	options = $state(defaultToastOptions);
+	#dismissTimeout?: number | NodeJS.Timer;
 
 	#parseContentAndUpdate(content: ToastContent) {
 		if (typeof content === 'string') {
@@ -54,60 +55,95 @@ class Toast {
 		this.id = id;
 		this.#parseContentAndUpdate(content);
 		this.options = { ...this.options, ...options };
+
+		this.startAutoDismiss();
 	}
 
-	success(content: ToastTextContent) {
-		this.#parseContentAndUpdate(content);
-		this.icon = CheckCircle;
-		this.options.variant = 'success';
-
-		if (this.options.autodismiss) {
-			setTimeout(() => {
-				this.dismiss();
-			}, 2000);
-		}
-	}
-
-	error(content: ToastTextContent) {
-		this.#parseContentAndUpdate(content);
-		this.icon = WarningCircle;
-		this.options.variant = 'urgent';
-
-		if (this.options.autodismiss) {
-			setTimeout(() => {
-				this.dismiss();
-			}, 2000);
-		}
-	}
-
+	/**
+	 * Update the toast's contents
+	 * @param content The new contents of the toast
+	 */
 	update(content: ToastContent) {
 		this.#parseContentAndUpdate(content);
 	}
 
+	/**
+	 * Update the toast with a success state & dismiss it
+	 * @param content The new contents of the toast
+	 */
+	success(content: ToastTextContent) {
+		this.#parseContentAndUpdate(content);
+		this.icon = CheckCircle;
+		this.options.variant = 'success';
+		this.options.autoDismiss = true;
+
+		this.startAutoDismiss(2000);
+	}
+
+	/**
+	 * Update the toast with an error state & dismiss it
+	 * @param content The new contents of the toast
+	 */
+	error(content: ToastTextContent) {
+		this.#parseContentAndUpdate(content);
+		this.icon = WarningCircle;
+		this.options.variant = 'urgent';
+		this.options.autoDismiss = true;
+
+		this.startAutoDismiss(2000);
+	}
+
+	/**
+	 * Programmatically dismiss the toast
+	 */
 	dismiss() {
 		toaster.dismiss(this.id);
+	}
+
+	/**
+	 * Start/resume the autodismiss behavior of the toast. Respects the `options.autoDismiss` option.
+	 * @param timeout In how much time the toast should be dismissed (in milliseconds)
+	 */
+	startAutoDismiss(timeout = 3000) {
+		if (!this.options.autoDismiss) return;
+
+		this.#dismissTimeout = setTimeout(() => {
+			this.dismiss();
+		}, timeout);
+	}
+
+	/**
+	 * Stop/pause the toast from being automatically dismissed
+	 */
+	stopAutoDismiss() {
+		clearTimeout(this.#dismissTimeout);
+		this.#dismissTimeout = undefined;
 	}
 }
 
 class ToastPortal {
 	toasts = $state<Toast[]>([]);
 
-	toast(content: string | ToastContent, options?: ToastOptions) {
+	/**
+	 * Spawns a toast
+	 * @param content The toast's message or content
+	 * @param options Behavioral and appearance options
+	 */
+	toast(content: ToastContent, options?: ToastOptions) {
 		const previousToast = this.toasts.at(-1);
 		const newToastId = previousToast ? previousToast.id + 1 : 0;
 
 		const newToast = new Toast(newToastId, content, options);
 		this.toasts = [...this.toasts, newToast];
 
-		if (newToast.options.autodismiss) {
-			setTimeout(() => {
-				newToast.dismiss();
-			}, 3000);
-		}
-
 		return newToast;
 	}
 
+	/**
+	 * Spawns a success toast
+	 * @param content The toast's message or content
+	 * @param options Behavioral options
+	 */
 	success(content: ToastTextContent, options?: ToastOptions) {
 		options = { ...options, variant: 'success' };
 
@@ -124,8 +160,34 @@ class ToastPortal {
 		);
 	}
 
+	/**
+	 * Spawns an error toast
+	 * @param content The toast's message or content
+	 * @param options Behavioral options
+	 */
+	error(content: ToastTextContent, options?: ToastOptions) {
+		options = { ...options, variant: 'urgent' };
+
+		return this.toast(
+			{
+				...(typeof content === 'object'
+					? content
+					: {
+							title: content
+						}),
+				icon: WarningCircle
+			},
+			options
+		);
+	}
+
+	/**
+	 * Spawns a toast with a spinner that does not auto-dismiss
+	 * @param content The toast's message or content
+	 * @param options Behavioral and appearance options
+	 */
 	load(content: ToastTextContent, options?: ToastOptions) {
-		options = { ...options, autodismiss: false };
+		options = { ...options, autoDismiss: false };
 
 		return this.toast(
 			{
@@ -140,6 +202,10 @@ class ToastPortal {
 		);
 	}
 
+	/**
+	 * Programmatically dismiss a toast using its ID
+	 * @param toastId The ID of the toast you wish to dismiss
+	 */
 	dismiss(toastId: number) {
 		this.toasts.splice(
 			this.toasts.findIndex(({ id }) => id === toastId),
