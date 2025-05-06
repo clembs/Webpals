@@ -1,5 +1,5 @@
 import Spinner from '$icons/Spinner.svelte';
-import { CheckCircle, type IconComponentProps } from 'phosphor-svelte';
+import { CheckCircle, WarningCircle, type IconComponentProps } from 'phosphor-svelte';
 import type { Component, Snippet } from 'svelte';
 
 type ToastSnippetContent = {
@@ -56,17 +56,31 @@ class Toast {
 		this.options = { ...this.options, ...options };
 	}
 
-	success(content: ToastTextContent | string) {
+	success(content: ToastTextContent) {
 		this.#parseContentAndUpdate(content);
 		this.icon = CheckCircle;
 		this.options.variant = 'success';
 
-		setTimeout(() => {
-			this.dismiss();
-		}, 2000);
+		if (this.options.autodismiss) {
+			setTimeout(() => {
+				this.dismiss();
+			}, 2000);
+		}
 	}
 
-	update(content: ToastContent | string) {
+	error(content: ToastTextContent) {
+		this.#parseContentAndUpdate(content);
+		this.icon = WarningCircle;
+		this.options.variant = 'urgent';
+
+		if (this.options.autodismiss) {
+			setTimeout(() => {
+				this.dismiss();
+			}, 2000);
+		}
+	}
+
+	update(content: ToastContent) {
 		this.#parseContentAndUpdate(content);
 	}
 
