@@ -48,7 +48,7 @@
 				class="toast"
 				data-variant={toast.options.variant}
 				data-toast-id={toast.id}
-				in:fly={{ x: 400 }}
+				in:fly={{ x: 400, duration: 150 }}
 				out:exitAndSlideItemsUp
 			>
 				{#if toast.title}
