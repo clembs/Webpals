@@ -2,7 +2,16 @@
 	import AddFriend from './AddFriendButton.svelte';
 	import { type Profile } from '$lib/db/types';
 	import { formatDate } from '$lib/helpers/text';
-	import { Cake, Circle, CircleDashed, Prohibit, DotsThree } from 'phosphor-svelte';
+	import {
+		Cake,
+		Circle,
+		CircleDashed,
+		Prohibit,
+		DotsThree,
+		CopySimple,
+		Flag,
+		ShareFat
+	} from 'phosphor-svelte';
 	import BaseWidget from '../BaseWidget.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { HEARTBEAT_INTERVAL } from '$lib/helpers/constants';
@@ -11,6 +20,9 @@
 	import InlineTextInput from '$lib/components/InlineTextInput.svelte';
 	import { enhance } from '$app/forms';
 	import { toaster } from '$lib/components/Toast/toast.svelte';
+	import Dropdown from '$lib/components/Dropdown/Dropdown.svelte';
+	import DropdownItem from '$lib/components/Dropdown/DropdownItem.svelte';
+	import { DropdownMenu } from 'bits-ui';
 
 	let { profile, editing }: { profile: Profile; editing: boolean } = $props();
 	let avatarInputEl = $state<HTMLInputElement>();
@@ -153,7 +165,6 @@
 						profile.pronouns === pronounsValue &&
 						(profile.displayName ?? profile.username) === displayNameValue
 					) {
-						console.log('no updates');
 						return;
 					}
 
@@ -200,8 +211,51 @@
 
 	{#if page.data.currentProfile}
 		<div class="actions">
-			<!-- TODO: more options menu -->
-			<Button icon={DotsThree} iconProps={{ weight: 'regular' }} variant="secondary" />
+			<Dropdown>
+				{#snippet trigger({ props })}
+					<Button
+						icon={DotsThree}
+						iconProps={{ weight: 'regular' }}
+						variant="secondary"
+						aria-label="More actions"
+						{...props}
+					/>
+				{/snippet}
+
+				<DropdownMenu.Group aria-label="User actions">
+					<DropdownItem
+						icon={ShareFat}
+						iconProps={{ weight: 'regular' }}
+						onSelect={async () => {
+							const profileUrl = `${page.url.origin}/${profile.username}`;
+
+							if ('canShare' in navigator && navigator.canShare()) {
+								await navigator.share({
+									title: `Come check @${profile.username}'s Webpals profile!`,
+									url: profileUrl
+								});
+							} else {
+								await navigator.clipboard.writeText(profileUrl);
+								toaster.success('Copied profile URL to clipboard!');
+							}
+						}}
+					>
+						Share
+					</DropdownItem>
+					<DropdownItem
+						icon={CopySimple}
+						iconProps={{ weight: 'regular' }}
+						onSelect={async () => {
+							await navigator.clipboard.writeText(profile.id);
+							toaster.success('Copied user ID to clipboard!');
+						}}
+					>
+						Copy user ID
+					</DropdownItem>
+					<!-- TODO: implement user reporting -->
+					<DropdownItem variant="urgent" icon={Flag} disabled>Report user</DropdownItem>
+				</DropdownMenu.Group>
+			</Dropdown>
 
 			<AddFriend {profile} />
 		</div>
