@@ -1,5 +1,3 @@
-<!-- TODO: lock the body when a dialog is opened -->
-
 <script lang="ts">
 	import { dialogPortal } from './dialog.svelte';
 </script>
