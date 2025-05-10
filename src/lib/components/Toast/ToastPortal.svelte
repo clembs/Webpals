@@ -68,7 +68,7 @@
 <style lang="scss">
 	toast-portal {
 		position: fixed;
-		z-index: 99;
+		z-index: 1001; // so they can go above dialogs
 		top: var(--base-padding);
 		right: var(--base-padding);
 
