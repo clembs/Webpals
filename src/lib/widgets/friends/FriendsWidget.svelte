@@ -21,7 +21,7 @@
 			{#each friends.slice(0, 6) as friend}
 				<li class="friend">
 					<a class="friend-el" href="/{friend.username}">
-						<Avatar user={friend} size="48px" />
+						<Avatar profile={friend} size="48px" />
 
 						<div class="text">
 							<div class="display-name heading">

@@ -105,7 +105,7 @@
 						title="Profile"
 						class="icon-button"
 					>
-						<Avatar user={page.data.currentProfile} size="2.5rem" />
+						<Avatar profile={page.data.currentProfile} size="2.5rem" />
 					</button>
 
 					{#if accountMenuOpen}

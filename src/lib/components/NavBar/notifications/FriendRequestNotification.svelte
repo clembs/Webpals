@@ -19,7 +19,7 @@
 
 <div class="left">
 	<a href="/{recipient.username}">
-		<Avatar user={recipient} size="48px" />
+		<Avatar profile={recipient} size="48px" />
 	</a>
 
 	<div class="text">

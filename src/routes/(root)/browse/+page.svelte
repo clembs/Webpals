@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Avatar from '$lib/components/Avatar.svelte';
-	import { type Profile } from '$lib/db/types';
+	import { type BaseProfile } from '$lib/db/types';
 	import { HEARTBEAT_INTERVAL } from '$lib/helpers/constants';
 	import { formatDate, formatRelativeTime } from '$lib/helpers/text';
 	import { mergeThemes } from '$lib/themes/merge-themes';
@@ -14,7 +14,7 @@
 	let usePlainTheme = $state(false);
 </script>
 
-{#snippet renderProfile(profile: Profile)}
+{#snippet renderProfile(profile: BaseProfile)}
 	<ThemeProvider theme={usePlainTheme ? plainTheme : mergeThemes(profile.theme || {})}>
 		{@const userAlive =
 			profile.status !== 'offline' &&
@@ -22,7 +22,7 @@
 		<li>
 			<a class="profile" href="/{profile.username}">
 				<div class="important">
-					<Avatar user={profile} size="48px" />
+					<Avatar {profile} size="48px" />
 
 					<div class="text">
 						<h3>{profile.displayName || profile.username}</h3>
