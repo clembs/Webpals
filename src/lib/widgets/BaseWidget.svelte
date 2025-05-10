@@ -10,20 +10,24 @@
 
 <script lang="ts">
 	import type { AnyWidgetJSON } from '$lib/widgets/types';
-	import { type Snippet } from 'svelte';
+	import { type Component, type Snippet } from 'svelte';
 	import { enhance } from '$app/forms';
-	import { GearSix, TrashSimple } from 'phosphor-svelte';
+	import { GearSix, TrashSimple, type IconComponentProps } from 'phosphor-svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
 
 	let {
 		isEditing,
 		widget,
+		settingsIcon,
+		settingsIconProps,
 		settingsDialog,
 		children
 	}: {
 		isEditing?: boolean;
 		widget?: AnyWidgetJSON;
+		settingsIcon?: Component<IconComponentProps>;
+		settingsIconProps?: IconComponentProps;
 		settingsDialog?: Snippet;
 		children: Snippet;
 	} = $props();
@@ -47,9 +51,7 @@
 		<p>Any settings to this widget will be lost if you change your mind and add it again later.</p>
 
 		<div class="buttons">
-			<Button type="button" variant="secondary" onclick={() => dialogPortal.closeDialog()}>
-				Cancel
-			</Button>
+			<Button variant="secondary" onclick={() => dialogPortal.closeDialog()}>Cancel</Button>
 			<Button type="submit" variant="urgent">Delete widget</Button>
 		</div>
 	</form>
@@ -64,7 +66,8 @@
 		<div class="hover-menu">
 			{#if settingsDialog}
 				<Button
-					icon={GearSix}
+					icon={settingsIcon ?? GearSix}
+					iconProps={settingsIconProps}
 					size="sm"
 					aria-label="Open widget settings"
 					onclick={() => dialogPortal.openDialog(settingsDialog)}
