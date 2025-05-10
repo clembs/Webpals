@@ -10,7 +10,8 @@
 		DotsThree,
 		CopySimple,
 		Flag,
-		ShareFat
+		ShareFat,
+		Image
 	} from 'phosphor-svelte';
 	import BaseWidget from '../BaseWidget.svelte';
 	import Button from '$lib/components/Button.svelte';
@@ -25,10 +26,6 @@
 	import { DropdownMenu } from 'bits-ui';
 
 	let { profile, editing }: { profile: Profile; editing: boolean } = $props();
-	let avatarInputEl = $state<HTMLInputElement>();
-	let temporaryAvatarSrc = $state<string>();
-
-	let error = $state<string>();
 
 	// If the user set their status to something other than offline AND that the last heartbeat was within the IN (plus a second for safety)
 	let isAlive = $derived(
@@ -36,6 +33,9 @@
 			profile.lastHeartbeat.getTime() > Date.now() - HEARTBEAT_INTERVAL + 1000
 	);
 
+	// form-related states
+	let avatarInputEl = $state<HTMLInputElement>();
+	let temporaryAvatarSrc = $state<string>();
 	let displayNameValue = $state(profile.displayName || profile.username);
 	let pronounsValue = $state(profile.pronouns || '');
 	let formEl = $state<HTMLFormElement>();
@@ -43,19 +43,67 @@
 
 {#snippet topProfileContents()}
 	<div class="top-profile">
-		<div class="avatar-status">
-			<Avatar user={profile} />
+		{#if editing}
+			<input
+				bind:this={avatarInputEl}
+				type="file"
+				id="avatar-input"
+				name="avatar"
+				accept="image/*"
+				onchange={() => {
+					if (avatarInputEl && avatarInputEl.files?.length) {
+						const avatar = avatarInputEl.files[0];
 
-			<div class="status">
-				{#if profile.status === 'online' && isAlive}
-					<Circle color="var(--color-success)" />
-				{:else if profile.status === 'dnd' && isAlive}
-					<Prohibit color="var(--color-urgent)" />
-				{:else}
-					<CircleDashed />
-				{/if}
+						if (avatar && !avatar.type.startsWith('image/')) {
+							toaster.error('Only images are supported for profile pictures!');
+							return;
+						}
+
+						if (avatar.size > 1024 * 1024) {
+							toaster.error("Please pick an image that's less than 1 MB.");
+							return;
+						}
+
+						const reader = new FileReader();
+
+						reader.onload = () => {
+							if (!reader.result) return;
+							temporaryAvatarSrc = reader.result.toString();
+						};
+						reader.readAsDataURL(avatar);
+
+						formEl?.requestSubmit();
+					}
+				}}
+			/>
+			<label class="avatar-stack" for="avatar-input" aria-label="Edit avatar">
+				<Avatar {profile} src={temporaryAvatarSrc} />
+
+				<div class="overlay edit-button">
+					<Button
+						onclick={() => avatarInputEl?.click()}
+						type="button"
+						variant="secondary"
+						size="sm"
+						icon={Image}
+					/>
+				</div>
+			</label>
+		{:else}
+			<div class="avatar-stack">
+				<Avatar {profile} />
+
+				<div class="overlay">
+					{#if profile.status === 'online' && isAlive}
+						<Circle color="var(--color-success)" />
+					{:else if profile.status === 'dnd' && isAlive}
+						<Prohibit color="var(--color-urgent)" />
+					{:else}
+						<CircleDashed />
+					{/if}
+				</div>
 			</div>
-		</div>
+		{/if}
 
 		<div class="text-bits">
 			{#if editing}
@@ -97,73 +145,17 @@
 {/snippet}
 
 <BaseWidget {editing}>
-	<!-- {#snippet editMenu()}
-		<form
-			use:enhance={() => {
-				error = '';
-				isLoading = true;
-
-				return ({ update, result }) => {
-					if (result.type === 'failure' && typeof result.data?.message === 'string') {
-						error = result.data.message;
-						return;
-					}
-
-					update({ reset: false, invalidateAll: true });
-					modalOpened = false;
-					isLoading = false;
-				};
-			}}
-			class="update-profile"
-			enctype="multipart/form-data"
-			method="post"
-			action="/api/profile?/editProfile"
-		>
-			<div class="important-stuff">
-				<input
-					bind:this={avatarInputEl}
-					type="file"
-					id="avatar"
-					name="avatar"
-					accept="image/*"
-					onchange={() => {
-						if (avatarInputEl && avatarInputEl.files?.length) {
-							const avatar = avatarInputEl.files[0];
-
-							if (avatar && !avatar.type.startsWith('image/')) {
-								error = 'Please pick an image file for your avatar.';
-							}
-
-							if (avatar.size > 1024 * 1024) {
-								error = "Please pick an avatar image that's less than 1MB.";
-								return;
-							}
-
-							const reader = new FileReader();
-
-							reader.onload = () => {
-								if (!reader.result) return;
-								temporaryAvatarSrc = reader.result.toString();
-							};
-							reader.readAsDataURL(avatar);
-						}
-					}}
-				/>
-				<label for="avatar" aria-label="Edit avatar">
-					<span class="hover-text">
-						<PencilSimple />
-					</span>
-					<Avatar user={profile} src={temporaryAvatarSrc} />
-				</label>
-		</form>
-	{/snippet} -->
 	<div class="profile-info">
 		{#if editing}
 			<form
 				use:enhance={() => {
+					console.log(avatarInputEl?.files?.length);
+
 					if (
 						profile.pronouns === pronounsValue &&
-						(profile.displayName ?? profile.username) === displayNameValue
+						(profile.displayName ?? profile.username) === displayNameValue &&
+						avatarInputEl?.files &&
+						avatarInputEl.files.length === 0
 					) {
 						return;
 					}
@@ -173,8 +165,8 @@
 					return async ({ result, update }) => {
 						if (result.type === 'success') {
 							toast.success('Profile updated!');
-						} else {
-							toast.error('Error updating your profile.');
+						} else if (result.type === 'failure' && typeof result.data?.message === 'string') {
+							toast.error({ title: 'Error updating your profile.', subtitle: result.data.message });
 						}
 
 						await update({
@@ -211,7 +203,7 @@
 
 	{#if page.data.currentProfile}
 		<div class="actions">
-			<Dropdown>
+			<Dropdown contentProps={{ align: 'start' }}>
 				{#snippet trigger({ props })}
 					<Button
 						icon={DotsThree}
@@ -278,19 +270,39 @@
 		gap: var(--base-gap);
 		align-items: center;
 
-		.avatar-status {
+		.avatar-stack {
 			position: relative;
 
-			.status {
+			.overlay {
 				position: absolute;
-				bottom: 0;
-				right: 0;
+				bottom: -5px;
+				right: -5px;
+				border-radius: 99px;
+				overflow: visible;
+				background-color: var(--widgets-background-color);
+				border: 5px solid var(--widgets-background-color);
+
+				&.edit-button {
+					bottom: -10px;
+					right: -10px;
+				}
 			}
 		}
 
 		.text-bits {
 			display: flex;
 			flex-direction: column;
+		}
+	}
+
+	#avatar-input {
+		display: none;
+	}
+
+	label[for='avatar-input'] {
+		cursor: pointer;
+		&:hover {
+			filter: brightness(0.9);
 		}
 	}
 
