@@ -2,7 +2,11 @@
 	import Spinner from '$icons/Spinner.svelte';
 	import type { IconComponentProps } from 'phosphor-svelte';
 	import type { Component, Snippet } from 'svelte';
-	import type { HTMLButtonAttributes, HTMLAnchorAttributes } from 'svelte/elements';
+	import type {
+		HTMLButtonAttributes,
+		HTMLAnchorAttributes,
+		MouseEventHandler
+	} from 'svelte/elements';
 
 	let {
 		href,
@@ -18,7 +22,7 @@
 		...restProps
 	}: (HTMLButtonAttributes | HTMLAnchorAttributes) & {
 		href?: string;
-		onclick?: () => void;
+		onclick?: MouseEventHandler<HTMLButtonElement>;
 		type?: 'submit' | 'button';
 		variant?: 'primary' | 'secondary' | 'text' | 'success' | 'urgent';
 		disabled?: boolean;
