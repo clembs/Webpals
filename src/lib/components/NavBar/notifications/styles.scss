@@ -1,0 +1,20 @@
+.notification-details {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	width: 100%;
+	gap: var(--base-gap);
+	padding: calc(var(--base-padding) * 0.75) 0px;
+
+	.content {
+		display: flex;
+		gap: calc(var(--base-gap) * 0.75);
+		align-items: center;
+	}
+
+	.actions {
+		display: flex;
+		gap: calc(var(--base-gap) * 0.5);
+	}
+}

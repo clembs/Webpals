@@ -1,44 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { Bell, BellRinging, Compass } from 'phosphor-svelte';
+	import { Compass } from 'phosphor-svelte';
 	import Avatar from '../Avatar.svelte';
-	import NotificationsMenu from './NotificationsMenu.svelte';
+	import NotificationsMenu from './notifications/NotificationsMenu.svelte';
 	import { clickoutside } from '@svelte-put/clickoutside';
 	import AccountMenu from './AccountMenu.svelte';
-	import { clientSupabase } from '$lib/db/supabase';
-	import { onDestroy, onMount } from 'svelte';
-	import { invalidate } from '$app/navigation';
-	import type { RealtimeChannel } from '@supabase/supabase-js';
 	import Webpals from '$icons/Webpals.svelte';
 	import Button from '../Button.svelte';
 
 	let accountMenuOpen = $state(false);
-	let notificationsMenuOpen = $state(false);
-
-	let unreadNotifications = $derived(
-		page.data.currentProfile?.notifications.filter((n) => !n.read)
-	);
-
-	let supabaseChannel = $state<RealtimeChannel>();
-
-	onMount(() => {
-		supabaseChannel = clientSupabase
-			.channel('notification-updates')
-			.on(
-				'postgres_changes',
-				{
-					event: 'INSERT',
-					table: 'notifications',
-					schema: 'public',
-					// TODO: figure out better security
-					filter: `user_id = ${page.data.currentProfile?.id}`
-				},
-				(payload) => invalidate('layout:user')
-			)
-			.subscribe((status) => console.log('supabase realtime', status));
-	});
-
-	onDestroy(() => supabaseChannel?.unsubscribe());
 </script>
 
 <header>
@@ -50,7 +20,7 @@
 		<ul>
 			<li>
 				<a
-					class="icon-button"
+					class="navbar-icon-button"
 					href="/explore"
 					aria-label="Explore"
 					title="Explore"
@@ -59,39 +29,12 @@
 					<Compass weight={page.url.pathname === '/explore' ? 'fill' : 'regular'} />
 				</a>
 			</li>
-			{#if page.data.currentProfile}
-				<li
-					data-has-submenu="true"
-					use:clickoutside
-					onclickoutside={() => (notificationsMenuOpen = false)}
-				>
-					<button
-						class="icon-button"
-						onclick={() => (notificationsMenuOpen = !notificationsMenuOpen)}
-						aria-current={notificationsMenuOpen}
-						aria-label="Notifications"
-						title="Notifications"
-					>
-						{#if unreadNotifications!.length > 0}
-							<div aria-label="{unreadNotifications!.length} new notifications" class="badge">
-								{unreadNotifications!.length}
-							</div>
-							<BellRinging weight={notificationsMenuOpen ? 'fill' : 'regular'} />
-						{:else}
-							<Bell weight={notificationsMenuOpen ? 'fill' : 'regular'} />
-						{/if}
-					</button>
 
-					{#if notificationsMenuOpen}
-						<NotificationsMenu
-							bind:menuOpen={notificationsMenuOpen}
-							user={page.data.currentProfile}
-						/>
-					{/if}
+			{#if page.data.currentProfile}
+				<li data-has-submenu="true">
+					<NotificationsMenu />
 				</li>
-			{/if}
 
-			{#if page.data.currentProfile}
 				<li
 					id="account-menu-wrapper"
 					use:clickoutside
@@ -103,7 +46,7 @@
 						onclick={() => (accountMenuOpen = !accountMenuOpen)}
 						aria-label="Profile"
 						title="Profile"
-						class="icon-button"
+						class="navbar-icon-button"
 					>
 						<Avatar profile={page.data.currentProfile} size="2.5rem" />
 					</button>
@@ -162,11 +105,11 @@
 		list-style: none;
 	}
 
-	li[data-has-submenu='true'] {
-		position: relative;
-	}
+	// li[data-has-submenu='true'] {
+	// 	position: relative;
+	// }
 
-	.icon-button {
+	:global(.navbar-icon-button) {
 		// Layout
 		display: grid;
 		place-items: center;
@@ -191,7 +134,7 @@
 		}
 
 		// If the item has a submenu & is selected
-		&[aria-current='true'] {
+		&:global([aria-current='true']) {
 			background-color: var(--widgets-background-color-dim);
 
 			&:hover {
@@ -199,12 +142,12 @@
 			}
 		}
 
-		.badge {
+		:global(.badge) {
 			// Layout & position
 			display: grid;
 			place-items: center;
 			position: absolute;
-			top: -2px;
+			bottom: -2px;
 			right: -2px;
 
 			// Gaps, paddings, margins
