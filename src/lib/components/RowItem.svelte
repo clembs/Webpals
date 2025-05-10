@@ -56,7 +56,13 @@
 {/snippet}
 
 {#if onclick}
-	<button {onclick} class="row-item" draggable="false" {...restProps as HTMLButtonAttributes}>
+	<button
+		{onclick}
+		class="row-item"
+		type="button"
+		draggable="false"
+		{...restProps as HTMLButtonAttributes}
+	>
 		{@render rowItemContents()}
 	</button>
 {:else if href}
