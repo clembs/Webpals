@@ -11,12 +11,12 @@
 	import { plainTheme } from '$lib/themes/plain-theme';
 
 	let {
-		editing = $bindable(),
+		isEditing = $bindable(),
 		profile = $bindable(),
 		theme = $bindable(),
 		currentUser
 	}: {
-		editing: boolean;
+		isEditing: boolean;
 		profile: CurrentProfile;
 		theme: Theme;
 		currentUser: User;
@@ -36,10 +36,10 @@
 	function toggleMode() {
 		if (!editBarWrapperEl || !toggleModesButtonEl || !editBarEl) return;
 
-		editing = !editing;
+		isEditing = !isEditing;
 
 		// switch to editing
-		if (editing) {
+		if (isEditing) {
 			replaceState(`/${profile.username}`, {});
 
 			// expand animation
@@ -83,7 +83,7 @@
 </script>
 
 <ThemeProvider theme={plainTheme}>
-	<div id="edit-bar-wrapper" bind:this={editBarWrapperEl} class:viewing={!editing}>
+	<div id="edit-bar-wrapper" bind:this={editBarWrapperEl} class:viewing={!isEditing}>
 		<!-- <WidgetPickerMenu {profile} {editBarEl} {editBarWrapperEl} bind:menuOpen={widgetPickerOpen} /> -->
 
 		<ThemeEditorMenu bind:theme {editBarEl} {editBarWrapperEl} bind:menuOpen={themeEditorOpen} />
@@ -98,7 +98,7 @@
 
 		<div id="edit-bar" bind:this={editBarEl}>
 			<!-- commands -->
-			<div id="edit-commands" inert={!editing} aria-hidden={!editing}>
+			<div id="edit-commands" inert={!isEditing} aria-hidden={!isEditing}>
 				<button
 					class="edit-command"
 					onclick={() => (widgetPickerOpen = true)}
@@ -125,7 +125,7 @@
 				</button>
 			</div>
 
-			{#if editing}
+			{#if isEditing}
 				<!-- switch button -->
 				<!-- holy fuck thats a lot of props lmao -->
 				<button

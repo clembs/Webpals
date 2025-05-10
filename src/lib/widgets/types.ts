@@ -56,5 +56,5 @@ export type AnyWidgetJSON = AnyDefaultWidgetJSON | CustomWidgetJSON;
 export type WidgetComponentProps<T extends AnyWidgetJSON> = {
 	profile: Profile;
 	widget: T;
-	editing: boolean;
+	isEditing: boolean;
 };

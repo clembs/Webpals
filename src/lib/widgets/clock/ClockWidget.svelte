@@ -5,7 +5,7 @@
 	import { Globe } from 'phosphor-svelte';
 	// import ClockWidgetEdit from './ClockWidgetEdit.svelte';
 
-	let { widget, editing }: WidgetComponentProps<ClockJSON> = $props();
+	let { widget, isEditing }: WidgetComponentProps<ClockJSON> = $props();
 
 	let date = $state(new Date());
 
@@ -40,7 +40,7 @@
 	});
 </script>
 
-<BaseWidget {widget} {editing}>
+<BaseWidget {widget} {isEditing}>
 	<!-- {#snippet editMenu()}
 		<ClockWidgetEdit bind:modalOpened {widget} {editing} />
 	{/snippet} -->

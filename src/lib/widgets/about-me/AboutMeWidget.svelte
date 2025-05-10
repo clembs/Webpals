@@ -5,10 +5,10 @@
 	import { enhance } from '$app/forms';
 	import { parseMarkdown } from '$lib/helpers/text';
 
-	let { widget, editing }: WidgetComponentProps<AboutMeJSON> = $props();
+	let { widget, isEditing }: WidgetComponentProps<AboutMeJSON> = $props();
 </script>
 
-<BaseWidget {widget} {editing}>
+<BaseWidget {widget} {isEditing}>
 	{#snippet settingsDialog()}
 		<form
 			use:enhance={() =>

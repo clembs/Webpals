@@ -17,12 +17,12 @@
 	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
 
 	let {
-		editing,
+		isEditing,
 		widget,
 		settingsDialog,
 		children
 	}: {
-		editing?: boolean;
+		isEditing?: boolean;
 		widget?: AnyWidgetJSON;
 		settingsDialog?: Snippet;
 		children: Snippet;
@@ -56,7 +56,7 @@
 {/snippet}
 
 <div class="widget-wrapper" bind:this={wrapperEl}>
-	{#if editing}
+	{#if isEditing}
 		<div class="hover-menu">
 			{#if settingsDialog}
 				<Button

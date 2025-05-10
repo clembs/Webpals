@@ -25,7 +25,7 @@
 	import DropdownItem from '$lib/components/Dropdown/DropdownItem.svelte';
 	import { DropdownMenu } from 'bits-ui';
 
-	let { profile, editing }: { profile: Profile; editing: boolean } = $props();
+	let { profile, isEditing }: { profile: Profile; isEditing: boolean } = $props();
 
 	// If the user set their status to something other than offline AND that the last heartbeat was within the IN (plus a second for safety)
 	let isAlive = $derived(
@@ -43,7 +43,7 @@
 
 {#snippet topProfileContents()}
 	<div class="top-profile">
-		{#if editing}
+		{#if isEditing}
 			<input
 				bind:this={avatarInputEl}
 				type="file"
@@ -106,7 +106,7 @@
 		{/if}
 
 		<div class="text-bits">
-			{#if editing}
+			{#if isEditing}
 				<InlineTextInput
 					name="display-name"
 					bind:value={displayNameValue}
@@ -125,7 +125,7 @@
 				{#if profile.pronouns}
 					<span class="bullet"> &bull; </span>
 
-					{#if editing}
+					{#if isEditing}
 						<InlineTextInput
 							name="pronouns"
 							bind:value={pronounsValue}
@@ -144,9 +144,9 @@
 	</div>
 {/snippet}
 
-<BaseWidget {editing}>
+<BaseWidget {isEditing}>
 	<div class="profile-info">
-		{#if editing}
+		{#if isEditing}
 			<form
 				use:enhance={() => {
 					console.log(avatarInputEl?.files?.length);

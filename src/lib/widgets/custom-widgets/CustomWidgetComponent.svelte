@@ -9,13 +9,13 @@
 	let {
 		profile,
 		widget,
-		editing
+		isEditing
 	}: WidgetComponentProps<CustomWidgetJSON> & {
 		profile: { id: string };
 	} = $props();
 </script>
 
-<BaseWidget {widget} {editing}>
+<BaseWidget {widget} {isEditing}>
 	{#snippet settingsDialog()}
 		<form
 			use:enhance={() =>

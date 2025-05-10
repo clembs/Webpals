@@ -6,10 +6,10 @@
 	import AudioPlayer from '$lib/components/AudioPlayer/AudioPlayer.svelte';
 	import { PUBLIC_STORAGE_BASE_URL } from '$env/static/public';
 
-	let { widget, editing }: WidgetComponentProps<MusicJSON> = $props();
+	let { widget, isEditing }: WidgetComponentProps<MusicJSON> = $props();
 </script>
 
-<BaseWidget {widget} {editing}>
+<BaseWidget {widget} {isEditing}>
 	<!-- {#snippet editMenu()}
 		<MusicEditWidgetComponent {widget} {editing} bind:modalOpened />
 	{/snippet} -->

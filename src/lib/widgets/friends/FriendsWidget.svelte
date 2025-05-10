@@ -4,7 +4,7 @@
 	import BaseWidget from '../BaseWidget.svelte';
 	import type { FriendsJSON, WidgetComponentProps } from '../types';
 
-	let { profile, widget, editing }: WidgetComponentProps<FriendsJSON> = $props();
+	let { profile, widget, isEditing }: WidgetComponentProps<FriendsJSON> = $props();
 
 	let friends = $derived(
 		profile.initiatedRelationships
@@ -13,7 +13,7 @@
 	);
 </script>
 
-<BaseWidget {widget} {editing}>
+<BaseWidget {widget} {isEditing}>
 	<h2>Friends ({friends.length})</h2>
 
 	<div class="friends-wrapper">

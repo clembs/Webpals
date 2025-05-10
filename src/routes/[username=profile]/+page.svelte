@@ -15,12 +15,12 @@
 
 	let theme = $state(data.profile.theme);
 	let userWidgets = $state(data.profile.widgets);
-	let editing = $state(data.editing);
+	let isEditing = $state(data.isEditing);
 
 	$effect(() => {
 		theme = data.profile.theme;
 		userWidgets = data.profile.widgets;
-		editing = data.editing;
+		isEditing = data.isEditing;
 	});
 
 	async function updateWidgetPosition(widgetId: string) {
@@ -56,9 +56,9 @@
 	{@const WidgetComponent = defaultWidgets.find((w) => widget.id === w.id)?.component}
 
 	{#if WidgetComponent}
-		<WidgetComponent profile={data.profile} {editing} widget={widget as AnyWidgetJSON} />
-	{:else if editing}
-		<BaseWidget {editing} {widget}>
+		<WidgetComponent profile={data.profile} {isEditing} {widget} />
+	{:else if isEditing}
+		<BaseWidget {isEditing} {widget}>
 			I didn't code this widget in yet (type {widget.id}).<br />
 			Other users won't see this widget, but once it's coded it'll render properly!
 		</BaseWidget>
@@ -99,9 +99,9 @@
 			{#each userWidgets as column, index}
 				<div class="column-outer">
 					{#if index === 0}
-						<ProfileWidget {...data} {editing} />
+						<ProfileWidget {...data} {isEditing} />
 					{/if}
-					{#if editing}
+					{#if isEditing}
 						{@render draggableWidgetColumns(column, index)}
 					{:else}
 						<div class="column">
@@ -118,10 +118,10 @@
 
 {#if data.editable && data.currentProfile && data.currentUser}
 	<ProfileEditBar
-		currentUser={data.currentUser}
-		bind:editing
-		profile={data.currentProfile}
+		bind:isEditing
 		bind:theme
+		currentUser={data.currentUser}
+		profile={data.currentProfile}
 	/>
 {/if}
 

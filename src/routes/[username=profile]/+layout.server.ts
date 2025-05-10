@@ -47,6 +47,6 @@ export const load: LayoutServerLoad = async ({
 		currentUser,
 		profile: { ...profile, theme: mergeThemes(profile?.theme || {}) },
 		editable: isCurrentProfile,
-		editing: !!(!url.searchParams.has('view') && isCurrentProfile)
+		isEditing: !!(!url.searchParams.has('view') && isCurrentProfile)
 	};
 };

@@ -7,7 +7,7 @@
 	import { SvelteMap } from 'svelte/reactivity';
 	import type { Connection } from '$lib/db/types';
 
-	let { profile, widget, editing }: WidgetComponentProps<ConnectionsJSON> = $props();
+	let { profile, widget, isEditing }: WidgetComponentProps<ConnectionsJSON> = $props();
 
 	let copiedConnections = new SvelteMap(profile.connections.map((_, index) => [index, false]));
 
@@ -51,7 +51,7 @@
 	{/if}
 {/snippet}
 
-<BaseWidget {widget} {editing}>
+<BaseWidget {widget} {isEditing}>
 	<!-- {#snippet editMenu()}
 		<ConnectionsWidgetEditComponent user={profile} />
 	{/snippet} -->

@@ -7,7 +7,8 @@
 
 	let {
 		widget,
-		modalOpened = $bindable(false)
+		modalOpened = $bindable(false),
+		profile
 	}: WidgetComponentProps<MusicJSON> & {
 		modalOpened: boolean;
 	} = $props();
@@ -47,7 +48,7 @@
 		{#if selectedProvider !== 'local' && selectedProviderData}
 			<MusicProviderSearch {selectedProvider} bind:modalOpened />
 		{:else}
-			<MusicUpload {widget} editing={false} bind:modalOpened />
+			<MusicUpload {profile} {widget} isEditing={false} bind:modalOpened />
 		{/if}
 	</div>
 </div>

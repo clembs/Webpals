@@ -10,7 +10,8 @@
 
 	let {
 		modalOpened = $bindable(),
-		widget
+		widget,
+		profile
 	}: WidgetComponentProps<MusicJSON> & {
 		modalOpened: boolean;
 	} = $props();
@@ -218,7 +219,8 @@
 					provider: 'local',
 					external_url: null
 				}}
-				editing={false}
+				{profile}
+				isEditing={false}
 			/>
 
 			<div class="buttons">
