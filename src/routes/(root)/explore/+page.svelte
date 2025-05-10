@@ -94,6 +94,8 @@
 </main>
 
 <style lang="scss">
+	@use '../../../styles/mixins.scss';
+
 	main {
 		padding: var(--base-padding);
 		display: flex;
@@ -137,17 +139,8 @@
 			border-radius: calc(var(--widgets-border-base-radius) + var(--plain-theme-padding) * 0.5);
 
 			.profile {
-				display: flex;
-				flex-direction: column;
+				@include mixins.card;
 				text-decoration: none;
-				gap: var(--plain-theme-gap);
-
-				background: var(--widgets-background-color);
-				border-radius: var(--widgets-border-base-radius);
-				padding: var(--plain-theme-padding);
-				box-shadow: var(--widgets-box-shadow-x) var(--widgets-box-shadow-y)
-					var(--widgets-box-shadow-blur) var(--widgets-box-shadow-spread)
-					var(--widgets-box-shadow-color);
 
 				.important {
 					display: flex;
