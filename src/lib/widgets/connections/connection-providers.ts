@@ -57,27 +57,28 @@ export const connectionProviderKeys = [
 
 export type ConnectionProvider = (typeof connectionProviderKeys)[number];
 
-export const connectionProviders: Record<
-	ConnectionProvider,
+export type ConnectionProviderData = {
+	id: ConnectionProvider;
+	name: string;
+	icon: Component<IconComponentProps>;
+	iconProps?: IconComponentProps;
+	// the regex pattern to match the identifiable part of the connection
+	identifiablePattern?: RegExp;
+	// the label shown above the identifiable input
+	identifiableInputLabel?: string;
+	// an example or explanation of what to input
+	identifiableInputPlaceholder?: string;
+	// what comes before the identifiable, used to build URLs
+	identifiablePrefix?: string;
+	// true the connection links to a webpage, false if it's just text
+	hasUrl: boolean;
+	// whether the connection can be oauth verified
+	verifiable: boolean;
+};
+
+export const connectionProviders: ConnectionProviderData[] = [
 	{
-		name: string;
-		icon: Component<IconComponentProps>;
-		iconProps?: IconComponentProps;
-		// the regex pattern to match the identifiable part of the connection
-		identifiablePattern?: RegExp;
-		// the label shown above the identifiable input
-		identifiableInputLabel?: string;
-		// an example or explanation of what to input
-		identifiableInputPlaceholder?: string;
-		// what comes before the identifiable, used to build URLs
-		identifiablePrefix?: string;
-		// true the connection links to a webpage, false if it's just text
-		hasUrl: boolean;
-		// whether the connection can be oauth verified
-		verifiable: boolean;
-	}
-> = {
-	bluesky: {
+		id: 'bluesky',
 		name: 'Bluesky',
 		icon: BlueskyLogo,
 		// works for domain names, DID PLC identities and Web DID identities.
@@ -90,7 +91,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	discord: {
+	{
+		id: 'discord',
 		name: 'Discord',
 		icon: DiscordLogo,
 		identifiablePattern: /^([a-zA-Z0-9._]{2,32})$/,
@@ -99,7 +101,8 @@ export const connectionProviders: Record<
 		hasUrl: false,
 		verifiable: true
 	},
-	email: {
+	{
+		id: 'email',
 		name: 'Email address',
 		icon: Envelope,
 		iconProps: { weight: 'regular' },
@@ -109,7 +112,8 @@ export const connectionProviders: Record<
 		hasUrl: false,
 		verifiable: true
 	},
-	facebook: {
+	{
+		id: 'facebook',
 		name: 'Facebook',
 		icon: FacebookLogo,
 		identifiablePattern: /^([a-zA-Z0-9.]{5,50})$/,
@@ -118,7 +122,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	github: {
+	{
+		id: 'github',
 		name: 'GitHub',
 		icon: GitHubLogo,
 		identifiablePattern: /^([a-zA-Z0-9-]{1,39})$/,
@@ -128,7 +133,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	instagram: {
+	{
+		id: 'instagram',
 		name: 'Instagram',
 		icon: InstagramLogo,
 		identifiablePattern: /^([a-zA-Z0-9._]{1,30})$/,
@@ -138,7 +144,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	kofi: {
+	{
+		id: 'kofi',
 		name: 'Ko-fi',
 		icon: KoFiLogo,
 		identifiablePattern: /^([a-zA-Z0-9-]{1,50})$/,
@@ -148,7 +155,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: false
 	},
-	lastfm: {
+	{
+		id: 'lastfm',
 		name: 'Last.fm',
 		icon: LastFmLogo,
 		identifiablePattern: /^([a-zA-Z0-9-]{1,50})$/,
@@ -157,7 +165,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: false
 	},
-	linkedin: {
+	{
+		id: 'linkedin',
 		name: 'LinkedIn',
 		icon: LinkedInLogo,
 		identifiablePattern: /^([a-zA-Z0-9-]{1,50})$/,
@@ -166,7 +175,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	mastodon: {
+	{
+		id: 'mastodon',
 		name: 'Mastodon',
 		icon: MastodonLogo,
 		// taken from https://regex101.com/r/ac4fG5/2, thank you very much
@@ -177,7 +187,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: false
 	},
-	patreon: {
+	{
+		id: 'patreon',
 		name: 'Patreon',
 		icon: PatreonLogo,
 		identifiablePattern: /^([a-zA-Z0-9-]{1,50})$/,
@@ -186,7 +197,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: false
 	},
-	phone: {
+	{
+		id: 'phone',
 		name: 'Phone number',
 		icon: Phone,
 		identifiablePattern: /^(\+?[0-9]{1,3}-?[0-9\- ]{3,14})$/,
@@ -195,14 +207,16 @@ export const connectionProviders: Record<
 		hasUrl: false,
 		verifiable: false
 	},
-	pretendo: {
+	{
+		id: 'pretendo',
 		name: 'Pretendo Network ID',
 		icon: PretendoLogo,
 		identifiableInputLabel: 'Pretendo Network ID',
 		hasUrl: false,
 		verifiable: false
 	},
-	reddit: {
+	{
+		id: 'reddit',
 		name: 'Reddit',
 		icon: RedditLogo,
 		identifiablePattern: /^([a-zA-Z0-9_]{3,20})$/,
@@ -212,7 +226,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	signal: {
+	{
+		id: 'signal',
 		name: 'Signal',
 		icon: SignalLogo,
 		identifiablePattern: /^([a-zA-Z0-9_]{3,32}\.\d{2})$/,
@@ -221,7 +236,8 @@ export const connectionProviders: Record<
 		hasUrl: false,
 		verifiable: false
 	},
-	spotify: {
+	{
+		id: 'spotify',
 		name: 'Spotify',
 		icon: SpotifyLogo,
 		identifiablePattern: /^([0-9A-Za-z-]{2,32})$/,
@@ -231,7 +247,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	startgg: {
+	{
+		id: 'startgg',
 		name: 'Start.gg',
 		icon: StartGgLogo,
 		identifiablePattern: /^([a-zA-Z0-9]{8})$/,
@@ -240,7 +257,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	steam: {
+	{
+		id: 'steam',
 		name: 'Steam',
 		icon: SteamLogo,
 		// works for steamcommunity.com URLs. group 1 is the SteamID or profile URL
@@ -250,7 +268,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	threads: {
+	{
+		id: 'threads',
 		name: 'Threads',
 		icon: ThreadsLogo,
 		identifiablePattern: /^([a-zA-Z0-9._]{1,30})$/,
@@ -260,7 +279,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: false
 	},
-	twitch: {
+	{
+		id: 'twitch',
 		name: 'Twitch',
 		icon: TwitchLogo,
 		identifiablePattern: /^([a-zA-Z0-9_]{4,25})$/,
@@ -270,7 +290,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	twitter: {
+	{
+		id: 'twitter',
 		name: 'X/Twitter',
 		icon: XLogo,
 		identifiablePattern: /^([a-zA-Z0-9_]{1,15})$/,
@@ -280,7 +301,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	webpals: {
+	{
+		id: 'webpals',
 		name: 'Webpals',
 		icon: Webpals,
 		identifiablePattern: USERNAME_REGEX,
@@ -290,7 +312,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	youtube: {
+	{
+		id: 'youtube',
 		name: 'YouTube',
 		icon: YouTubeLogo,
 		// works for youtube.com URLs. group 1 is the channelId. group 2 is the handle or username
@@ -302,7 +325,8 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	},
-	domain: {
+	{
+		id: 'domain',
 		name: 'Website',
 		icon: Globe,
 		// honestly tho idk why i called this "domain" when it can be any website
@@ -314,9 +338,4 @@ export const connectionProviders: Record<
 		hasUrl: true,
 		verifiable: true
 	}
-};
-
-export const connectionProvidersArray = Object.entries(connectionProviders).map(([id, rest]) => ({
-	id: id as ConnectionProvider,
-	...rest
-}));
+];

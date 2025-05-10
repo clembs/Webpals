@@ -6,6 +6,7 @@ import {
 	connectionProviders,
 	type ConnectionProvider
 } from '$lib/widgets/connections/connection-providers';
+import { parseIdentifiableUrl } from '$lib/widgets/connections/helpers';
 
 export async function createConnection({ locals: { getCurrentProfile }, request }: RequestEvent) {
 	const user = getCurrentProfile();
@@ -27,7 +28,7 @@ export async function createConnection({ locals: { getCurrentProfile }, request 
 		return fail(400, { message: 'Label too long' });
 	}
 
-	const connectionProvider = connectionProviders[rawProvider];
+	const connectionProvider = connectionProviders.find(({ id }) => id === rawProvider);
 
 	if (!connectionProvider) {
 		return fail(400, {
@@ -52,11 +53,7 @@ export async function createConnection({ locals: { getCurrentProfile }, request 
 		: rawIdentifiable;
 
 	// if the provider needs a URL, prepend https if not already present
-	const url = connectionProvider.hasUrl
-		? rawIdentifiable.startsWith('http')
-			? rawIdentifiable
-			: `https://${connectionProvider.identifiableInputPlaceholder ?? ''}${rawIdentifiable}`
-		: undefined;
+	const url = parseIdentifiableUrl(connectionProvider, rawIdentifiable);
 
 	try {
 		await db.insert(connections).values({

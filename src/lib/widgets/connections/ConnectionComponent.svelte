@@ -22,7 +22,7 @@
 		connection: Connection;
 	} = $props();
 
-	let provider = $derived(connectionProviders[connection.provider]);
+	let provider = $derived(connectionProviders.find(({ id }) => id === connection.provider));
 
 	// to more quickly delete a connection
 	let isPressingShift = $state(false);
@@ -86,7 +86,7 @@
 				{#if copiedConnections.has(connection.id)}
 					<Check weight="regular" />
 				{:else}
-					<CopySimple />
+					<CopySimple weight="regular" />
 				{/if}
 			</div>
 		{/if}

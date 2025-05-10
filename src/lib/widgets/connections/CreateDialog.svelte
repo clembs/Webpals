@@ -1,23 +1,24 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
 	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
-	import { ArrowLeft, CaretRight, MagnifyingGlass, Tag } from 'phosphor-svelte';
-	import { connectionProvidersArray } from './connection-providers';
+	import { ArrowLeft, CaretRight, MagnifyingGlass } from 'phosphor-svelte';
+	import { connectionProviders, type ConnectionProviderData } from './connection-providers';
 	import TextInput from '$lib/components/TextInput.svelte';
 	import { enhance } from '$app/forms';
 	import RowItem from '$lib/components/RowItem.svelte';
 	import ConnectionComponent from './ConnectionComponent.svelte';
 	import { toaster } from '$lib/components/Toast/toast.svelte';
+	import { parseIdentifiableUrl } from './helpers';
 
 	// form stuff
 	let label = $state('');
 	let identifiable = $state('');
-	let selectedProvider = $state<(typeof connectionProvidersArray)[number]>();
+	let selectedProvider = $state<ConnectionProviderData>();
 
 	// provider filtering
 	let filter = $state('');
 	let filteredProviders = $derived(
-		connectionProvidersArray
+		connectionProviders
 			.sort((a, b) => a.name.localeCompare(b.name))
 			.filter(
 				({ name, id }) =>
@@ -173,18 +174,20 @@
 			<div id="connection-preview">
 				<h4>Preview</h4>
 
-				<ConnectionComponent
-					connection={{
-						id: '',
-						identifiable,
-						label,
-						profileId: '',
-						provider: selectedProvider.id,
-						url: '',
-						verified: false
-					}}
-					isEditing={false}
-				/>
+				<div id="connection-preview-wrapper" inert>
+					<ConnectionComponent
+						connection={{
+							id: '',
+							identifiable,
+							label,
+							profileId: '',
+							provider: selectedProvider.id,
+							url: parseIdentifiableUrl(selectedProvider, identifiable) || null,
+							verified: false
+						}}
+						isEditing={false}
+					/>
+				</div>
 			</div>
 		{/if}
 
@@ -243,5 +246,11 @@
 		display: flex;
 		flex-direction: column;
 		gap: calc(var(--base-gap) * 0.75);
+
+		#connection-preview-wrapper {
+			overflow: hidden;
+			border-radius: var(--inputs-border-base-radius);
+			background-color: var(--widgets-background-color-dim);
+		}
 	}
 </style>
