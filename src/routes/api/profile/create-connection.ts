@@ -55,7 +55,7 @@ export async function createConnection({ locals: { getCurrentProfile }, request 
 	const url = connectionProvider.hasUrl
 		? rawIdentifiable.startsWith('http')
 			? rawIdentifiable
-			: `https://${connectionProvider.identifiablePrefix ?? ''}${rawIdentifiable}`
+			: `https://${connectionProvider.identifiableInputPlaceholder ?? ''}${rawIdentifiable}`
 		: undefined;
 
 	try {

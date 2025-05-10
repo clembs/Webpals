@@ -63,11 +63,18 @@ export const connectionProviders: Record<
 		name: string;
 		icon: Component<IconComponentProps>;
 		iconProps?: IconComponentProps;
-		identifiablePattern?: RegExp; // the regex pattern to match the identifiable part of the connection
-		identifiablePlaceholder?: string; // the placeholder for the identifiable input
+		// the regex pattern to match the identifiable part of the connection
+		identifiablePattern?: RegExp;
+		// the label shown above the identifiable input
+		identifiableInputLabel?: string;
+		// an example or explanation of what to input
+		identifiableInputPlaceholder?: string;
+		// what comes before the identifiable, used to build URLs
 		identifiablePrefix?: string;
-		hasUrl: boolean; // true the connection links to a webpage, false if it's just text
-		verifiable: boolean; // whether the connection can be oauth verified
+		// true the connection links to a webpage, false if it's just text
+		hasUrl: boolean;
+		// whether the connection can be oauth verified
+		verifiable: boolean;
 	}
 > = {
 	bluesky: {
@@ -77,7 +84,8 @@ export const connectionProviders: Record<
 		identifiablePattern:
 			// wrote this regex myself. proud of it.
 			/^((?:[a-zA-Z0-9-]+\.)+[a-zA-Z0-9-]+|^(?:did:plc:[a-zA-Z0-9]{24})$|^(?:did:web:[a-zA-Z0-9.]+))$/,
-		identifiablePlaceholder: 'bluesky handle/did',
+		identifiableInputLabel: 'Bluesky handle or DID',
+		identifiableInputPlaceholder: 'e.g. clembs.com, yourname.bsky.social, did:plc:...',
 		identifiablePrefix: 'bsky.app/profile/',
 		hasUrl: true,
 		verifiable: true
@@ -86,16 +94,18 @@ export const connectionProviders: Record<
 		name: 'Discord',
 		icon: DiscordLogo,
 		identifiablePattern: /^([a-zA-Z0-9._]{2,32})$/,
-		identifiablePlaceholder: 'discord username',
-		identifiablePrefix: '@',
+		identifiableInputLabel: 'Discord username',
+		identifiableInputPlaceholder: 'what comes after the @ (e.g. clembs)',
 		hasUrl: false,
 		verifiable: true
 	},
 	email: {
-		name: 'Email',
+		name: 'Email address',
 		icon: Envelope,
+		iconProps: { weight: 'regular' },
 		identifiablePattern: EMAIL_REGEX,
-		identifiablePlaceholder: 'email address',
+		identifiableInputLabel: 'Email address',
+		identifiableInputPlaceholder: 'e.g. clembs@clembs.com',
 		hasUrl: false,
 		verifiable: true
 	},
@@ -103,8 +113,8 @@ export const connectionProviders: Record<
 		name: 'Facebook',
 		icon: FacebookLogo,
 		identifiablePattern: /^([a-zA-Z0-9.]{5,50})$/,
+		identifiableInputLabel: 'Facebook username',
 		identifiablePrefix: 'facebook.com/',
-		identifiablePlaceholder: 'facebook username',
 		hasUrl: true,
 		verifiable: true
 	},
@@ -112,7 +122,8 @@ export const connectionProviders: Record<
 		name: 'GitHub',
 		icon: GitHubLogo,
 		identifiablePattern: /^([a-zA-Z0-9-]{1,39})$/,
-		identifiablePlaceholder: 'github username',
+		identifiableInputLabel: 'GitHub username',
+		identifiableInputPlaceholder: 'e.g. clembs',
 		identifiablePrefix: 'github.com/',
 		hasUrl: true,
 		verifiable: true
@@ -121,7 +132,8 @@ export const connectionProviders: Record<
 		name: 'Instagram',
 		icon: InstagramLogo,
 		identifiablePattern: /^([a-zA-Z0-9._]{1,30})$/,
-		identifiablePlaceholder: 'instagram handle',
+		identifiableInputLabel: 'Instagram handle',
+		identifiableInputPlaceholder: 'e.g. clembs.v',
 		identifiablePrefix: 'instagram.com/',
 		hasUrl: true,
 		verifiable: true
@@ -130,8 +142,9 @@ export const connectionProviders: Record<
 		name: 'Ko-fi',
 		icon: KoFiLogo,
 		identifiablePattern: /^([a-zA-Z0-9-]{1,50})$/,
+		identifiableInputLabel: 'Ko-fi username',
+		identifiableInputPlaceholder: 'e.g. clembs',
 		identifiablePrefix: 'ko-fi.com/',
-		identifiablePlaceholder: 'ko-fi username',
 		hasUrl: true,
 		verifiable: false
 	},
@@ -139,8 +152,8 @@ export const connectionProviders: Record<
 		name: 'Last.fm',
 		icon: LastFmLogo,
 		identifiablePattern: /^([a-zA-Z0-9-]{1,50})$/,
+		identifiableInputLabel: 'Last.fm username',
 		identifiablePrefix: 'last.fm/user/',
-		identifiablePlaceholder: 'last.fm username',
 		hasUrl: true,
 		verifiable: false
 	},
@@ -148,7 +161,7 @@ export const connectionProviders: Record<
 		name: 'LinkedIn',
 		icon: LinkedInLogo,
 		identifiablePattern: /^([a-zA-Z0-9-]{1,50})$/,
-		identifiablePlaceholder: 'linkedin username',
+		identifiableInputLabel: 'LinkedIn username',
 		identifiablePrefix: 'linkedin.com/in/',
 		hasUrl: true,
 		verifiable: true
@@ -159,7 +172,8 @@ export const connectionProviders: Record<
 		// taken from https://regex101.com/r/ac4fG5/2, thank you very much
 		identifiablePattern: /^@?\b(?:[a-zA-Z0-9._%+-]+)@(?:[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b$/,
 		identifiablePrefix: 'mastodon.social/@',
-		identifiablePlaceholder: 'mastodon full handle (e.g. @clembs@mastodon.social)',
+		identifiableInputLabel: 'Mastodon full handle',
+		identifiableInputPlaceholder: 'e.g. @clembs@mastodon.social',
 		hasUrl: true,
 		verifiable: false
 	},
@@ -168,22 +182,23 @@ export const connectionProviders: Record<
 		icon: PatreonLogo,
 		identifiablePattern: /^([a-zA-Z0-9-]{1,50})$/,
 		identifiablePrefix: 'patreon.com/',
-		identifiablePlaceholder: 'patreon username',
+		identifiableInputLabel: 'Patreon username',
 		hasUrl: true,
 		verifiable: false
 	},
 	phone: {
-		name: 'Phone',
+		name: 'Phone number',
 		icon: Phone,
-		identifiablePattern: /^(\+?[0-9]{1,3}-?[0-9]{3,14})$/,
-		identifiablePlaceholder: 'phone number',
+		identifiablePattern: /^(\+?[0-9]{1,3}-?[0-9\- ]{3,14})$/,
+		identifiableInputLabel: 'Phone number',
+		identifiableInputPlaceholder: 'e.g. +33-123-456-789',
 		hasUrl: false,
 		verifiable: false
 	},
 	pretendo: {
 		name: 'Pretendo Network ID',
 		icon: PretendoLogo,
-		identifiablePlaceholder: 'pretendo network id',
+		identifiableInputLabel: 'Pretendo Network ID',
 		hasUrl: false,
 		verifiable: false
 	},
@@ -191,7 +206,8 @@ export const connectionProviders: Record<
 		name: 'Reddit',
 		icon: RedditLogo,
 		identifiablePattern: /^([a-zA-Z0-9_]{3,20})$/,
-		identifiablePlaceholder: 'reddit username',
+		identifiableInputLabel: 'Reddit username',
+		identifiableInputPlaceholder: 'e.g. spez if your username is u/spez',
 		identifiablePrefix: 'reddit.com/u/',
 		hasUrl: true,
 		verifiable: true
@@ -200,7 +216,8 @@ export const connectionProviders: Record<
 		name: 'Signal',
 		icon: SignalLogo,
 		identifiablePattern: /^([a-zA-Z0-9_]{3,32}\.\d{2})$/,
-		identifiablePlaceholder: 'signal username',
+		identifiableInputLabel: 'Signal username',
+		identifiableInputPlaceholder: 'e.g. name.00',
 		hasUrl: false,
 		verifiable: false
 	},
@@ -209,7 +226,8 @@ export const connectionProviders: Record<
 		icon: SpotifyLogo,
 		identifiablePattern: /^([0-9A-Za-z-]{2,32})$/,
 		identifiablePrefix: 'open.spotify.com/user/',
-		identifiablePlaceholder: 'spotify username',
+		identifiableInputLabel: 'Spotify username or user ID',
+		identifiableInputPlaceholder: 'found in your profile URL, e.g. 8n100zlbhhtzjxpbd9mey2opt',
 		hasUrl: true,
 		verifiable: true
 	},
@@ -218,7 +236,7 @@ export const connectionProviders: Record<
 		icon: StartGgLogo,
 		identifiablePattern: /^([a-zA-Z0-9]{8})$/,
 		identifiablePrefix: 'start.gg/user/',
-		identifiablePlaceholder: 'start.gg user ID',
+		identifiableInputLabel: 'Start.gg user ID',
 		hasUrl: true,
 		verifiable: true
 	},
@@ -228,7 +246,7 @@ export const connectionProviders: Record<
 		// works for steamcommunity.com URLs. group 1 is the SteamID or profile URL
 		identifiablePattern: /^((?:id|profiles)\/[a-zA-Z0-9_-]+)(?:\?.*)?$/,
 		identifiablePrefix: 'steamcommunity.com/',
-		identifiablePlaceholder: 'steam profile id/url',
+		identifiableInputLabel: 'Steam profile ID or URL',
 		hasUrl: true,
 		verifiable: true
 	},
@@ -237,7 +255,8 @@ export const connectionProviders: Record<
 		icon: ThreadsLogo,
 		identifiablePattern: /^([a-zA-Z0-9._]{1,30})$/,
 		identifiablePrefix: 'threads.net/@',
-		identifiablePlaceholder: 'threads/instagram handle',
+		identifiableInputLabel: 'Threads handle',
+		identifiableInputPlaceholder: 'the instagram handle you used to sign up',
 		hasUrl: true,
 		verifiable: false
 	},
@@ -245,18 +264,19 @@ export const connectionProviders: Record<
 		name: 'Twitch',
 		icon: TwitchLogo,
 		identifiablePattern: /^([a-zA-Z0-9_]{4,25})$/,
-		identifiablePlaceholder: 'twitch username',
+		identifiableInputLabel: 'Twitch username',
 		identifiablePrefix: 'twitch.tv/',
+		identifiableInputPlaceholder: 'e.g. clembs',
 		hasUrl: true,
 		verifiable: true
 	},
 	twitter: {
 		name: 'X/Twitter',
 		icon: XLogo,
-		iconProps: { weight: 'regular' },
 		identifiablePattern: /^([a-zA-Z0-9_]{1,15})$/,
-		identifiablePlaceholder: 'twitter handle',
+		identifiableInputLabel: 'X/Twitter handle',
 		identifiablePrefix: 'x.com/',
+		identifiableInputPlaceholder: 'what comes after the @ (e.g. clembsv)',
 		hasUrl: true,
 		verifiable: true
 	},
@@ -265,7 +285,8 @@ export const connectionProviders: Record<
 		icon: Webpals,
 		identifiablePattern: USERNAME_REGEX,
 		identifiablePrefix: 'webpals.me/',
-		identifiablePlaceholder: 'webpals username',
+		identifiableInputLabel: 'Webpals username',
+		identifiableInputPlaceholder: 'what comes after the @ (e.g. clembs)',
 		hasUrl: true,
 		verifiable: true
 	},
@@ -275,12 +296,12 @@ export const connectionProviders: Record<
 		// works for youtube.com URLs. group 1 is the channelId. group 2 is the handle or username
 		// modified from https://stackoverflow.com/a/65726047 (ty)
 		identifiablePattern: /^(?:channel\/(UC[\w-]{21}[AQgw])|(?:c\/|user\/)?([\w@-]+))$/,
-		identifiablePlaceholder: 'username/handle/channel id',
+		identifiableInputLabel: 'YouTube username/handle/channel ID',
 		identifiablePrefix: 'youtube.com/',
+		identifiableInputPlaceholder: 'what comes after the @ (e.g. clembs)',
 		hasUrl: true,
 		verifiable: true
 	},
-	// domains are last because they're supposed to be generic and the fallback pattern
 	domain: {
 		name: 'Website',
 		icon: Globe,
@@ -288,7 +309,8 @@ export const connectionProviders: Record<
 		// modified from https://uibakery.io/regex-library/url to group the domain
 		identifiablePattern:
 			/^(?:https?:\/\/)?((?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6})\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/,
-		identifiablePlaceholder: 'website url',
+		identifiableInputLabel: 'Website URL or domain',
+		identifiableInputPlaceholder: 'e.g. crbt.app, https://clembs.com/contact',
 		hasUrl: true,
 		verifiable: true
 	}
