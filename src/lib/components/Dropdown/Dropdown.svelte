@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { DropdownMenu, type DropdownMenuRootProps, type WithoutChild } from 'bits-ui';
+	import { DropdownMenu, type WithoutChild } from 'bits-ui';
 	import './styles.scss';
 
 	let {
@@ -9,7 +9,7 @@
 		contentProps,
 		trigger,
 		...restProps
-	}: DropdownMenuRootProps & {
+	}: DropdownMenu.RootProps & {
 		contentProps?: WithoutChild<DropdownMenu.ContentProps>;
 		children: Snippet;
 		trigger: Snippet<[{ props: Record<string, unknown> }]>;
