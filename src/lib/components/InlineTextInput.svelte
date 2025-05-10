@@ -4,15 +4,18 @@
 
 	let {
 		ref = $bindable(),
+		fullWidth = false,
 		name,
 		value = $bindable(''),
 		multiline = false,
 		maxlength,
 		class: className,
+		onkeydown,
 		onblur,
 		...restProps
 	}: HTMLAttributes<HTMLDivElement> & {
 		ref?: HTMLDivElement;
+		fullWidth?: boolean;
 		name: string;
 		value?: string;
 		multiline?: boolean;
@@ -22,13 +25,14 @@
 	let originalValue = $state(value);
 </script>
 
-<div class="text-input">
+<div class="text-input" data-fullwidth={fullWidth}>
 	<div
 		id={name}
 		class="input {className}"
 		contenteditable="true"
 		bind:this={ref}
 		onkeydown={(ev) => {
+			onkeydown?.(ev);
 			// Implement max length
 			if (maxlength && ev.key !== 'Backspace' && value.length > maxlength) {
 				ev.preventDefault();
@@ -109,6 +113,11 @@
 			}
 			.icon {
 				display: none;
+			}
+
+			// Full width
+			&[data-fullwidth='true'] {
+				width: 100%;
 			}
 		}
 	}
