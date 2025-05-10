@@ -56,6 +56,10 @@
 {/snippet}
 
 <div class="widget-wrapper" bind:this={wrapperEl}>
+	<div class="inner-widget">
+		{@render children()}
+	</div>
+
 	{#if isEditing}
 		<div class="hover-menu">
 			{#if settingsDialog}
@@ -67,29 +71,15 @@
 				/>
 			{/if}
 			{#if widget}
-				<!-- if the menu is editable, open the dialog to confirm deletion -->
-				<!-- {#if editMenu} -->
 				<Button
 					icon={TrashSimple}
 					size="sm"
 					aria-label="Delete widget"
 					onclick={() => dialogPortal.openDialog(confirmDeleteDialog)}
 				/>
-				<!-- otherwise we dont really care and can delete right away -->
-				<!-- {:else}
-					<form use:enhance action="/api/profile?/deleteWidget&id={widget.id}" method="post">
-						<button aria-label="Delete widget">
-							<TrashSimple size={20} />
-						</button>
-					</form>
-				{/if} -->
 			{/if}
 		</div>
 	{/if}
-
-	<div class="inner-widget">
-		{@render children()}
-	</div>
 </div>
 
 <style lang="scss">
@@ -104,7 +94,6 @@
 			right: calc(var(--base-padding) * 0.25);
 			top: calc(var(--base-padding) * 0.25);
 			padding: calc(var(--base-padding) * 0.25);
-			z-index: 2;
 		}
 
 		.inner-widget {
