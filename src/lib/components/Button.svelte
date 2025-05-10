@@ -11,7 +11,7 @@
 	let {
 		href,
 		onclick,
-		type,
+		type = 'button',
 		variant = 'primary',
 		disabled = false,
 		icon: Icon,
