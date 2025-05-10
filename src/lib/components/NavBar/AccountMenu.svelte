@@ -9,41 +9,21 @@
 	import Webpals from '$icons/Webpals.svelte';
 	import type { CurrentProfile } from '$lib/db/types';
 	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
-	import { ArrowSquareOut, DoorOpen, Gear, UserSquare } from 'phosphor-svelte';
-	import { fly } from 'svelte/transition';
+	import { ArrowSquareOut, Gear, SignOut, UserSquare } from 'phosphor-svelte';
 	import WebpalsThumbup from '$icons/WebpalsThumbup.svelte';
 	import GitHubLogo from '$icons/brands/GitHubLogo.svelte';
-	import type { Component } from 'svelte';
+	import Popover from '../Popover/Popover.svelte';
+	import Avatar from '../Avatar.svelte';
+	import RowItem from '../RowItem.svelte';
 
 	let {
-		menuOpen = $bindable(false),
-		user
+		profile: profile
 	}: {
-		menuOpen: boolean;
-		user: CurrentProfile;
+		profile: CurrentProfile;
 	} = $props();
+
+	let menuOpen = $state(false);
 </script>
-
-<svelte:window
-	onkeydown={(e) => {
-		if (e.key === 'Escape') {
-			menuOpen = false;
-		}
-	}}
-/>
-
-{#snippet link(href: string, label: string, Icon: Component)}
-	<li>
-		<a {href} target="_blank" rel="noopener noreferrer">
-			<div class="label">
-				<Icon />
-				{label}
-			</div>
-
-			<ArrowSquareOut weight="regular" />
-		</a>
-	</li>
-{/snippet}
 
 {#snippet aboutWebpalsDialog()}
 	<div id="about-webpals">
@@ -59,117 +39,132 @@
 			<div id="version-badge">Private Alpha</div>
 		</div>
 
-		<ul aria-label="Issues">
-			{@render link('https://discord.gg/Mauurzxvrp', 'Community', DiscordLogo)}
-			{@render link('https://github.com/Clembs/Webpals/issues', 'Report an Issue', GitHubLogo)}
+		<ul>
+			<li>
+				<RowItem
+					leadingIcon={DiscordLogo}
+					label="Discord"
+					href="https://discord.gg/Mauurzxvrp"
+					trailingIcon={ArrowSquareOut}
+					trailingIconProps={{ weight: 'regular' }}
+				/>
+			</li>
+			<li>
+				<RowItem
+					leadingIcon={GitHubLogo}
+					label="Report an issue"
+					href="https://github.com/Clembs/Webpals/issues"
+					trailingIcon={ArrowSquareOut}
+					trailingIconProps={{ weight: 'regular' }}
+				/>
+			</li>
 		</ul>
 
-		<ul aria-label="Socials">
-			{@render link(
-				'https://bsky.app/profile/did:plc:ywcz5zihn4hxynh6wmxk4f4y',
-				'Bluesky',
-				BlueskyLogo
-			)}
-			{@render link('https://x.com/clembsv', 'X/Twitter', XLogo)}
+		<ul>
+			<li>
+				<RowItem
+					leadingIcon={BlueskyLogo}
+					label="Bluesky"
+					href="https://bsky.app/profile/did:plc:ywcz5zihn4hxynh6wmxk4f4y"
+					trailingIcon={ArrowSquareOut}
+					trailingIconProps={{ weight: 'regular' }}
+				/>
+			</li>
+			<li>
+				<RowItem
+					leadingIcon={XLogo}
+					label="X/Twitter"
+					href="https://x.com/clembsv"
+					trailingIcon={ArrowSquareOut}
+					trailingIconProps={{ weight: 'regular' }}
+				/>
+			</li>
 		</ul>
-
-		<!-- TODO -->
-		<!-- <ul aria-label="Legal">
-			{@render link('/terms-of-service', 'Terms of Service', Scroll)}
-			{@render link('/privacy-policy', 'Privacy Policy', EyeSlash)}
-		</ul> -->
 	</div>
 {/snippet}
 
-<div class="account-menu" transition:fly={{ y: -20, duration: 200 }}>
-	<div class="header">
-		<h2>
-			{user.displayName || user.username}
-			<span class="subtext">
-				@{user.username}
-			</span>
-		</h2>
-	</div>
+<Popover bind:open={menuOpen} contentProps={{ align: 'end' }}>
+	{#snippet trigger({ props })}
+		<button
+			{...props}
+			class="navbar-icon-button"
+			aria-label="Profile"
+			title="Profile"
+			aria-current={menuOpen}
+		>
+			<Avatar {profile} size="2.5rem" />
+		</button>
+	{/snippet}
 
-	<ul class="option-list">
-		<li class="option">
-			<a href="/{user.username}" onclick={() => (menuOpen = false)}>
-				<UserSquare weight="regular" />
-				My profile
-			</a>
-		</li>
-		<li class="option">
-			<a href="/settings" onclick={() => (menuOpen = false)}>
-				<Gear weight="regular" />
-				Settings
-			</a>
-		</li>
-		<li class="option">
-			<button
-				onclick={() => {
-					menuOpen = false;
-					dialogPortal.openDialog(aboutWebpalsDialog);
-				}}
-			>
-				<Webpals />
-				About Webpals
-			</button>
-		</li>
-		<li class="option">
-			<a data-sveltekit-preload-data="off" href="/logout" onclick={() => (menuOpen = false)}>
-				<DoorOpen weight="regular" />
-				Logout
-			</a>
-		</li>
-	</ul>
-</div>
+	<div id="account-menu">
+		<div class="header">
+			<Avatar {profile} size="3rem" />
+			<div class="text">
+				<h4>
+					{profile.displayName || profile.username}
+				</h4>
+				<p class="paragraph">
+					@{profile.username}
+				</p>
+			</div>
+		</div>
+
+		<ul>
+			<li>
+				<RowItem
+					leadingIcon={UserSquare}
+					leadingIconProps={{ weight: 'regular' }}
+					label="My profile"
+					href="/{profile.username}"
+				/>
+			</li>
+			<li>
+				<RowItem
+					leadingIcon={Gear}
+					leadingIconProps={{ weight: 'regular' }}
+					label="Settings"
+					href="/settings"
+				/>
+			</li>
+			<li>
+				<RowItem
+					leadingIcon={Webpals}
+					label="About Webpals"
+					onclick={() => {
+						dialogPortal.openDialog(aboutWebpalsDialog);
+					}}
+				/>
+			</li>
+			<li>
+				<RowItem
+					leadingIcon={SignOut}
+					leadingIconProps={{ weight: 'regular' }}
+					label="Logout"
+					href="/logout"
+					data-sveltekit-preload-data="off"
+				/>
+			</li>
+		</ul>
+	</div>
+</Popover>
 
 <style lang="scss">
 	@use '../../../styles/mixins.scss';
 
-	.account-menu {
-		@include mixins.card;
+	#account-menu {
+		display: flex;
+		flex-direction: column;
+
+		gap: var(--base-gap);
 		width: 300px;
-		position: absolute;
-		top: 100%;
-		right: 0;
-		z-index: 99;
 
-		h2 {
-			font-size: 1.25rem;
+		.header {
+			display: flex;
+			gap: calc(var(--base-gap) * 0.75);
 		}
 
-		.option-list {
+		ul {
 			@include mixins.fancy-list;
-
-			.option {
-				a,
-				button {
-					display: flex;
-					align-items: center;
-					padding: calc(var(--base-padding) * 0.75);
-					gap: var(--base-gap);
-					text-decoration: none;
-					width: 100%;
-					background-color: transparent;
-					color: var(--color-heading);
-					border: none;
-					cursor: pointer;
-
-					&:hover {
-						backdrop-filter: brightness(0.95);
-					}
-				}
-			}
-		}
-
-		@media (max-width: 768px) {
-			width: 100%;
-			position: fixed;
-			bottom: 0;
-			top: 400px;
-			border-bottom: none;
-			border-radius: var(--widgets-border-base-radius) var(--widgets-border-base-radius) 0 0;
 		}
 	}
 
@@ -177,24 +172,15 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+
 		gap: calc(var(--base-gap) * 1.25);
-		width: 350px;
+		min-width: 400px;
 
 		.header {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-		}
-
-		h1 {
-			font-size: 1.75rem;
-			display: flex;
-			margin-top: var(--base-gap);
-			margin-bottom: calc(var(--base-gap) * 0.25);
-		}
-
-		#copyright-blurb {
-			margin-bottom: calc(var(--base-gap) * 0.75);
+			gap: calc(var(--base-gap) * 0.5);
 		}
 
 		#version-badge {
@@ -202,34 +188,16 @@
 			padding: calc(var(--base-padding) * 0.25) calc(var(--base-padding) * 0.75);
 			align-items: center;
 			height: fit-content;
-			margin-left: calc(var(--base-gap) * 0.25);
 			border-radius: 99px;
 			color: var(--inputs-background-color);
-			transform: translateY(-4px);
 		}
 
 		ul {
 			@include mixins.fancy-list;
-			width: 100%;
+		}
 
-			a {
-				display: flex;
-				align-items: center;
-				gap: var(--base-gap);
-				text-decoration: none;
-				padding: var(--base-padding);
-				justify-content: space-between;
-
-				.label {
-					display: flex;
-					align-items: center;
-					gap: calc(var(--base-gap) * 0.75);
-				}
-
-				&:hover {
-					backdrop-filter: brightness(0.95);
-				}
-			}
+		@media (max-width: 768px) {
+			min-width: auto;
 		}
 	}
 </style>

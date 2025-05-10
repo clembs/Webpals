@@ -1,18 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { Compass } from 'phosphor-svelte';
-	import Avatar from '../Avatar.svelte';
 	import NotificationsMenu from './notifications/NotificationsMenu.svelte';
-	import { clickoutside } from '@svelte-put/clickoutside';
 	import AccountMenu from './AccountMenu.svelte';
 	import Webpals from '$icons/Webpals.svelte';
 	import Button from '../Button.svelte';
-
-	let accountMenuOpen = $state(false);
 </script>
 
 <header>
-	<a class="icon-button" href="/" aria-label="Home" title="Home">
+	<a class="navbar-icon-button" href="/" aria-label="Home" title="Home">
 		<Webpals size="2rem" />
 	</a>
 
@@ -35,25 +31,8 @@
 					<NotificationsMenu />
 				</li>
 
-				<li
-					id="account-menu-wrapper"
-					use:clickoutside
-					onclickoutside={() => (accountMenuOpen = false)}
-					data-has-submenu="true"
-				>
-					<button
-						use:clickoutside
-						onclick={() => (accountMenuOpen = !accountMenuOpen)}
-						aria-label="Profile"
-						title="Profile"
-						class="navbar-icon-button"
-					>
-						<Avatar profile={page.data.currentProfile} size="2.5rem" />
-					</button>
-
-					{#if accountMenuOpen}
-						<AccountMenu bind:menuOpen={accountMenuOpen} user={page.data.currentProfile} />
-					{/if}
+				<li id="account-menu-wrapper" data-has-submenu="true">
+					<AccountMenu profile={page.data.currentProfile} />
 				</li>
 			{:else}
 				<li id="join-cta-wrapper">
