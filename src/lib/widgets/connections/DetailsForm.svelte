@@ -24,7 +24,7 @@
 	placeholder={provider?.identifiableInputPlaceholder ??
 		(provider?.identifiablePrefix ? `what comes after ${provider?.identifiablePrefix}` : '')}
 	bind:value={identifiable}
-	maxlength={32}
+	maxlength={64}
 	required={false}
 	{oninput}
 />
