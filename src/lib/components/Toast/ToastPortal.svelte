@@ -56,7 +56,14 @@
 						<toast.icon />
 					{/if}
 
-					{toast.title}
+					<div class="text">
+						<div class="headline">
+							{toast.title}
+						</div>
+						<div class="subtitle">
+							{toast.subtitle}
+						</div>
+					</div>
 				{:else if toast.snippet}
 					{@render toast.snippet(toast.snippetProps)}
 				{/if}
@@ -107,6 +114,12 @@
 			&[data-variant='urgent'] {
 				--background-color: var(--color-urgent);
 				--on-background-color: var(--buttons-primary-on-background-color);
+			}
+
+			.text {
+				display: flex;
+				flex-direction: column;
+				gap: calc(var(--base-gap) * 0.25);
 			}
 		}
 	}
