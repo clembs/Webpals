@@ -82,6 +82,7 @@
 		ol {
 			display: flex;
 			flex-direction: column;
+			align-items: flex-end;
 			list-style: none;
 			gap: calc(var(--base-gap) * 0.5);
 		}
@@ -90,6 +91,7 @@
 			display: flex;
 
 			min-width: 300px;
+			width: fit-content;
 			max-width: 100%;
 			padding: var(--base-padding);
 			gap: var(--base-gap);
