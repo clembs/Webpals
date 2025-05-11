@@ -1,36 +1,36 @@
 <script lang="ts">
-	import { PencilSimple, Warning } from 'phosphor-svelte';
 	import BaseWidget from '../BaseWidget.svelte';
 	import type { MusicJSON, WidgetComponentProps } from '../types';
 	import AudioPlayer from '$lib/components/AudioPlayer/AudioPlayer.svelte';
 	import { PUBLIC_STORAGE_BASE_URL } from '$env/static/public';
 	import MusicSettings from './MusicSettings.svelte';
 	import AlbumArt from './AlbumArt.svelte';
+	import NoContent from '../NoContent.svelte';
 
 	let { widget, isEditing }: Omit<WidgetComponentProps<MusicJSON>, 'profile'> = $props();
 </script>
 
-<BaseWidget {widget} {isEditing}>
-	{#snippet settingsDialog()}
-		<MusicSettings {widget} />
-	{/snippet}
+{#snippet settingsDialog()}
+	<MusicSettings {widget} />
+{/snippet}
 
+<BaseWidget {widget} {isEditing} {settingsDialog}>
 	<div class="music-widget">
-		<div class="heading">
+		<div class="metadata">
 			<AlbumArt albumArtUrl={widget.album_art_url} title={widget.title} />
 
 			<div class="text">
-				<h2>
-					{widget.title || 'Music'}
-				</h2>
+				<h3>
+					{widget.title || 'Song title'}
+				</h3>
 
-				<span class="subtext">
-					{widget.artist || 'Artist'}
-				</span>
+				<p>
+					{widget.artist || 'Song artist(s)'}
+				</p>
 			</div>
 		</div>
 
-		{#if widget.content_url}
+		{#if widget.content_url && widget.title && widget.album_art_url}
 			<AudioPlayer
 				src={widget.provider === 'local' && widget.content_url.includes('music/')
 					? `${PUBLIC_STORAGE_BASE_URL}/${widget.content_url}`
@@ -51,15 +51,7 @@
 				}}
 			/>
 		{:else}
-			<div class="error">
-				<p>
-					<Warning /> No content provided. The widget will not be visible.
-				</p>
-
-				<p>
-					Click <PencilSimple /> to setup.
-				</p>
-			</div>
+			<NoContent {settingsDialog} />
 		{/if}
 	</div>
 </BaseWidget>
@@ -68,12 +60,12 @@
 	.music-widget {
 		display: flex;
 		flex-direction: column;
-		gap: calc(var(--base-gap) * 0.5);
+		gap: calc(var(--base-gap) * 0.75);
 		color: var(--color-heading);
 
-		.heading {
+		.metadata {
 			display: flex;
-			gap: calc(var(--base-gap) * 0.5);
+			gap: calc(var(--base-gap) * 0.75);
 			align-items: center;
 
 			.text {
@@ -82,45 +74,14 @@
 				gap: calc(var(--base-gap) * 0.125);
 			}
 
-			h2 {
-				font-size: 1.25rem;
-				flex: 1;
+			h3,
+			p {
 				display: -webkit-box;
 				-webkit-line-clamp: 2;
 				line-clamp: 2;
 				-webkit-box-orient: vertical;
 				overflow: hidden;
 			}
-
-			.subtext {
-				display: -webkit-box;
-				-webkit-line-clamp: 1;
-				line-clamp: 1;
-				-webkit-box-orient: vertical;
-				overflow: hidden;
-			}
 		}
-
-		.error p {
-			color: var(--color-urgent);
-			display: flex;
-			align-items: center;
-			gap: calc(var(--base-gap) * 0.25);
-		}
-
-		// .external-url-cta {
-		// 	display: flex;
-		// 	align-items: center;
-		// 	align-self: flex-end;
-		// 	gap: calc(var(--base-gap) * 0.5);
-		// 	max-width: fit-content;
-		// 	padding: 1rem;
-		// 	margin: -1rem;
-		// 	text-decoration: none;
-
-		// 	&:hover {
-		// 		text-decoration: underline;
-		// 	}
-		// }
 	}
 </style>
