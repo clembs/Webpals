@@ -332,7 +332,7 @@ export const connectionProviders: ConnectionProviderData[] = [
 		// honestly tho idk why i called this "domain" when it can be any website
 		// modified from https://uibakery.io/regex-library/url to group the domain
 		identifiablePattern:
-			/^(?:https?:\/\/)?((?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6})\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/,
+			/^(?:https?:\/\/)?((?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*))$/,
 		identifiableInputLabel: 'Website URL or domain',
 		identifiableInputPlaceholder: 'e.g. crbt.app, https://clembs.com/contact',
 		hasUrl: true,
