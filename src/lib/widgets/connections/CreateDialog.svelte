@@ -100,7 +100,7 @@
 
 			<Step>
 				<div class="step-content">
-					<div class="title">
+					<div class="title-back">
 						<Button
 							onclick={previousStep}
 							icon={ArrowLeft}
@@ -155,7 +155,7 @@
 		gap: calc(var(--base-gap) * 1.5);
 	}
 
-	.title {
+	.title-back {
 		display: flex;
 		align-items: center;
 		gap: calc(var(--base-gap) * 0.5);

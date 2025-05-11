@@ -1,5 +1,5 @@
 import type { Profile } from '$lib/db/types';
-import type { MusicProvider } from '$lib/widgets/music/music';
+import type { MusicProvider } from '$lib/widgets/music/helpers';
 import type { CustomWidgetJSON } from './custom-widgets/types';
 
 export type BaseWidgetJSON = {

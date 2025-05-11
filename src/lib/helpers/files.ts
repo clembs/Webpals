@@ -70,6 +70,14 @@ const signatures = [
 
 export type MimeTypes = (typeof signatures)[number]['mime'];
 
+export const supportedAudioMimeTypes: MimeTypes[] = [
+	'audio/mpeg',
+	'audio/wav',
+	'audio/flac',
+	// 'audio/ogg',
+	'audio/x-wav'
+];
+
 export function validateFileSignatures(file: File, mimes: MimeTypes[]): Promise<boolean> {
 	const signaturesToCheck = signatures.filter((s) => mimes.includes(s.mime));
 

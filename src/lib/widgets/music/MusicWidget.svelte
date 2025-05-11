@@ -1,32 +1,23 @@
 <script lang="ts">
-	import { MusicNote, PencilSimple, Warning } from 'phosphor-svelte';
+	import { PencilSimple, Warning } from 'phosphor-svelte';
 	import BaseWidget from '../BaseWidget.svelte';
 	import type { MusicJSON, WidgetComponentProps } from '../types';
-	// import MusicEditWidgetComponent from './MusicWidgetEdit/MusicWidgetEditComponent.svelte';
 	import AudioPlayer from '$lib/components/AudioPlayer/AudioPlayer.svelte';
 	import { PUBLIC_STORAGE_BASE_URL } from '$env/static/public';
+	import MusicSettings from './MusicSettings.svelte';
+	import AlbumArt from './AlbumArt.svelte';
 
-	let { widget, isEditing }: WidgetComponentProps<MusicJSON> = $props();
+	let { widget, isEditing }: Omit<WidgetComponentProps<MusicJSON>, 'profile'> = $props();
 </script>
 
 <BaseWidget {widget} {isEditing}>
-	<!-- {#snippet editMenu()}
-		<MusicEditWidgetComponent {widget} {editing} bind:modalOpened />
-	{/snippet} -->
+	{#snippet settingsDialog()}
+		<MusicSettings {widget} />
+	{/snippet}
+
 	<div class="music-widget">
 		<div class="heading">
-			{#if widget.album_art_url}
-				<img
-					draggable={false}
-					src={widget.album_art_url}
-					alt="{widget.title} Cover art"
-					height={48}
-					width={48}
-					class="album-art"
-				/>
-			{:else}
-				<MusicNote />
-			{/if}
+			<AlbumArt albumArtUrl={widget.album_art_url} title={widget.title} />
 
 			<div class="text">
 				<h2>
@@ -84,10 +75,6 @@
 			display: flex;
 			gap: calc(var(--base-gap) * 0.5);
 			align-items: center;
-
-			.album-art {
-				border-radius: var(--inputs-border-base-radius);
-			}
 
 			.text {
 				display: flex;

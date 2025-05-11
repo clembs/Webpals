@@ -3,7 +3,8 @@ import type { RequestEvent } from './$types';
 import { db } from '$lib/db';
 import { profiles } from '$lib/db/schema/profiles';
 import { eq } from 'drizzle-orm';
-import { getSpotifyToken, type Track } from '$lib/widgets/music/music';
+import { type Track } from '$lib/widgets/music/helpers';
+import { getSpotifyPreviewUrl, getSpotifyToken } from '$lib/widgets/music/server-helpers';
 
 export async function setExternalMusic({ locals: { getCurrentProfile }, url }: RequestEvent) {
 	const user = await getCurrentProfile();
@@ -41,6 +42,8 @@ export async function setExternalMusic({ locals: { getCurrentProfile }, url }: R
 		});
 	}
 
+	const previewUrl = await getSpotifyPreviewUrl(track.id);
+
 	await db
 		.update(profiles)
 		.set({
@@ -49,12 +52,12 @@ export async function setExternalMusic({ locals: { getCurrentProfile }, url }: R
 					if (w.id === 'music') {
 						return {
 							...w,
-							album_art_url: track.album.images[0].url,
-							content_url: track.preview_url,
 							provider: 'spotify',
 							title: track.name,
 							artist: track.artists.map((a) => a.name).join(', '),
-							external_url: track.external_urls.spotify
+							album_art_url: track.album.images[0].url,
+							external_url: track.external_urls.spotify,
+							content_url: previewUrl
 						};
 					}
 					return w;
