@@ -33,7 +33,7 @@
 			style:--nested-level={dialogPortal.history.length - i}
 			autofocus
 		>
-			{@render dialog.snippet(dialog.snippetProps)}
+			{@render dialog.snippet()}
 		</div>
 	{/each}
 </dialog-portal>
