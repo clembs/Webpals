@@ -6,9 +6,8 @@
 	import TextInput from '$lib/components/TextInput.svelte';
 	import { enhance } from '$app/forms';
 	import RowItem from '$lib/components/RowItem.svelte';
-	import ConnectionComponent from './ConnectionComponent.svelte';
 	import { toaster } from '$lib/components/Toast/toast.svelte';
-	import { parseIdentifiableUrl } from './helpers';
+	import DetailsForm from './DetailsForm.svelte';
 
 	// form stuff
 	let label = $state('');
@@ -147,49 +146,12 @@
 			<h1>Connection Details</h1>
 		</div>
 
-		<TextInput
-			name="connection-identifiable"
-			label={selectedProvider?.identifiableInputLabel}
-			placeholder={selectedProvider?.identifiableInputPlaceholder ??
-				(selectedProvider?.identifiablePrefix
-					? `what comes after ${selectedProvider?.identifiablePrefix}`
-					: '')}
-			bind:value={identifiable}
-			maxlength={32}
-			required={false}
+		<DetailsForm
+			bind:label
+			bind:identifiable
+			provider={selectedProvider}
 			oninput={recalculateDialogHeight}
 		/>
-
-		<TextInput
-			name="connection-label"
-			label="Label (optional)"
-			placeholder="What does this connection represent?"
-			bind:value={label}
-			maxlength={32}
-			required={false}
-			oninput={recalculateDialogHeight}
-		/>
-
-		{#if selectedProvider && identifiable}
-			<div id="connection-preview">
-				<h4>Preview</h4>
-
-				<div id="connection-preview-wrapper" inert>
-					<ConnectionComponent
-						connection={{
-							id: '',
-							identifiable,
-							label,
-							profileId: '',
-							provider: selectedProvider.id,
-							url: parseIdentifiableUrl(selectedProvider, identifiable) || null,
-							verified: false
-						}}
-						isEditing={false}
-					/>
-				</div>
-			</div>
-		{/if}
 
 		<div class="buttons">
 			<Button
@@ -240,17 +202,5 @@
 		@include mixins.fancy-list;
 		max-height: 300px;
 		overflow-y: auto;
-	}
-
-	#connection-preview {
-		display: flex;
-		flex-direction: column;
-		gap: calc(var(--base-gap) * 0.75);
-
-		#connection-preview-wrapper {
-			overflow: hidden;
-			border-radius: var(--inputs-border-base-radius);
-			background-color: var(--widgets-background-color-dim);
-		}
 	}
 </style>
