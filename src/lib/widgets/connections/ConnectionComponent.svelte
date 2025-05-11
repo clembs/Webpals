@@ -13,6 +13,7 @@
 	import { SvelteSet } from 'svelte/reactivity';
 	import { enhance } from '$app/forms';
 	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
+	import EditDialog from './EditDialog.svelte';
 
 	let {
 		isEditing,
@@ -22,7 +23,7 @@
 		connection: Connection;
 	} = $props();
 
-	let provider = $derived(connectionProviders.find(({ id }) => id === connection.provider));
+	let provider = $derived(connectionProviders.find(({ id }) => id === connection.provider)!);
 
 	// to more quickly delete a connection
 	let isPressingShift = $state(false);
@@ -102,6 +103,7 @@
 			<Button
 				variant="text"
 				icon={PencilSimple}
+				onclick={() => dialogPortal.openDialog(editDialog)}
 				aria-label="Edit connection"
 				title="Edit connection"
 			/>
@@ -145,6 +147,10 @@
 		{@render content()}
 	</button>
 {/if}
+
+{#snippet editDialog()}
+	<EditDialog {connection} {provider} />
+{/snippet}
 
 {#snippet confirmDeleteDialog()}
 	<form
