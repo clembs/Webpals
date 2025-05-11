@@ -13,6 +13,16 @@ export async function createConnection({ locals: { getCurrentProfile }, request 
 
 	if (!user) redirect(302, '/login');
 
+	const connectionsWidget = user.widgets
+		.find((column) => column.find((w) => w.id === 'connections'))
+		?.find((w) => w.id === 'connections');
+
+	if (!connectionsWidget) {
+		return fail(400, {
+			message: 'No connection widget'
+		});
+	}
+
 	const formData = await request.formData();
 	const rawProvider = formData.get('connection-provider')?.toString() as
 		| ConnectionProvider
@@ -21,11 +31,21 @@ export async function createConnection({ locals: { getCurrentProfile }, request 
 	const label = formData.get('connection-label')?.toString();
 
 	if (!rawProvider || !rawIdentifiable) {
-		return fail(400, { message: 'Missing required fields' });
+		return fail(400, {
+			message: 'Missing required fields'
+		});
 	}
 
-	if (label && label.length > 30) {
-		return fail(400, { message: 'Label too long' });
+	if (rawIdentifiable.length > 64) {
+		return fail(400, {
+			message: 'Identifiable is too long'
+		});
+	}
+
+	if (label && label.length > 32) {
+		return fail(400, {
+			message: 'Label too long'
+		});
 	}
 
 	const connectionProvider = connectionProviders.find(({ id }) => id === rawProvider);
@@ -52,7 +72,6 @@ export async function createConnection({ locals: { getCurrentProfile }, request 
 			matches![1] || matches![2] || rawIdentifiable
 		: rawIdentifiable;
 
-	// if the provider needs a URL, prepend https if not already present
 	const url = parseIdentifiableUrl(connectionProvider, rawIdentifiable);
 
 	try {

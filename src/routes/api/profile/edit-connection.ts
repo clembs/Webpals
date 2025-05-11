@@ -4,6 +4,7 @@ import { connectionProviders } from '$lib/widgets/connections/connection-provide
 import { db } from '$lib/db';
 import { connections } from '$lib/db/schema/profiles';
 import { eq } from 'drizzle-orm';
+import { parseIdentifiableUrl } from '$lib/widgets/connections/helpers';
 
 export async function editConnection({
 	locals: { getCurrentProfile },
@@ -13,16 +14,6 @@ export async function editConnection({
 	const user = getCurrentProfile();
 
 	if (!user) redirect(302, '/login');
-
-	const formData = await request.formData();
-	const rawIdentifiable = formData.get('connection-identifiable')?.toString();
-	const connectionId = url.searchParams.get('connection-id');
-
-	if (!rawIdentifiable || !connectionId) {
-		return fail(400, {
-			message: 'Missing required fields'
-		});
-	}
 
 	const connectionsWidget = user.widgets
 		.find((column) => column.find((w) => w.id === 'connections'))
@@ -34,6 +25,7 @@ export async function editConnection({
 		});
 	}
 
+	const connectionId = url.searchParams.get('connection-id');
 	const connection = user.connections.find(({ id }) => id === connectionId);
 
 	if (!connection) {
@@ -42,11 +34,34 @@ export async function editConnection({
 		});
 	}
 
-	const connectionProvider = connectionProviders[connection.provider];
+	const formData = await request.formData();
+	const rawIdentifiable = formData.get('connection-identifiable')?.toString();
+	const label = formData.get('connection-label')?.toString();
+
+	if (!rawIdentifiable || !connectionId) {
+		return fail(400, {
+			message: 'Missing required fields'
+		});
+	}
+
+	if (rawIdentifiable.length > 64) {
+		return fail(400, {
+			message: 'Identifiable is too long'
+		});
+	}
+
+	if (label && label.length > 32) {
+		return fail(400, {
+			message: 'Label is too long'
+		});
+	}
+
+	const connectionProvider = connectionProviders.find(({ id }) => id === connection.provider);
 
 	if (
-		connectionProvider.identifiablePattern &&
-		!connectionProvider.identifiablePattern.test(rawIdentifiable)
+		!connectionProvider ||
+		(connectionProvider.identifiablePattern &&
+			!connectionProvider.identifiablePattern.test(rawIdentifiable))
 	) {
 		return fail(400, {
 			message: 'Invalid connection identifier'
@@ -60,23 +75,13 @@ export async function editConnection({
 			matches![1] || matches![2] || rawIdentifiable
 		: rawIdentifiable;
 
-	// if the provider needs a URL, prepend https if not already present
-	const connectionUrl = connectionProvider.hasUrl
-		? rawIdentifiable.startsWith('http')
-			? rawIdentifiable
-			: `https://${connectionProvider.identifiablePrefix ?? ''}${rawIdentifiable}`
-		: undefined;
-
-	console.log({
-		...connection,
-		identifiable,
-		url: connectionUrl
-	});
+	const connectionUrl = parseIdentifiableUrl(connectionProvider, rawIdentifiable);
 
 	try {
 		await db
 			.update(connections)
 			.set({
+				label,
 				identifiable,
 				url: connectionUrl
 			})
