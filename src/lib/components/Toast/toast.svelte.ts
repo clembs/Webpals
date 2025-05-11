@@ -27,7 +27,7 @@ const defaultToastOptions: ToastOptions = {
 	variant: 'primary'
 };
 
-class Toast {
+export class Toast {
 	id: number;
 	icon? = $state<Component<IconComponentProps>>();
 	title? = $state<string>();
