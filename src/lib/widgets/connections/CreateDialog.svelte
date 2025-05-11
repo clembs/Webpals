@@ -1,12 +1,14 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import Button from '$lib/components/Button.svelte';
 	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
+	import RowItem from '$lib/components/RowItem.svelte';
+	import Step from '$lib/components/Steps/Step.svelte';
+	import Stepper from '$lib/components/Steps/Stepper.svelte';
+	import TextInput from '$lib/components/TextInput.svelte';
+	import { toaster } from '$lib/components/Toast/toast.svelte';
 	import { ArrowLeft, CaretRight, MagnifyingGlass } from 'phosphor-svelte';
 	import { connectionProviders, type ConnectionProviderData } from './connection-providers';
-	import TextInput from '$lib/components/TextInput.svelte';
-	import { enhance } from '$app/forms';
-	import RowItem from '$lib/components/RowItem.svelte';
-	import { toaster } from '$lib/components/Toast/toast.svelte';
 	import DetailsForm from './DetailsForm.svelte';
 
 	// form stuff
@@ -25,47 +27,7 @@
 			)
 	);
 
-	// steps
-	const stepWidth = 550;
-	let currentStep = $state(0);
-	let createDialogEl = $state<HTMLElement>();
-
 	let isLoading = $state(false);
-
-	function nextStep() {
-		currentStep++;
-		moveSteps();
-	}
-
-	function previousStep() {
-		currentStep--;
-		moveSteps();
-	}
-
-	function moveSteps() {
-		createDialogEl!.scroll({
-			left: stepWidth * currentStep,
-			behavior: 'smooth'
-		});
-
-		createDialogEl!.style.height = `${createDialogEl!.clientHeight}px`;
-		recalculateDialogHeight();
-	}
-
-	// smoothly animate the height of the dialog
-	function recalculateDialogHeight() {
-		requestAnimationFrame(() => {
-			const currentStepEl = createDialogEl!.children[currentStep];
-			createDialogEl!.style.height = `${currentStepEl.clientHeight}px`;
-		});
-	}
-
-	// $effect(() => {
-	// 	// when the dialog closes, remove the selectedProvider value
-	// 	if (!dialogPortal.current) {
-	// 		selectedProvider = undefined;
-	// 	}
-	// });
 </script>
 
 <form
@@ -96,111 +58,106 @@
 	}}
 	action="/api/profile?/createConnection"
 	method="post"
-	style:--step-width="{stepWidth}px"
-	bind:this={createDialogEl}
 >
-	<div class="step" inert={currentStep !== 0}>
-		<h1>Add a Connection</h1>
+	<Stepper>
+		{#snippet steps({ previousStep, nextStep, recalculateStepperHeight })}
+			<Step>
+				<div class="step-content">
+					<h1>Add a Connection</h1>
 
-		<input name="connection-provider" type="hidden" value={selectedProvider?.id} />
+					<input name="connection-provider" type="hidden" value={selectedProvider?.id} />
 
-		<TextInput
-			label="Filter connections"
-			placeholder="e.g. Discord, Website..."
-			icon={MagnifyingGlass}
-			iconProps={{ weight: 'regular' }}
-			name="filter"
-			bind:value={filter}
-			required={false}
-			oninput={recalculateDialogHeight}
-		/>
-
-		<ul id="provider-list">
-			{#each filteredProviders as provider}
-				<li>
-					<RowItem
-						leadingIcon={provider.icon}
-						leadingIconProps={provider.iconProps}
-						label={provider.name}
-						trailingIcon={CaretRight}
-						trailingIconProps={{ weight: 'regular' }}
-						onclick={() => {
-							selectedProvider = provider;
-							nextStep();
-						}}
+					<TextInput
+						label="Filter connections"
+						placeholder="e.g. Discord, Website..."
+						icon={MagnifyingGlass}
+						iconProps={{ weight: 'regular' }}
+						name="filter"
+						bind:value={filter}
+						required={false}
+						oninput={recalculateStepperHeight}
 					/>
-				</li>
-			{/each}
-		</ul>
-	</div>
 
-	<div class="step" inert={currentStep !== 1}>
-		<div class="title">
-			<Button
-				onclick={previousStep}
-				icon={ArrowLeft}
-				iconProps={{ weight: 'regular' }}
-				variant="text"
-				type="button"
-			/>
-			<h1>Connection Details</h1>
-		</div>
+					<ul id="provider-list">
+						{#each filteredProviders as provider}
+							<li>
+								<RowItem
+									leadingIcon={provider.icon}
+									leadingIconProps={provider.iconProps}
+									label={provider.name}
+									trailingIcon={CaretRight}
+									trailingIconProps={{ weight: 'regular' }}
+									onclick={() => {
+										selectedProvider = provider;
+										nextStep();
+									}}
+								/>
+							</li>
+						{/each}
+					</ul>
+				</div>
+			</Step>
 
-		<DetailsForm
-			bind:label
-			bind:identifiable
-			provider={selectedProvider}
-			oninput={recalculateDialogHeight}
-		/>
+			<Step>
+				<div class="step-content">
+					<div class="title">
+						<Button
+							onclick={previousStep}
+							icon={ArrowLeft}
+							iconProps={{ weight: 'regular' }}
+							variant="text"
+							type="button"
+						/>
+						<h1>Connection Details</h1>
+					</div>
 
-		<div class="buttons">
-			<Button
-				type="submit"
-				loading={isLoading}
-				disabled={isLoading ||
-					!identifiable ||
-					!selectedProvider?.identifiablePattern?.test(identifiable)}
-			>
-				Add to profile
-			</Button>
-		</div>
-	</div>
+					<DetailsForm
+						bind:label
+						bind:identifiable
+						provider={selectedProvider}
+						oninput={recalculateStepperHeight}
+					/>
+
+					<div class="buttons">
+						<Button
+							type="submit"
+							loading={isLoading}
+							disabled={isLoading ||
+								!identifiable ||
+								!selectedProvider?.identifiablePattern?.test(identifiable)}
+						>
+							Add to profile
+						</Button>
+					</div>
+				</div>
+			</Step>
+		{/snippet}
+	</Stepper>
 </form>
 
 <style lang="scss">
 	@use '../../../styles/mixins.scss';
 
 	#connection-create-dialog {
-		display: flex;
-		flex-direction: row;
-		gap: 0;
-
-		max-width: var(--step-width);
 		margin: 0 calc(0px - var(--base-padding) * 1.5);
-		overflow: hidden;
-
-		transition: height 300ms ease;
-	}
-
-	.step {
-		display: flex;
-		flex-direction: column;
-		flex-shrink: 0;
-		width: var(--step-width);
-		padding: 0 calc(var(--base-padding) * 1.5);
-		gap: calc(var(--base-gap) * 1.5);
-		height: fit-content;
-	}
-
-	.title {
-		display: flex;
-		align-items: center;
-		gap: calc(var(--base-gap) * 0.5);
 	}
 
 	#provider-list {
 		@include mixins.fancy-list;
 		max-height: 300px;
 		overflow-y: auto;
+	}
+
+	.step-content {
+		display: flex;
+		flex-direction: column;
+		padding: 0 calc(var(--base-padding) * 1.5);
+		gap: calc(var(--base-gap) * 1.5);
+	}
+
+	.title {
+		display: flex;
+		align-items: center;
+		gap: calc(var(--base-gap) * 0.5);
 	}
 </style>
