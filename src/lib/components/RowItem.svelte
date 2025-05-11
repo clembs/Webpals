@@ -92,6 +92,7 @@
 			background-color: transparent;
 			border: none;
 			cursor: pointer;
+			text-align: left;
 		}
 
 		&:is(button, a):hover {
@@ -109,8 +110,13 @@
 			.text {
 				display: flex;
 				flex-direction: column;
-				gap: calc(var(--base-gap) * 0.5);
+				gap: calc(var(--base-gap) * 0.25);
 			}
+		}
+
+		.trailing {
+			display: flex;
+			gap: calc(var(--base-gap) * 0.75);
 		}
 	}
 </style>
