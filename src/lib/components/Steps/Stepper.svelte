@@ -30,25 +30,23 @@
 		moveSteps();
 	}
 
-	function moveSteps() {
+	function moveSteps({ smooth } = { smooth: true }) {
 		const stepWidth = stepsWrapperEl!.clientWidth;
-
-		stepsWrapperEl!.scroll({
-			left: stepWidth * currentStep,
-			behavior: 'smooth'
-		});
-
-		// stepsWrapperEl!.style.height = `${stepsWrapperEl!.clientHeight}px`;
-		makeInert();
-		recalculateStepperHeight();
-	}
-
-	function makeInert() {
 		const currentStepEl = stepsWrapperEl!.children[currentStep];
 
+		// scroll to current step
+		stepsWrapperEl!.scroll({
+			left: stepWidth * currentStep,
+			behavior:
+				smooth && matchMedia('(prefers-reduced-motion: no-preference)') ? 'smooth' : 'instant'
+		});
+
+		// make all steps (except current step) inert
 		Array.from(stepsWrapperEl!.children).forEach((stepEl) => {
 			(stepEl as HTMLDivElement).inert = !stepEl.isSameNode(currentStepEl);
 		});
+
+		recalculateStepperHeight();
 	}
 
 	// smoothly animate the height of the dialog
@@ -59,10 +57,7 @@
 		});
 	}
 
-	onMount(() => {
-		makeInert();
-		recalculateStepperHeight();
-	});
+	onMount(() => moveSteps({ smooth: false }));
 </script>
 
 <div bind:this={stepsWrapperEl} role="tablist" data-current-step={currentStep}>
@@ -76,5 +71,9 @@
 		gap: 0;
 		overflow: hidden;
 		transition: height 300ms ease;
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
 	}
 </style>
