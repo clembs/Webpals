@@ -53,7 +53,7 @@
 		background: var(--inputs-background-color);
 		border: var(--inputs-border-width) solid var(--buttons-primary-border-color);
 		padding: var(--track-padding);
-		border-radius: calc(var(--inputs-border-base-radius) + var(--track-padding));
+		border-radius: calc(var(--inputs-border-base-radius) * 1.5 + var(--track-padding));
 
 		flex-shrink: 0;
 		display: grid;
@@ -68,7 +68,7 @@
 			grid-area: track;
 			inline-size: var(--thumb-size);
 			block-size: var(--thumb-size);
-			border-radius: var(--inputs-border-base-radius);
+			border-radius: calc(var(--inputs-border-base-radius) * 1.5);
 			background-color: var(--thumb-color);
 			outline: 1px solid var(--color-outline);
 
