@@ -2,11 +2,14 @@
 	import { onMount } from 'svelte';
 	import BaseWidget from '../BaseWidget.svelte';
 	import type { ClockJSON, WidgetComponentProps } from '../types';
-	import { Globe } from 'phosphor-svelte';
-	// import ClockWidgetEdit from './ClockWidgetEdit.svelte';
+	import { Globe, PencilSimple } from 'phosphor-svelte';
+	import Popover from '$lib/components/Popover/Popover.svelte';
+	import TimezonePopover from './TimezonePopover.svelte';
+	import ClockSettings from './ClockSettings.svelte';
 
 	let { widget, isEditing }: WidgetComponentProps<ClockJSON> = $props();
 
+	let popoverOpen = $state(false);
 	let date = $state(new Date());
 
 	let timeParts = $derived(
@@ -41,27 +44,46 @@
 </script>
 
 <BaseWidget {widget} {isEditing}>
-	<!-- {#snippet editMenu()}
-		<ClockWidgetEdit bind:modalOpened {widget} {editing} />
-	{/snippet} -->
+	{#snippet settingsDialog()}
+		<ClockSettings {widget} />
+	{/snippet}
 
 	<div class="clock">
 		<time datetime={date.toISOString()}>
 			<span class="time-string">
 				{timeString}
 			</span>
+
 			{#if widget.hour_format === '12h' && dayPeriod}
 				<span class="day-period">{dayPeriod}</span>
 			{/if}
 		</time>
 
-		<div class="region">
-			<Globe />
+		{#if isEditing}
+			<Popover bind:open={popoverOpen}>
+				{#snippet trigger({ props })}
+					<button class="region" {...props} aria-current={popoverOpen}>
+						<Globe />
 
-			<span class="city-country">
-				{widget.city}, {widget.country}
-			</span>
-		</div>
+						<span class="city-country">
+							{widget.city}, {widget.country}
+						</span>
+
+						<PencilSimple size={18} />
+					</button>
+				{/snippet}
+
+				<TimezonePopover {widget} onselect={() => (popoverOpen = false)} />
+			</Popover>
+		{:else}
+			<div class="region">
+				<Globe />
+
+				<span class="city-country">
+					{widget.city}, {widget.country}
+				</span>
+			</div>
+		{/if}
 	</div>
 </BaseWidget>
 
@@ -69,15 +91,21 @@
 	.clock {
 		display: flex;
 		flex-direction: column;
-		gap: calc(var(--base-gap) * 0.75);
 		align-items: center;
+
+		// optical alignment since the button is technically big and has its own padding
+		margin: calc(0px - var(--base-padding));
+		padding-left: var(--base-padding);
+		padding-right: var(--base-padding);
+		padding-top: calc(var(--base-padding) * 1.25);
+		padding-bottom: calc(var(--base-padding) * 0.5);
+		gap: calc(var(--base-gap) * 0.25);
 
 		time {
 			color: var(--color-heading);
 
 			.time-string {
-				font-size: 3.25rem;
-				letter-spacing: -0.05em;
+				font-size: 3.5rem;
 				font-family: var(--font-heading);
 				margin-right: 0.1em;
 			}
@@ -90,9 +118,26 @@
 
 		.region {
 			display: flex;
-			gap: calc(var(--base-gap) * 0.5);
 			align-items: center;
+
+			padding-left: calc(var(--base-padding) * 0.75);
+			padding-top: calc(var(--base-padding) * 0.75);
+			padding-bottom: calc(var(--base-padding) * 0.75);
+			padding-right: var(--base-padding);
+			gap: calc(var(--base-gap) * 0.5);
+
+			background-color: transparent;
+			border: none;
+			border-radius: var(--inputs-border-base-radius);
 			color: var(--color-heading);
+
+			cursor: pointer;
+			text-align: left;
+
+			&:is(button):hover,
+			&[aria-current='true'] {
+				backdrop-filter: brightness(0.9);
+			}
 		}
 	}
 </style>
