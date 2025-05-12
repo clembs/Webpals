@@ -22,7 +22,10 @@ export type WidgetMetadata<T extends AnyWidgetJSON> = {
 	description: string;
 	amountAllowedAtOnce?: 1 | 'multiple';
 	component: Component<WidgetComponentProps<T>>;
-	generateDefault: (props: { clientAddress: string; profile: CurrentProfile }) => MaybePromise<T>;
+	generateDefault: (props?: {
+		clientAddress?: string;
+		profile?: CurrentProfile;
+	}) => MaybePromise<T>;
 };
 
 export const musicWidgetData: WidgetMetadata<MusicJSON> = {
