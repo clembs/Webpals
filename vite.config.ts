@@ -6,5 +6,8 @@ export default defineConfig({
 	plugins: [sveltePhosphorOptimize(), sveltekit()],
 	optimizeDeps: {
 		exclude: ['phosphor-svelte']
+	},
+	build: {
+		sourcemap: true
 	}
 });
