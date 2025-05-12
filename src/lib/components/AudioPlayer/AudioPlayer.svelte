@@ -75,7 +75,7 @@
 		padding-left: calc(var(--base-padding) * 0.25);
 		padding-right: var(--base-padding);
 
-		background-color: var(--widgets-background-color-dim);
+		background-color: var(--inputs-background-color);
 		border-radius: var(--inputs-border-base-radius);
 
 		.buttons {
@@ -88,7 +88,7 @@
 
 			height: var(--track-height);
 
-			background-color: var(--widgets-border-color);
+			background-color: var(--inputs-border-color);
 			border-radius: 99px;
 			// we forget webkit/chrome because it can't style the progress
 			// like on firefox
