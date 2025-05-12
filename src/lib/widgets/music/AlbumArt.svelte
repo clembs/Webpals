@@ -29,6 +29,7 @@
 	.album-art {
 		display: grid;
 		place-items: center;
+		flex-shrink: 0;
 
 		height: 52px;
 		width: 52px;
