@@ -1,85 +1,56 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/Button.svelte';
-	import Card from '$lib/components/Card.svelte';
-	import TextInput from '$lib/components/TextInput.svelte';
+	import PinInput from '$lib/components/PinInput.svelte';
+	import { REGEXP_ONLY_DIGITS } from 'bits-ui';
+	import { ArrowLeft, Envelope } from 'phosphor-svelte';
 
-	let { data, form } = $props();
+	let { data } = $props();
 
 	let isLoading = $state(false);
+	let formEl = $state<HTMLFormElement>();
 </script>
 
-<main>
-	<Card min-width="500px">
-		<div class="header">
-			<h1>Log in using an email one-time password</h1>
+<div class="back">
+	<Button
+		href="/login?login={data.login}"
+		variant="text"
+		icon={ArrowLeft}
+		iconProps={{ weight: 'regular' }}
+	/>
+</div>
 
-			<p>A 6-digit code has been sent to your inbox. Type it below to log in.</p>
-		</div>
+<div class="header">
+	<Envelope weight="regular" size={48} />
 
-		<form
-			use:enhance={() => {
-				isLoading = true;
-				return ({ update }) => {
-					update({ reset: false });
-					isLoading = false;
-				};
-			}}
-			action="?/verifyOTP"
-			method="post"
-		>
-			<TextInput
-				name="otp"
-				inputmode="numeric"
-				autocomplete="one-time-code"
-				pattern={`\\d\{6\}`}
-				minlength={6}
-				maxlength={6}
-				label="One-time password"
-				tabindex={1}
-				autofocus
-				error={form?.message}
-			/>
+	<h2>Check your email for a 6-digit code</h2>
 
-			<div class="buttons">
-				<Button type="submit" variant="secondary" href="/login?login={data.login}" tabindex={3}>
-					Back
-				</Button>
+	<p>We've sent a login code to your inbox, be patient and check your spam folders!</p>
+</div>
 
-				<Button loading={isLoading} type="submit" tabindex={2} disabled={isLoading}>Log in</Button>
-			</div>
-		</form>
-	</Card>
-</main>
+<form
+	use:enhance={() => {
+		isLoading = true;
+		return async ({ update }) => {
+			isLoading = false;
 
-<style lang="scss">
-	main {
-		display: grid;
-		place-items: center;
-		height: 100vh;
+			await update({ reset: false });
+		};
+	}}
+	action="?/verifyOTP"
+	method="post"
+	bind:this={formEl}
+>
+	<PinInput
+		name="otp"
+		label="Login code"
+		onComplete={() => formEl?.requestSubmit()}
+		pattern={REGEXP_ONLY_DIGITS}
+		maxlength={6}
+		autofocus
+	/>
 
-		h1 {
-			font-size: 1.5rem;
-			margin-bottom: 0.5rem;
-		}
-
-		form {
-			display: flex;
-			flex-direction: column;
-			gap: 0.5rem;
-			container-type: inline-size;
-		}
-
-		.buttons {
-			display: flex;
-			gap: 0.5rem;
-			width: 100%;
-		}
-	}
-
-	@container (max-width: 430px) {
-		.buttons {
-			flex-direction: column-reverse;
-		}
-	}
-</style>
+	<div class="buttons">
+		<Button type="submit" loading={isLoading} disabled={isLoading}>Log in</Button>
+	</div>
+</form>

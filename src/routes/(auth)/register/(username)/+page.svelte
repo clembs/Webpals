@@ -4,7 +4,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
 	import { USERNAME_REGEX } from '$lib/helpers/constants';
-	import { At } from 'phosphor-svelte';
+	import { ArrowLeft, At } from 'phosphor-svelte';
 
 	let { data: initialData, form } = $props();
 	let isLoading = $state(false);
@@ -13,23 +13,24 @@
 	let data = $state(initialData);
 </script>
 
-<header>
-	<div class="eyebrow">Create an account - Step 1/3</div>
+<div class="back">
+	<Button href="/login" variant="text" icon={ArrowLeft} iconProps={{ weight: 'regular' }} />
+</div>
 
-	<h1>Choose a username</h1>
+<div class="header">
+	<h2>What's your online username?</h2>
 
 	<p>
-		A username helps identify you. It must be between 2 and 32 characters and contain only roman
-		letters, numbers, dots and underscores.
+		This shouldn't be your real name! Pick something short & sweet, using underscores and periods.
 	</p>
-</header>
+</div>
 
 <form
 	use:enhance={() => {
 		isLoading = true;
 		return ({ update }) => {
-			update({ reset: false });
 			isLoading = false;
+			update({ reset: false });
 		};
 	}}
 	method="post"
@@ -46,41 +47,15 @@
 		minlength={2}
 		maxlength={32}
 		pattern={USERNAME_REGEX.source}
+		icon={At}
+		iconProps={{ weight: 'regular' }}
 		tabindex={1}
 		autofocus
 		bind:value={data.username}
 		error={form?.message}
 	/>
-	{#snippet prefixIcon(size: number)}
-		<At {size} weight="regular" />
-	{/snippet}
 
 	<div class="buttons">
-		<Button variant="secondary" href="/login" tabindex={3}>Back to login</Button>
 		<Button loading={isLoading} type="submit" tabindex={2} disabled={isLoading}>Continue</Button>
 	</div>
 </form>
-
-<style lang="scss">
-	form {
-		display: flex;
-		flex-direction: column;
-		gap: calc(var(--base-gap) * 0.5);
-	}
-
-	.eyebrow {
-		font-size: 0.815rem;
-		font-weight: 500;
-		color: var(--color-paragraph);
-		margin-bottom: calc(var(--base-gap) * 0.5);
-	}
-
-	h1 {
-		margin-bottom: calc(var(--base-gap) * 0.5);
-	}
-
-	.buttons {
-		display: flex;
-		gap: calc(var(--base-gap) * 0.5);
-	}
-</style>

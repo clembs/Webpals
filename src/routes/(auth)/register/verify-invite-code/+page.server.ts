@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { db } from '$lib/db';
 import { USERNAME_REGEX } from '$lib/helpers/constants';
+import { getValidInviteCode } from '../helpers';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const username = url.searchParams.get('username')?.toString();
@@ -10,14 +10,6 @@ export const load: PageServerLoad = async ({ url }) => {
 		throw redirect(302, '/register');
 	}
 };
-
-export async function _getValidInviteCode(inputCode: string) {
-	const dbInviteCode = await db.query.inviteCodes.findFirst({
-		where: ({ code, claimedAt }, { isNull, eq, and }) => and(eq(code, inputCode), isNull(claimedAt))
-	});
-
-	return dbInviteCode;
-}
 
 export const actions: Actions = {
 	async validateInviteCode({ request, cookies }) {
@@ -39,7 +31,7 @@ export const actions: Actions = {
 			});
 		}
 
-		const inviteCode = await _getValidInviteCode(inputCode);
+		const inviteCode = await getValidInviteCode(inputCode);
 
 		if (!inviteCode) {
 			return fail(404, {

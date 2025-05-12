@@ -1,26 +1,29 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/Button.svelte';
-	import TextInput from '$lib/components/TextInput.svelte';
-	import { Numpad } from 'phosphor-svelte';
+	import PinInput from '$lib/components/PinInput.svelte';
+	import { ArrowLeft } from 'phosphor-svelte';
 
-	let { data: initialData, form } = $props();
+	let { data } = $props();
+
 	let isLoading = $state(false);
-
-	// do that so you can bind the value to the input
-	let data = $state(initialData);
+	let formEl = $state<HTMLFormElement>();
 </script>
 
-{#snippet numpadIcon(size: number)}
-	<Numpad {size} weight="regular" />
-{/snippet}
+<div class="back">
+	<Button
+		href="/register?username={data.username}{data.email ? `&email=${data.email}` : ''}"
+		variant="text"
+		icon={ArrowLeft}
+		iconProps={{ weight: 'regular' }}
+	/>
+</div>
 
 <div class="header">
-	<div class="eyebrow">Create an account - Step 2/3</div>
-	<h1>Enter your invite code</h1>
+	<h2>Enter your invite code</h2>
 
 	<p>
-		Before Webpals releases, an invite code is required to register.<br />
+		Until Webpals releases, an invite code is required to register.<br />
 		Please enter the 5 characters-long code you were given.
 	</p>
 </div>
@@ -35,62 +38,17 @@
 	}}
 	action="?/validateInviteCode"
 	method="post"
+	bind:this={formEl}
 >
-	<TextInput
+	<PinInput
 		name="invite-code"
-		icon={numpadIcon}
 		label="Invite code"
-		minlength={5}
+		onComplete={() => formEl?.requestSubmit()}
 		maxlength={5}
-		tabindex={1}
 		autofocus
-		error={form?.message}
 	/>
 
 	<div class="buttons">
-		<Button
-			type="button"
-			variant="secondary"
-			href="/register?username={data.username}{data.email ? `&email=${data.email}` : ''}"
-			tabindex={3}
-		>
-			Back
-		</Button>
-
-		<Button disabled={isLoading} type="submit" tabindex={2}>
-			{isLoading ? 'Loading...' : 'Verify invite code'}
-		</Button>
+		<Button loading={isLoading} disabled={isLoading} type="submit">Verify invite code</Button>
 	</div>
 </form>
-
-<style>
-	form {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		container-type: inline-size;
-	}
-
-	.eyebrow {
-		font-size: 0.815rem;
-		font-weight: 500;
-		color: #656565;
-		margin-bottom: 0.5rem;
-	}
-
-	h1 {
-		margin-bottom: 0.5rem;
-	}
-
-	.buttons {
-		display: flex;
-		gap: 0.5rem;
-		width: 100%;
-	}
-
-	@container (max-width: 430px) {
-		.buttons {
-			flex-direction: column-reverse;
-		}
-	}
-</style>

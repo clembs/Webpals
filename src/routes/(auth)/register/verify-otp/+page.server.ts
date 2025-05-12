@@ -2,13 +2,19 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { EMAIL_REGEX } from 'valibot';
 import { db } from '$lib/db';
-import { _getValidInviteCode } from '../verify-invite-code/+page.server';
+import { getValidInviteCode } from '../helpers';
 import { inviteCodes } from '$lib/db/schema/auth';
 import { count, eq } from 'drizzle-orm';
 import { profiles } from '$lib/db/schema/profiles';
 import { DISCORD_WEBHOOK_URL } from '$env/static/private';
 import { PUBLIC_STORAGE_BASE_URL } from '$env/static/public';
 import { USERNAME_REGEX } from '$lib/helpers/constants';
+import {
+	aboutMeWidgetData,
+	clockWidgetData,
+	friendsWidgetData,
+	musicWidgetData
+} from '$lib/widgets/widget-metadata';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const username = url.searchParams.get('username')?.toString();
@@ -26,7 +32,7 @@ export const load: PageServerLoad = async ({ url }) => {
 export const actions: Actions = {
 	// TODO
 	async resendOTP() {},
-	async verifyOTP({ locals: { supabase }, cookies, request, fetch, url }) {
+	async verifyOTP({ locals: { supabase }, cookies, request, fetch, url, getClientAddress }) {
 		const formData = await request.formData();
 		const originUrl = new URL(request.headers.get('referer')!);
 
@@ -54,7 +60,7 @@ export const actions: Actions = {
 
 		const inviteCodeCookie = cookies.get('invite-code');
 
-		if (!inviteCodeCookie || !_getValidInviteCode(inviteCodeCookie)) {
+		if (!inviteCodeCookie || !getValidInviteCode(inviteCodeCookie)) {
 			return fail(400, {
 				message: "Missing an invite code, or it's invalid. Go back and try again."
 			});
@@ -75,7 +81,15 @@ export const actions: Actions = {
 		// insert the profile
 		await db.insert(profiles).values({
 			id: data.user.id,
-			username
+			username,
+			// default widgets
+			widgets: [
+				[
+					await musicWidgetData.generateDefault(),
+					await clockWidgetData.generateDefault({ clientAddress: getClientAddress() })
+				],
+				[await aboutMeWidgetData.generateDefault(), await friendsWidgetData.generateDefault()]
+			]
 		});
 
 		// mark the invite code as claimed

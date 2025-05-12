@@ -3,7 +3,7 @@
 	import { replaceState } from '$app/navigation';
 	import Button from '$lib/components/Button.svelte';
 	import TextInput from '$lib/components/TextInput.svelte';
-	import { Envelope } from 'phosphor-svelte';
+	import { ArrowLeft, Envelope } from 'phosphor-svelte';
 
 	let { data: initialData, form } = $props();
 
@@ -13,13 +13,17 @@
 	let isLoading = $state(false);
 </script>
 
-{#snippet emailIcon(size: number)}
-	<Envelope {size} weight="regular" />
-{/snippet}
+<div class="back">
+	<Button
+		href="/register?username={data.username}{data.email ? `&email=${data.email}` : ''}"
+		variant="text"
+		icon={ArrowLeft}
+		iconProps={{ weight: 'regular' }}
+	/>
+</div>
 
 <div class="header">
-	<div class="eyebrow">Create an account - Step 3/3</div>
-	<h1>Verify your email address</h1>
+	<h2>Verify your email address</h2>
 
 	<p>To combat spam and secure your account, your email address needs to be verified.</p>
 </div>
@@ -28,8 +32,8 @@
 	use:enhance={() => {
 		isLoading = true;
 		return ({ update }) => {
-			update({ reset: false });
 			isLoading = false;
+			update({ reset: false });
 		};
 	}}
 	action="?/validateEmail"
@@ -38,60 +42,18 @@
 	<TextInput
 		name="email"
 		oninput={() => replaceState(`?username=${data.username}&email=${data.email}`, {})}
-		icon={emailIcon}
 		type="email"
 		label="Email address"
 		placeholder="clembs@clembs.com"
-		tabindex={1}
-		autofocus
+		autocomplete="email"
+		icon={Envelope}
+		iconProps={{ weight: 'regular' }}
 		bind:value={data.email}
 		error={form?.message}
+		autofocus
 	/>
 
 	<div class="buttons">
-		<Button
-			type="button"
-			variant="secondary"
-			href="/register?username={data.username}{data.email ? `&email=${data.email}` : ''}"
-			tabindex={3}
-		>
-			Back
-		</Button>
-
-		<Button loading={isLoading} type="submit" tabindex={2} disabled={isLoading}>
-			{isLoading ? 'Sending code...' : 'Send verification code'}
-		</Button>
+		<Button type="submit" loading={isLoading} disabled={isLoading}>Send verification code</Button>
 	</div>
 </form>
-
-<style>
-	form {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		container-type: inline-size;
-	}
-
-	.eyebrow {
-		font-size: 0.815rem;
-		font-weight: 500;
-		color: #656565;
-		margin-bottom: 0.5rem;
-	}
-
-	h1 {
-		margin-bottom: 0.5rem;
-	}
-
-	.buttons {
-		display: flex;
-		gap: 0.5rem;
-		width: 100%;
-	}
-
-	@container (max-width: 430px) {
-		.buttons {
-			flex-direction: column-reverse;
-		}
-	}
-</style>

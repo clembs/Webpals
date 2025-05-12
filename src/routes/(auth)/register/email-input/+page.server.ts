@@ -2,10 +2,10 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { EMAIL_REGEX } from 'valibot';
 import { db } from '$lib/db';
-import { _getValidInviteCode } from '../verify-invite-code/+page.server';
 import { authUsers } from 'drizzle-orm/supabase';
 import { eq } from 'drizzle-orm';
 import { USERNAME_REGEX } from '$lib/helpers/constants';
+import { getValidInviteCode } from '../helpers';
 
 export const load: PageServerLoad = async ({ url, cookies }) => {
 	const username = url.searchParams.get('username')?.toString();
@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ url, cookies }) => {
 
 	const inviteCodeCookie = cookies.get('invite-code');
 
-	if (!inviteCodeCookie || !(await _getValidInviteCode(inviteCodeCookie))) {
+	if (!inviteCodeCookie || !(await getValidInviteCode(inviteCodeCookie))) {
 		redirect(302, '/register');
 	}
 };
