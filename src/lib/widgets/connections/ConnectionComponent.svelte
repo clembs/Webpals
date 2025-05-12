@@ -49,6 +49,11 @@
 			isPressingShift = false;
 		}
 	}}
+	onvisibilitychange={() => {
+		if (document.visibilityState === 'hidden') {
+			isPressingShift = false;
+		}
+	}}
 />
 
 {#snippet leading()}
