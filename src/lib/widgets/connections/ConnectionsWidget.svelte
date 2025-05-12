@@ -8,33 +8,37 @@
 	import { slide } from 'svelte/transition';
 
 	let { profile, widget, isEditing }: WidgetComponentProps<ConnectionsJSON> = $props();
+
+	let isEmpty = $derived(profile.connections.length === 0);
 </script>
 
 {#snippet settingsDialog()}
 	<CreateDialog />
 {/snippet}
 
-<BaseWidget
-	{widget}
-	{isEditing}
-	settingsIcon={Plus}
-	settingsIconProps={{ weight: 'regular' }}
-	{settingsDialog}
->
-	<h3>Connections</h3>
+{#if !isEmpty || isEditing}
+	<BaseWidget
+		{widget}
+		{isEditing}
+		settingsIcon={Plus}
+		settingsIconProps={{ weight: 'regular' }}
+		{settingsDialog}
+	>
+		<h3>Connections</h3>
 
-	{#if profile.connections.length > 0}
-		<ul class="connections-list">
-			{#each profile.connections as connection (connection.id)}
-				<li out:slide>
-					<ConnectionComponent {isEditing} {connection} />
-				</li>
-			{/each}
-		</ul>
-	{:else}
-		<NoContent {settingsDialog} />
-	{/if}
-</BaseWidget>
+		{#if !isEmpty}
+			<ul class="connections-list">
+				{#each profile.connections as connection (connection.id)}
+					<li out:slide>
+						<ConnectionComponent {isEditing} {connection} />
+					</li>
+				{/each}
+			</ul>
+		{:else}
+			<NoContent {settingsDialog} />
+		{/if}
+	</BaseWidget>
+{/if}
 
 <style lang="scss">
 	@use '../../../styles/mixins.scss';

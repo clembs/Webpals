@@ -8,53 +8,63 @@
 	import NoContent from '../NoContent.svelte';
 
 	let { widget, isEditing }: Omit<WidgetComponentProps<MusicJSON>, 'profile'> = $props();
+
+	let isEmpty = $derived(
+		!widget.provider ||
+			!widget.title ||
+			!widget.artist ||
+			!widget.content_url ||
+			!widget.album_art_url
+	);
 </script>
 
 {#snippet settingsDialog()}
 	<MusicSettings {widget} />
 {/snippet}
 
-<BaseWidget {widget} {isEditing} {settingsDialog}>
-	<div class="music-widget">
-		<div class="metadata">
-			<AlbumArt albumArtUrl={widget.album_art_url} title={widget.title} />
+{#if isEditing || !isEmpty}
+	<BaseWidget {widget} {isEditing} {settingsDialog}>
+		<div class="music-widget">
+			<div class="metadata">
+				<AlbumArt albumArtUrl={widget.album_art_url} title={widget.title} />
 
-			<div class="text">
-				<h3>
-					{widget.title || 'Song title'}
-				</h3>
+				<div class="text">
+					<h3>
+						{widget.title || 'Song title'}
+					</h3>
 
-				<p>
-					{widget.artist || 'Song artist(s)'}
-				</p>
+					<p>
+						{widget.artist || 'Song artist(s)'}
+					</p>
+				</div>
 			</div>
-		</div>
 
-		{#if widget.content_url && widget.title && widget.album_art_url}
-			<AudioPlayer
-				src={widget.provider === 'local' && widget.content_url.includes('music/')
-					? `${PUBLIC_STORAGE_BASE_URL}/${widget.content_url}`
-					: widget.content_url}
-				metadata={{
-					title: widget.title || '',
-					artist: widget.artist || '',
-					...(widget.album_art_url
-						? {
-								artwork: [
-									{
-										src: widget.album_art_url,
-										type: 'image/jpeg'
-									}
-								]
-							}
-						: {})
-				}}
-			/>
-		{:else}
-			<NoContent {settingsDialog} />
-		{/if}
-	</div>
-</BaseWidget>
+			{#if !isEmpty}
+				<AudioPlayer
+					src={widget.provider === 'local' && widget.content_url!.includes('music/')
+						? `${PUBLIC_STORAGE_BASE_URL}/${widget.content_url!}`
+						: widget.content_url!}
+					metadata={{
+						title: widget.title || '',
+						artist: widget.artist || '',
+						...(widget.album_art_url
+							? {
+									artwork: [
+										{
+											src: widget.album_art_url,
+											type: 'image/jpeg'
+										}
+									]
+								}
+							: {})
+					}}
+				/>
+			{:else}
+				<NoContent {settingsDialog} />
+			{/if}
+		</div>
+	</BaseWidget>
+{/if}
 
 <style lang="scss">
 	.music-widget {
