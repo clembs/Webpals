@@ -94,8 +94,10 @@
 		.hover-menu {
 			display: flex;
 			position: absolute;
-			right: calc(var(--base-padding) * 0.25);
 			top: calc(var(--base-padding) * 0.25);
+			right: calc(var(--base-padding) * 0.25);
+
+			gap: calc(var(--base-gap) * 0.25);
 			padding: calc(var(--base-padding) * 0.25);
 		}
 
