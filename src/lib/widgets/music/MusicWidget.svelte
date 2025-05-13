@@ -10,11 +10,7 @@
 	let { widget, isEditing }: Omit<WidgetComponentProps<MusicJSON>, 'profile'> = $props();
 
 	let isEmpty = $derived(
-		!widget.provider ||
-			!widget.title ||
-			!widget.artist ||
-			!widget.content_url ||
-			!widget.album_art_url
+		!widget.provider || !widget.title || !widget.artist || !widget.content_url
 	);
 </script>
 
