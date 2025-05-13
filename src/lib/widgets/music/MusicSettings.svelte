@@ -18,7 +18,7 @@
 </script>
 
 <div id="settings-dialog">
-	<Stepper currentStep={!widget ? 0 : widget.provider === 'local' ? 2 : 1}>
+	<Stepper currentStep={widget?.provider === null ? 0 : widget?.provider === 'local' ? 2 : 1}>
 		{#snippet steps({ previousStep, nextStep, recalculateStepperHeight })}
 			<Step>
 				<div class="step-content">
