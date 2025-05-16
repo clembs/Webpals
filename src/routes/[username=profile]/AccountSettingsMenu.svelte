@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import type { CurrentProfile } from '$lib/db/types';
 	import type { User } from '@supabase/supabase-js';
 	import AccountSettings from '../(app)/settings/account/AccountSettings.svelte';
@@ -20,11 +20,11 @@
 </script>
 
 <BaseEditBarMenu
-	expandHref="/settings/account"
-	name="Account settings"
+icon={}
+	label="Account settings"
 	{editBarEl}
 	{editBarWrapperEl}
-	bind:menuOpen
+	bind:open={menuOpen}
 >
 	<AccountSettings
 		data={{
@@ -32,4 +32,4 @@
 			currentUser
 		}}
 	/>
-</BaseEditBarMenu>
+</BaseEditBarMenu> -->

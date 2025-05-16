@@ -5,7 +5,7 @@
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/Button.svelte';
 	import { page } from '$app/state';
-	import { ArrowClockwise } from 'phosphor-svelte';
+	import { ArrowClockwise, PaintRoller, X } from 'phosphor-svelte';
 	import { mergeThemes } from '$lib/themes/merge-themes';
 	import { plainTheme } from '$lib/themes/plain-theme';
 
@@ -26,8 +26,8 @@
 	let fileInput = $state<HTMLInputElement>();
 </script>
 
-<BaseEditBarMenu name="Theme Settings" {editBarEl} {editBarWrapperEl} bind:menuOpen>
-	{#snippet rightButton()}
+<BaseEditBarMenu icon={PaintRoller} label="Theme" bind:open={menuOpen}>
+	{#snippet header()}
 		<form
 			use:enhance={() => {
 				formState = 'loading';
@@ -90,6 +90,8 @@
 				{/if}
 			</Button>
 		</form>
+
+		<h1>Theme Settings</h1>
 	{/snippet}
 
 	<ThemeEditor bind:theme />
