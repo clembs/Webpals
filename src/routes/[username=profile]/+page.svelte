@@ -138,7 +138,7 @@
 
 	main {
 		display: grid;
-		gap: var(--base-gap);
+		gap: calc(var(--base-gap) * 1.5);
 		grid-template-columns: 1fr 1.5fr;
 		grid-template-rows: 1fr auto; // thx kevin powell https://stackoverflow.com/a/45897789
 		max-width: 60rem;
@@ -148,13 +148,13 @@
 		.column-outer {
 			display: flex;
 			flex-direction: column;
-			gap: var(--base-gap);
+			gap: calc(var(--base-gap) * 1.5);
 			height: 100%;
 
 			.column {
 				display: flex;
 				flex-direction: column;
-				gap: var(--base-gap);
+				gap: calc(var(--base-gap) * 1.5);
 				height: 100%;
 			}
 		}

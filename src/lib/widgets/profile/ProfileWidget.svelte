@@ -292,6 +292,15 @@
 		.text-bits {
 			display: flex;
 			flex-direction: column;
+
+			.username-pronouns {
+				display: flex;
+				gap: calc(var(--base-gap) * 0.5);
+
+				.bullet {
+					color: var(--inputs-border-color);
+				}
+			}
 		}
 	}
 
