@@ -1,8 +1,8 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { db } from '$lib/db';
-import { _getValidInviteCode } from '../verify-invite-code/+page.server';
 import { USERNAME_REGEX } from '$lib/helpers/constants';
+import { getValidInviteCode } from '../helpers';
 
 export const actions: Actions = {
 	async validateUsername({ request, url, cookies }) {
@@ -30,7 +30,7 @@ export const actions: Actions = {
 
 		const inviteCodeCookie = cookies.get('invite-code');
 
-		if (inviteCodeCookie && !!_getValidInviteCode(inviteCodeCookie)) {
+		if (inviteCodeCookie && !!getValidInviteCode(inviteCodeCookie)) {
 			redirect(307, `/register/email-input?username=${username}${email ? `&email=${email}` : ''}`);
 		} else {
 			redirect(
