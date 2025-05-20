@@ -1,12 +1,16 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import Tabs from '$lib/components/Tabs.svelte';
+	import LineColorPicker from '$lib/components/ThemeEditor/LineColorPicker.svelte';
 	import { CheckCircle } from 'phosphor-svelte';
+	import { mergeThemes } from '../merge-themes';
+	import { plainTheme } from '../plain-theme';
 	import { fontStyles } from '../theme-structure';
 	import type { Theme } from '../types';
-	import ColorPicker from 'svelte-awesome-color-picker';
 
 	let { theme = $bindable() }: { theme: Theme } = $props();
 
+	let cleanTheme = $derived(mergeThemes(page.data.currentProfile?.theme ?? {}, plainTheme));
 	let currentlyEditing = $state<'heading' | 'paragraph'>('heading');
 </script>
 
@@ -80,18 +84,18 @@
 	<h3>Color</h3>
 
 	{#if currentlyEditing === 'heading'}
-		<ColorPicker
-			isDialog={false}
+		<LineColorPicker
 			label="Headings color"
 			name="font.color_heading"
-			bind:hex={theme.font.color_heading}
+			bind:value={theme.font.color_heading}
+			initialValue={cleanTheme.font.color_heading}
 		/>
 	{:else if currentlyEditing === 'paragraph'}
-		<ColorPicker
-			isDialog={false}
+		<LineColorPicker
 			label="Paragraphs color"
 			name="font.color_paragraph"
-			bind:hex={theme.font.color_paragraph}
+			bind:value={theme.font.color_paragraph}
+			initialValue={cleanTheme.font.color_paragraph}
 		/>
 	{/if}
 </section>

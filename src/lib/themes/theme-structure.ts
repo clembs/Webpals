@@ -21,7 +21,17 @@ import {
 const HexColorStructure = pipe(string(), hexColor());
 
 const BorderStructure = strictObject({
-	radius: union([pipe(string(), regex(/^(\d+)%$/)), pipe(number(), minValue(0), maxValue(3))]),
+	// radius used to be a percentage or a number
+	// now we normalize strings to a number
+	radius: union([
+		pipe(
+			string(),
+			regex(/^(\d+)%$/),
+			transform((percentage) => 9999 * (parseInt(percentage.replace('%', '')) / 100)),
+			number()
+		),
+		pipe(number(), minValue(0), maxValue(3))
+	]),
 	width: pipe(number(), minValue(0), maxValue(10)),
 	color: HexColorStructure
 });

@@ -6,7 +6,7 @@
 	import { page } from '$app/state';
 	import { RelationshipTypes } from '$lib/db/schema/profiles';
 
-	let { profile }: { profile: Profile } = $props();
+	let { profile, isEditing }: { profile: Profile; isEditing: boolean } = $props();
 	let addFriendState = $state<null | 'loading' | 'error'>(null);
 
 	let relationship = $derived(
@@ -48,7 +48,9 @@
 			style="flex: 1;"
 			icon={UserPlus}
 			loading={addFriendState === 'loading'}
-			disabled={(page.data.currentProfile && page.data.currentProfile.id === profile.id) ||
+			disabled={(!isEditing &&
+				page.data.currentProfile &&
+				page.data.currentProfile.id === profile.id) ||
 				addFriendState !== null}
 		>
 			Add friend

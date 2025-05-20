@@ -41,7 +41,7 @@
 	);
 </script>
 
-{#if href}
+{#if href && !disabled}
 	<a
 		{href}
 		target={href.startsWith('http') ? '_blank' : undefined}
@@ -196,6 +196,10 @@
 		&[data-label-type='icon'] {
 			--padding: 0;
 			width: var(--button-size);
+		}
+
+		&[aria-readonly='true'] {
+			cursor: not-allowed;
 		}
 	}
 </style>

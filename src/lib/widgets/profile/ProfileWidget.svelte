@@ -249,7 +249,7 @@
 				</DropdownMenu.Group>
 			</Dropdown>
 
-			<AddFriend {profile} />
+			<AddFriend {profile} {isEditing} />
 		</div>
 	{/if}
 </BaseWidget>

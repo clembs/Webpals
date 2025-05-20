@@ -5,7 +5,7 @@
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/Button.svelte';
 	import { page } from '$app/state';
-	import { ArrowClockwise, PaintRoller, X } from 'phosphor-svelte';
+	import { ArrowUUpLeft, PaintRoller } from 'phosphor-svelte';
 	import { mergeThemes } from '$lib/themes/merge-themes';
 	import { plainTheme } from '$lib/themes/plain-theme';
 
@@ -24,6 +24,9 @@
 	let formState = $state<null | 'loading' | 'success' | 'error'>(null);
 
 	let fileInput = $state<HTMLInputElement>();
+
+	// the clean theme, aka the theme before any changes were made
+	let cleanTheme = $derived(mergeThemes(page.data.currentProfile?.theme ?? {}, plainTheme));
 </script>
 
 <BaseEditBarMenu icon={PaintRoller} label="Theme" bind:open={menuOpen}>
@@ -68,27 +71,24 @@
 
 			<Button
 				size="sm"
-				icon={ArrowClockwise}
+				icon={ArrowUUpLeft}
 				variant="secondary"
 				type="button"
-				onclick={() => {
-					theme = page.data.currentProfile?.theme
-						? mergeThemes(page.data.currentProfile?.theme)
-						: plainTheme;
-				}}
 				disabled={formState === 'loading'}
+				loading={formState === 'loading'}
 				aria-label="Undo all"
+				onclick={() => {
+					theme = cleanTheme;
+				}}
 			/>
 
-			<Button size="sm" type="submit" disabled={formState === 'loading'}>
-				{#if formState === 'loading'}
-					Saving...
-				{:else if formState === 'success'}
-					Saved
-				{:else}
-					Save
-				{/if}
-			</Button>
+			{#if formState === 'loading'}
+				<Button size="sm" disabled loading />
+			{:else if formState === 'success'}
+				<Button size="sm" variant="success">Saved</Button>
+			{:else}
+				<Button size="sm" type="submit">Save</Button>
+			{/if}
 		</form>
 
 		<h1>Theme Settings</h1>
