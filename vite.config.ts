@@ -9,5 +9,8 @@ export default defineConfig({
 	},
 	build: {
 		sourcemap: true
+	},
+	define: {
+		WEBPALS_VERSION: JSON.stringify(process.env.npm_package_version)
 	}
 });

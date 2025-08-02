@@ -18,6 +18,8 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	declare const WEBPALS_VERSION: string;
 }
 
 export {};

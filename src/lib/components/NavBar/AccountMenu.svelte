@@ -4,16 +4,15 @@
 
 <script lang="ts">
 	import BlueskyLogo from '$icons/brands/BlueskyLogo.svelte';
-	import XLogo from '$icons/brands/XLogo.svelte';
 	import DiscordLogo from '$icons/brands/DiscordLogo.svelte';
-	import Webpals from '$icons/Webpals.svelte';
-	import type { CurrentProfile } from '$lib/db/types';
-	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
-	import { ArrowSquareOut, Gear, SignOut, UserSquare } from 'phosphor-svelte';
-	import WebpalsThumbup from '$icons/WebpalsThumbup.svelte';
 	import GitHubLogo from '$icons/brands/GitHubLogo.svelte';
-	import Popover from '../Popover/Popover.svelte';
+	import XLogo from '$icons/brands/XLogo.svelte';
+	import Webpals from '$icons/Webpals.svelte';
+	import { dialogPortal } from '$lib/components/Dialog/dialog.svelte';
+	import type { CurrentProfile } from '$lib/db/types';
+	import { ArrowSquareOut, Gear, SignOut, UserSquare } from 'phosphor-svelte';
 	import Avatar from '../Avatar.svelte';
+	import Popover from '../Popover/Popover.svelte';
 	import RowItem from '../RowItem.svelte';
 
 	let {
@@ -28,7 +27,7 @@
 {#snippet aboutWebpalsDialog()}
 	<div id="about-webpals">
 		<div class="header">
-			<WebpalsThumbup size={64} />
+			<Webpals size={64} />
 
 			<h1>Webpals</h1>
 
@@ -36,7 +35,7 @@
 				&copy; 2024-{new Date().getFullYear()} Clembs
 			</p>
 
-			<div id="version-badge">Private Alpha</div>
+			<div id="version-badge">Version {WEBPALS_VERSION}</div>
 		</div>
 
 		<ul>
