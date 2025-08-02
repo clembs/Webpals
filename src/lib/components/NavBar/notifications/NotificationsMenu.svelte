@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { NotificationTypes } from '$lib/db/schema/notifications';
-	import Button from '../../Button.svelte';
-	import FriendRequestNotification from './FriendRequestNotification.svelte';
-	import FriendRequestAcceptedNotification from './FriendRequestAcceptedNotification.svelte';
-	import GenericNotification from './GenericNotification.svelte';
 	import { enhance } from '$app/forms';
-	import Popover from '../../Popover/Popover.svelte';
-	import { onMount } from 'svelte';
-	import { clientSupabase } from '$lib/db/supabase';
+	import { invalidate } from '$app/navigation';
 	import { page } from '$app/state';
-	import { invalidate, invalidateAll } from '$app/navigation';
+	import { NotificationTypes } from '$lib/db/schema/notifications';
+	import { clientSupabase } from '$lib/db/supabase';
 	import { Bell, BellRinging } from 'phosphor-svelte';
+	import { onMount } from 'svelte';
+	import Button from '../../Button.svelte';
+	import Popover from '../../Popover/Popover.svelte';
+	import FriendRequestAcceptedNotification from './FriendRequestAcceptedNotification.svelte';
+	import FriendRequestNotification from './FriendRequestNotification.svelte';
+	import GenericNotification from './GenericNotification.svelte';
 
-	import './styles.scss';
-	import WebpalsThumbup from '$icons/WebpalsThumbup.svelte';
+	import Webpals from '$icons/Webpals.svelte';
 	import { slide } from 'svelte/transition';
+	import './styles.scss';
 
 	let menuOpen = $state(false);
 
@@ -119,7 +119,7 @@
 			</ul>
 		{:else}
 			<div class="no-notifications paragraph">
-				<WebpalsThumbup size={32} />
+				<Webpals size={32} />
 				No notifications...
 			</div>
 		{/if}
