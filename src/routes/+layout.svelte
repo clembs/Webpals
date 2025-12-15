@@ -3,7 +3,9 @@
 	import '../styles/global.scss';
 	import { browser } from '$app/environment';
 	import { HEARTBEAT_INTERVAL } from '$lib/helpers/constants';
-	import DialogPortal from '$lib/portals/DialogPortal.svelte';
+	import DialogPortal from '$lib/components/Dialog/DialogPortal.svelte';
+	import { ProgressBar } from '@prgm/sveltekit-progress-bar';
+	import ToastPortal from '$lib/components/Toast/ToastPortal.svelte';
 
 	let { data, children } = $props();
 
@@ -24,7 +26,10 @@
 		weight: 'fill'
 	}}
 >
+	<ProgressBar />
+
 	<DialogPortal />
+	<ToastPortal />
 
 	{@render children()}
 </IconContext>

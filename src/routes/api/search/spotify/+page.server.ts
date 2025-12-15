@@ -1,5 +1,6 @@
 import { fail, type Actions } from '@sveltejs/kit';
-import { getSpotifyToken } from '$lib/helpers/music';
+import { getSpotifyPreviewUrl, getSpotifyToken } from '$lib/widgets/music/server-helpers';
+import type { Track } from '$lib/widgets/music/helpers';
 
 export const actions: Actions = {
 	async default({ request, fetch }) {
@@ -23,9 +24,19 @@ export const actions: Actions = {
 				}
 			}).then((r) => r.json());
 
-			const tracks = searchRes.tracks.items;
+			const tracks: Track[] = searchRes.tracks.items;
 
-			return tracks;
+			// this is very ugly and sad but since CORS we can't fetch this on the client
+			// and i cba fetching from client to server for every song
+			// so it takes longer to load results, sorry and screw spotify tbh
+			const tracksWithPreviewUrls = await Promise.all(
+				tracks.map(async (t) => ({
+					...t,
+					preview_url: await getSpotifyPreviewUrl(t.id)
+				}))
+			);
+
+			return tracksWithPreviewUrls;
 		} catch (err) {
 			console.log(err);
 			return fail(500, { message: `Failed to search. Error: ${err}` });

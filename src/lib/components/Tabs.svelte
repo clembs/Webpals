@@ -25,25 +25,32 @@
 <style lang="scss">
 	.tabs {
 		display: flex;
-		gap: calc(var(--base-gap) * 0.5);
-		list-style: none;
+
+		gap: calc(var(--base-gap) * 0.25);
+		padding: calc(var(--base-padding) * 0.25);
+
 		background-color: var(--widgets-background-color-dim);
-		border-radius: calc(var(--widgets-border-base-radius) + var(--base-padding) * 0.5);
-		padding: calc(var(--base-padding) * 0.5);
+		border-radius: calc(var(--inputs-border-base-radius) + var(--base-padding) * 0.25);
+
+		list-style: none;
 
 		li {
-			width: 100%;
+			flex: 1;
 		}
 
 		label {
-			width: 100%;
+			display: flex;
+			justify-content: center;
+
 			padding: calc(var(--base-padding) * 0.75) calc(var(--base-padding) * 1.5);
-			border-radius: var(--widgets-border-base-radius);
+
+			border-radius: var(--inputs-border-base-radius);
+			color: var(--inputs-on-background-color);
+
 			cursor: pointer;
-			text-align: center;
 
 			&:hover {
-				backdrop-filter: brightness(0.95);
+				backdrop-filter: brightness(0.9);
 			}
 		}
 

@@ -1,108 +1,39 @@
 import type { Profile } from '$lib/db/types';
-import type { MusicProvider } from '$lib/helpers/music';
+import type { MusicProvider } from '$lib/widgets/music/helpers';
+import type { CustomWidgetJSON } from './custom-widgets/types';
 
-export type BaseDefaultWidget = {
+export type BaseWidgetJSON = {
 	id: string;
 };
 
-export type CustomWidget = BaseDefaultWidget & {
-	blocks: AnyBlock[];
-};
-
-export type Block = {
-	json_endpoint?: string;
-};
-
-export type TextBlock = Block & {
-	type: 'text';
-	content: string;
-	editable?: boolean;
-	text_type: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'paragraph' | 'subtext';
-};
-
-export type LayoutBlock = Block & {
-	type: 'layout';
-	blocks: AnyBlock[];
-};
-
-export type KeyValueBlock = Block & {
-	type: 'key_value';
-	key: string;
-	value: string;
-};
-
-export type AnyBlock = TextBlock | LayoutBlock | KeyValueBlock;
-
-export type MusicWidget = BaseDefaultWidget & {
+export type MusicJSON = BaseWidgetJSON & {
 	id: 'music';
 	content_url: string | null;
-	provider:
-		| MusicProvider
-		// | 'youtube'
-		// | 'soundcloud'
-		// | 'tidal'
-		// | 'apple-music'
-		// | 'deezer'
-		// | 'bandcamp'
-		| null;
+	provider: MusicProvider | null;
 	title: string | null;
 	artist: string | null;
 	album_art_url: string | null;
 	external_url: string | null;
 };
 
-export type AboutMeWidget = BaseDefaultWidget & {
+export type AboutMeJSON = BaseWidgetJSON & {
 	id: 'about_me';
 	content: string;
 };
 
-export type FriendsWidget = BaseDefaultWidget & {
+export type FriendsJSON = BaseWidgetJSON & {
 	id: 'friends';
 };
 
-export type PostsWidget = BaseDefaultWidget & {
+export type PostsJSON = BaseWidgetJSON & {
 	id: 'posts';
 };
 
-export type CommentsWidget = BaseDefaultWidget & {
-	id: 'comments';
-};
-
-export const connectionProviderKeys = [
-	'bluesky',
-	'discord',
-	'domain',
-	'email',
-	'facebook',
-	'github',
-	'instagram',
-	'kofi',
-	'lastfm',
-	'linkedin',
-	'mastodon',
-	'patreon',
-	// 'pixelfed',
-	'phone',
-	'pretendo',
-	'reddit',
-	'signal',
-	'spotify',
-	'startgg',
-	'steam',
-	'threads',
-	'twitch',
-	'twitter',
-	'webpals',
-	'youtube'
-] as const;
-
-export type ConnectionProvider = (typeof connectionProviderKeys)[number];
-
-export type ConnectionsWidget = BaseDefaultWidget & {
+export type ConnectionsJSON = BaseWidgetJSON & {
 	id: 'connections';
 };
 
-export type ClockWidget = BaseDefaultWidget & {
+export type ClockJSON = BaseWidgetJSON & {
 	id: 'clock';
 	timezone: string;
 	show_seconds: boolean;
@@ -111,19 +42,19 @@ export type ClockWidget = BaseDefaultWidget & {
 	country: string;
 };
 
-export type AnyDefaultWidget =
-	| MusicWidget
-	| AboutMeWidget
-	| FriendsWidget
-	| PostsWidget
-	| CommentsWidget
-	| ConnectionsWidget
-	| ClockWidget;
+export type AnyDefaultWidgetJSON =
+	| MusicJSON
+	| AboutMeJSON
+	| FriendsJSON
+	| PostsJSON
+	// | CommentsJSON
+	| ConnectionsJSON
+	| ClockJSON;
 
-export type AnyWidget = AnyDefaultWidget | CustomWidget;
+export type AnyWidgetJSON = AnyDefaultWidgetJSON | CustomWidgetJSON;
 
-export type WidgetComponentProps<T extends AnyWidget> = {
-	profile?: Profile;
+export type WidgetComponentProps<T extends AnyWidgetJSON> = {
+	profile: Profile;
 	widget: T;
-	editing: boolean;
+	isEditing: boolean;
 };

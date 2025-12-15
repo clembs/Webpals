@@ -11,7 +11,7 @@ const config = {
 			runtime: 'nodejs22.x'
 		}),
 		alias: {
-			$icons: 'src/icons'
+			$icons: 'src/lib/icons'
 		}
 	}
 };

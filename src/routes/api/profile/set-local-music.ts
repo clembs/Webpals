@@ -1,11 +1,15 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from './$types';
-import { validateFileSignatures, type MimeTypes } from '$lib/helpers/files';
+import {
+	supportedAudioMimeTypes,
+	validateFileSignatures,
+	type MimeTypes
+} from '$lib/helpers/files';
 import { db } from '$lib/db';
 import { profiles } from '$lib/db/schema/profiles';
 import { eq } from 'drizzle-orm';
 import { parseWebStream } from 'music-metadata';
-import type { MusicWidget } from '$lib/widgets/types';
+import type { MusicJSON } from '$lib/widgets/types';
 
 export async function setLocalMusic({
 	locals: { getCurrentProfile, supabase },
@@ -29,7 +33,7 @@ export async function setLocalMusic({
 
 	const musicWidget = currentProfile.widgets
 		.find((column) => column.some((w) => w.id === 'music'))
-		?.find((w) => w.id === 'music') as MusicWidget | undefined;
+		?.find((w) => w.id === 'music') as MusicJSON | undefined;
 
 	if (!musicWidget) {
 		return fail(400, {
@@ -75,28 +79,20 @@ export async function setLocalMusic({
 
 		if (!audioFile.type.startsWith('audio/')) {
 			return fail(400, {
-				message: 'Invalid file type.'
+				message: 'Unsupported file type.'
 			});
 		}
 
-		const mimeTypes: MimeTypes[] = [
-			'audio/mpeg',
-			'audio/wav',
-			'audio/flac',
-			// 'audio/ogg',
-			'audio/x-wav'
-		];
-
-		const isValidMimeSignature = await validateFileSignatures(audioFile, mimeTypes);
+		const isValidMimeSignature = await validateFileSignatures(audioFile, supportedAudioMimeTypes);
 
 		if (!isValidMimeSignature) {
 			return fail(400, {
-				message: 'Invalid file type.'
+				message: 'Unsupported file type.'
 			});
 		}
 
-		// check if the file is too large (>3MB)
-		if (audioFile.size > 3 * 1024 * 1024) {
+		// check if the file is too large
+		if (audioFile.size > 10 * 1024 * 1024) {
 			return fail(400, {
 				message: 'File must be less than 3 MB in size.'
 			});

@@ -5,8 +5,9 @@
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/Button.svelte';
 	import { page } from '$app/state';
-	import { ArrowClockwise } from 'phosphor-svelte';
-	import { mergeThemes, plainTheme } from '$lib/themes/mergeThemes';
+	import { ArrowUUpLeft, PaintRoller } from 'phosphor-svelte';
+	import { mergeThemes } from '$lib/themes/merge-themes';
+	import { plainTheme } from '$lib/themes/plain-theme';
 
 	let {
 		theme = $bindable(),
@@ -23,10 +24,13 @@
 	let formState = $state<null | 'loading' | 'success' | 'error'>(null);
 
 	let fileInput = $state<HTMLInputElement>();
+
+	// the clean theme, aka the theme before any changes were made
+	let cleanTheme = $derived(mergeThemes(page.data.currentProfile?.theme ?? {}, plainTheme));
 </script>
 
-<BaseEditBarMenu name="Theme Settings" {editBarEl} {editBarWrapperEl} bind:menuOpen>
-	{#snippet rightButton()}
+<BaseEditBarMenu icon={PaintRoller} label="Theme" bind:open={menuOpen}>
+	{#snippet header()}
 		<form
 			use:enhance={() => {
 				formState = 'loading';
@@ -66,32 +70,28 @@
 			<input type="hidden" name="theme" value={JSON.stringify(theme)} />
 
 			<Button
-				inline
-				size="small"
-				icon
+				size="sm"
+				icon={ArrowUUpLeft}
 				variant="secondary"
 				type="button"
-				onclick={() => {
-					theme = page.data.currentProfile?.theme
-						? mergeThemes(plainTheme, page.data.currentProfile?.theme)
-						: plainTheme;
-				}}
 				disabled={formState === 'loading'}
+				loading={formState === 'loading'}
 				aria-label="Undo all"
-			>
-				<ArrowClockwise />
-			</Button>
+				onclick={() => {
+					theme = cleanTheme;
+				}}
+			/>
 
-			<Button inline size="small" type="submit" disabled={formState === 'loading'}>
-				{#if formState === 'loading'}
-					Saving...
-				{:else if formState === 'success'}
-					Saved
-				{:else}
-					Save
-				{/if}
-			</Button>
+			{#if formState === 'loading'}
+				<Button size="sm" disabled loading />
+			{:else if formState === 'success'}
+				<Button size="sm" variant="success">Saved</Button>
+			{:else}
+				<Button size="sm" type="submit">Save</Button>
+			{/if}
 		</form>
+
+		<h1>Theme Settings</h1>
 	{/snippet}
 
 	<ThemeEditor bind:theme />

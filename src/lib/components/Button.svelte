@@ -1,153 +1,205 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-	import type { HTMLButtonAttributes, HTMLAnchorAttributes } from 'svelte/elements';
+	import Spinner from '$icons/Spinner.svelte';
+	import type { IconComponentProps } from 'phosphor-svelte';
+	import type { Component, Snippet } from 'svelte';
+	import type {
+		HTMLButtonAttributes,
+		HTMLAnchorAttributes,
+		MouseEventHandler
+	} from 'svelte/elements';
 
 	let {
-		type,
-		variant = 'primary',
 		href,
-		disabled = false,
-		inline = false,
-		icon = false,
-		size = 'medium',
-		children,
 		onclick,
+		type = 'button',
+		variant = 'primary',
+		disabled = false,
+		icon: Icon,
+		iconProps,
+		size = 'md',
+		loading = false,
+		children,
 		...restProps
 	}: (HTMLButtonAttributes | HTMLAnchorAttributes) & {
-		type?: 'submit' | 'button';
-		variant?: 'primary' | 'secondary' | 'success' | 'urgent';
 		href?: string;
+		onclick?: MouseEventHandler<HTMLButtonElement>;
+		type?: 'submit' | 'button';
+		variant?: 'primary' | 'secondary' | 'text' | 'success' | 'urgent';
 		disabled?: boolean;
-		icon?: boolean;
-		inline?: boolean;
-		size?: 'small' | 'medium';
-		children: Snippet;
-		onclick?: () => void;
+		icon?: Component<IconComponentProps>;
+		iconProps?: IconComponentProps;
+		size?: 'sm' | 'md';
+		loading?: boolean;
+		children?: Snippet;
 	} = $props();
+
+	let labelType = $derived(
+		((children ? 'label' : '') + (children && Icon ? '+' : '') + (Icon ? 'icon' : '')) as
+			| 'label'
+			| 'label+icon'
+			| 'icon'
+	);
 </script>
 
-{#if href}
+{#if href && !disabled}
 	<a
-		class:inline
-		class:icon
-		class="{variant} {size}"
 		{href}
 		target={href.startsWith('http') ? '_blank' : undefined}
 		rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+		data-label-type={labelType}
+		data-variant={variant}
+		data-size={size}
 		aria-disabled={disabled}
+		draggable="false"
 		{...restProps as HTMLAnchorAttributes}
 	>
-		{@render children()}
+		{#if loading}
+			<Spinner />
+		{:else if Icon}
+			<Icon {...iconProps} />
+		{/if}
+
+		{@render children?.()}
 	</a>
 {:else}
 	<button
-		class:inline
-		class:icon
-		class="{variant} {size}"
 		{onclick}
 		{type}
+		data-label-type={labelType}
+		data-variant={variant}
+		data-size={size}
 		{disabled}
+		draggable="false"
 		{...restProps as HTMLButtonAttributes}
 	>
-		{@render children()}
+		{#if loading}
+			<Spinner />
+		{:else if Icon}
+			<Icon {...iconProps} />
+		{/if}
+
+		{@render children?.()}
 	</button>
 {/if}
 
 <style lang="scss">
 	a,
 	button {
-		display: flex;
-		gap: calc(var(--base-gap) * 0.5);
-
-		padding: calc(var(--base-padding) * 0.625) var(--base-padding);
-		border-radius: var(--inputs-border-base-radius);
-
+		// Layout
+		display: inline-flex;
 		text-align: center;
 		justify-content: center;
 		align-items: center;
-		width: 100%;
-		// height: max-content;
 
+		// Gaps, paddings, margins
+		height: var(--button-size);
+		padding: var(--padding);
+		gap: calc(var(--base-gap) * 0.5);
+
+		// Visual flair
+		border: var(--border-style);
+		background-color: var(--background-color);
+		color: var(--on-background-color);
+		border-radius: var(--border-radius);
+
+		// Typography
 		font-weight: 500;
+
+		// Misc
 		cursor: pointer;
 		text-decoration: none;
 		user-select: none;
+		flex-shrink: 0;
 
-		&.icon {
-			display: grid;
-			place-items: center;
-			padding: calc(var(--base-padding) * 0.625);
+		// Icon size
+		:global(svg) {
+			height: var(--icon-size);
+			width: var(--icon-size);
 		}
 
-		&.inline {
-			display: inline-flex;
-			width: max-content;
-			flex-shrink: 0;
+		// Hover state
+		&:hover:not(:disabled, [aria-disabled='true']) {
+			filter: brightness(0.95);
 		}
 
-		&.primary {
-			background-color: var(--buttons-primary-background-color);
-			color: var(--buttons-primary-on-background-color);
-			border: var(--inputs-border-width) solid var(--buttons-primary-border-color);
-			box-shadow: var(--buttons-primary-box-shadow-x) var(--buttons-primary-box-shadow-y)
-				var(--buttons-primary-box-shadow-blur) var(--buttons-primary-box-shadow-spread)
-				var(--buttons-primary-box-shadow-color);
+		// Medium-sized buttons
+		&[data-size='md'] {
+			--button-size: 2.75rem;
+			--icon-size: 24px;
+			--padding: 0 var(--base-padding);
+			--border-radius: var(--inputs-border-base-radius);
+		}
 
-			&:hover {
-				filter: brightness(0.95);
-				// opacity: 0.815;
+		// Small-sized buttons
+		&[data-size='sm'] {
+			--button-size: 2.25rem;
+			--icon-size: 18px;
+			--padding: 0 calc(var(--base-padding) * 0.75);
+			--border-radius: calc(var(--inputs-border-base-radius) * 3);
+		}
+
+		// Color variants
+		&[data-variant='primary'] {
+			--background-color: var(--buttons-primary-background-color);
+			--on-background-color: var(--buttons-primary-on-background-color);
+			--border-style: var(--inputs-border-width) solid var(--buttons-primary-border-color);
+		}
+
+		&[data-variant='secondary'] {
+			--background-color: var(--inputs-background-color);
+			--on-background-color: var(--inputs-on-background-color);
+			--border-style: var(--inputs-border-width) solid var(--inputs-border-color);
+		}
+
+		&[data-variant='text'] {
+			--background-color: transparent;
+			--on-background-color: var(--inputs-on-background-color);
+			--border-style: transparent solid var(--inputs-border-color);
+
+			// Hover (h)override for text buttons to filter on the backdrop
+			// Since the button is transparent
+			&:hover:not(:disabled, [aria-disabled='true']) {
+				backdrop-filter: brightness(0.95);
 			}
 		}
 
-		&.secondary {
-			background-color: var(--inputs-background-color);
-			color: var(--inputs-on-background-color);
-			border: var(--inputs-border-width) solid var(--inputs-border-color);
-
-			&:hover {
-				backdrop-filter: brightness(0.9);
-				// background-color: var(--widgets-background-color-dim);
-			}
+		&[data-variant='success'] {
+			--background-color: var(--color-success);
+			--on-background-color: var(--buttons-primary-on-background-color);
+			--border-style: var(--inputs-border-width) solid var(--color-success);
 		}
 
-		&.success {
-			background-color: var(--color-success);
-			color: var(--background);
-			border: var(--inputs-border-width) solid var(--color-success);
-
-			&:hover {
-				filter: brightness(0.9);
-			}
+		&[data-variant='urgent'] {
+			--background-color: var(--color-urgent);
+			--on-background-color: var(--buttons-primary-on-background-color);
+			--border-style: var(--inputs-border-width) solid var(--color-urgent);
 		}
 
-		&.urgent {
-			background-color: var(--color-urgent);
-			color: var(--widgets-background-color);
-			border: var(--inputs-border-width) solid var(--color-urgent);
-
-			&:hover {
-				filter: brightness(0.9);
-			}
-		}
-
-		&.small {
-			font-size: 15px;
-			border-radius: calc(var(--inputs-border-base-radius) * 3);
-			padding: calc(var(--base-padding) * 0.5) calc(var(--base-padding) * 0.75);
-
-			&.icon {
-				padding: calc(var(--base-padding) * 0.5);
-			}
-		}
-
+		// Disabled state overrides
 		&:disabled,
 		&[aria-disabled='true'] {
 			opacity: 0.5;
 			cursor: not-allowed;
+		}
 
-			&:hover {
-				opacity: 0.5;
+		// Label type overrides
+		&[data-label-type='label+icon'] {
+			&[data-size='md'] {
+				--padding: 0 var(--base-padding) 0 calc(var(--base-padding) * 0.75);
 			}
+
+			&[data-size='sm'] {
+				--padding: 0 calc(var(--base-padding) * 0.75) 0 calc(var(--base-padding) * 0.625);
+			}
+		}
+
+		&[data-label-type='icon'] {
+			--padding: 0;
+			width: var(--button-size);
+		}
+
+		&[aria-readonly='true'] {
+			cursor: not-allowed;
 		}
 	}
 </style>

@@ -1,8 +1,9 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from './$types';
 import { db } from '$lib/db';
-import { profiles, USERNAME_REGEX } from '$lib/db/schema/profiles';
+import { profiles } from '$lib/db/schema/profiles';
 import { eq } from 'drizzle-orm';
+import { USERNAME_REGEX } from '$lib/helpers/constants';
 
 export async function updateUsername({ locals: { getCurrentProfile }, request }: RequestEvent) {
 	const user = await getCurrentProfile();

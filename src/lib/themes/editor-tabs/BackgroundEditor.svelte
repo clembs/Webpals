@@ -13,7 +13,7 @@
 		name="background.type"
 		bind:selectedTab={theme.background.type}
 		tabs={[
-			{ value: 'color', label: 'Color' },
+			{ value: 'color', label: 'Solid color' },
 			{ value: 'image', label: 'Image' }
 		]}
 	/>

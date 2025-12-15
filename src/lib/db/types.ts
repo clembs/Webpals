@@ -2,17 +2,19 @@ import type { inviteCodes } from './schema/auth';
 import type { notifications, notificationsMentionedProfiles } from './schema/notifications';
 import type { profiles, relationships, connections } from './schema/profiles';
 
+export type BaseProfile = typeof profiles.$inferSelect;
+
 export type Profile = typeof profiles.$inferSelect & {
 	connections: Connection[];
+	initiatedRelationships: (Relationship & {
+		recipient: BaseProfile;
+	})[];
 };
 
-export type FullProfile = Profile & {
+export type CurrentProfile = Profile & {
 	notifications: Notification[];
-	initiatedRelationships: (Relationship & {
-		recipient: Profile;
-	})[];
 	receivedRelationships: (Relationship & {
-		profile: Profile;
+		profile: BaseProfile;
 	})[];
 };
 
@@ -24,6 +26,6 @@ export type InviteCode = typeof inviteCodes.$inferSelect;
 
 export type Notification = typeof notifications.$inferSelect & {
 	mentionedProfiles: (typeof notificationsMentionedProfiles.$inferSelect & {
-		profile: Profile | undefined | null;
+		profile: BaseProfile | undefined | null;
 	})[];
 };

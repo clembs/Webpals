@@ -1,15 +1,13 @@
-@import url('plain-theme.scss');
+// CSS reset, variables and default opinionated styles
+// Inspired partly by Josh W Comeau
 
-@font-face {
-	font-family: 'Public Sans';
-	src: url('/fonts/PublicSans-VariableFont_wght.woff2') format('woff2');
-	font-weight: 400 700;
-	font-display: swap;
-}
+@import url('plain-theme.scss');
+@import url('typography.scss');
 
 :root {
 	--color-success: #2f9126;
 	--color-urgent: #e90000;
+	--color-warning: #ffe58f;
 }
 
 *,
@@ -26,14 +24,19 @@ html {
 }
 
 body {
+	// Layout
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+
+	// Typography
 	font-family: var(--font-paragraph);
 	line-height: 1.5;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
+
+	// Misc
 	background: var(--background);
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
 }
 
 input,
@@ -53,6 +56,9 @@ canvas {
 	display: block;
 	max-width: 100%;
 	height: auto;
+}
+
+svg {
 	flex-shrink: 0;
 }
 
@@ -66,38 +72,16 @@ p {
 	overflow-wrap: break-word;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.heading {
-	font-family: var(--font-heading);
-	font-weight: 500;
-	color: var(--color-heading);
-}
-
-.darken {
-	color: var(--color-heading);
-}
-
-p,
-.subtext {
-	font-size: 15px;
-	color: var(--color-paragraph);
+*:focus-visible {
+	/* Don't animate the shadow, if present */
+	outline: none;
+	transition: none;
+	box-shadow:
+		0 0 0 2px var(--background),
+		0 0 0 4px var(--buttons-primary-background-color);
 }
 
 a {
 	color: inherit;
-	text-decoration-color: color-mix(in srgb, var(--color-paragraph) 50%, transparent);
-
-	&:hover {
-		text-decoration-color: var(--color-paragraph);
-	}
-}
-
-code,
-pre {
-	font-size: 1rem;
+	text-decoration: none;
 }

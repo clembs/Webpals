@@ -4,25 +4,25 @@
 	import type { Profile } from '$lib/db/types';
 
 	let {
-		user,
+		profile,
 		src,
 		size
 	}: {
-		user: Partial<Profile>;
+		profile: Partial<Profile>;
 		src?: string;
 		size?: string;
 	} = $props();
 </script>
 
-{#if user.avatar || src}
+{#if profile.avatar || src}
 	<img
 		height={size}
 		width={size}
 		loading="lazy"
 		style:--size={size}
 		class="avatar"
-		src={src ?? `${PUBLIC_STORAGE_BASE_URL}/avatars/${user.id}/${user.avatar}.webp`}
-		alt="@{user.username}'s avatar"
+		src={src ?? `${PUBLIC_STORAGE_BASE_URL}/avatars/${profile.id}/${profile.avatar}.webp`}
+		alt="@{profile.username}'s avatar"
 	/>
 {:else}
 	<div style:--size={size} class="avatar fallback">

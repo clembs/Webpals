@@ -1,11 +1,11 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from './$types';
-import type { CustomWidget } from '$lib/widgets/types';
 import { db } from '$lib/db';
 import { profiles } from '$lib/db/schema/profiles';
 import { eq } from 'drizzle-orm';
 import { parse } from 'valibot';
-import { CustomWidgetStructure } from '$lib/widgets/custom-widget-structure';
+import type { CustomWidgetJSON } from '$lib/widgets/custom-widgets/types';
+import { CustomWidgetStructure } from '$lib/widgets/custom-widgets/custom-widget-structure';
 
 function mutateObject(
 	obj: {
@@ -47,7 +47,7 @@ export async function editCustomWidget({
 
 	const widget = user.widgets
 		.find((c) => c.find((w) => w.id === widgetId))
-		?.find((w) => w.id === widgetId) as CustomWidget | undefined;
+		?.find((w) => w.id === widgetId) as CustomWidgetJSON | undefined;
 
 	if (!widget) {
 		return fail(400, {

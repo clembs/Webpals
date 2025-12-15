@@ -1,20 +1,25 @@
 :root {
-	--plain-90: #ffffff;
-	--plain-80: #f2f2f2;
-	--plain-70: #d9d9d9;
+	--plain-100: #ffffff;
+	--plain-95: #f2f2f2;
+	--plain-90: #e5e5e5;
+	--plain-80: #cccccc;
+	--plain-70: #b2b2b2;
 	--plain-60: #999999;
-	--plain-50: #656565;
-	--plain-20: #2b2b2b;
+	--plain-50: #7f7f7f;
+	--plain-40: #666666;
+	--plain-30: #4c4c4c;
+	--plain-20: #333333;
+	--plain-10: #191919;
 	--plain-0: #000000;
 	--font-fallbacks:
 		'Public Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
 		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
 	// Background
-	--background: var(--plain-80);
+	--background: var(--plain-90);
 	// Avatar
 	--avatar-size: 80px;
-	--avatar-border-radius: 50%;
+	--avatar-border-radius: 999px;
 	// Font
 	--font-paragraph: var(--font-fallbacks);
 	--font-heading: var(--font-fallbacks);
@@ -24,35 +29,26 @@
 	--base-padding: 1rem;
 	--base-gap: 1rem;
 	// Widgets
-	--widgets-background-color: var(--plain-90);
-	--widgets-background-color-dim: var(--plain-80);
+	--widgets-background-color: var(--plain-100);
+	--widgets-background-color-dim: var(--plain-95);
 	--widgets-background-blur: 0px;
 	--widgets-border-width: 1px;
 	--widgets-border-color: var(--plain-60);
-	--widgets-border-base-radius: 1rem;
-	--widgets-box-shadow-x: 0;
-	--widgets-box-shadow-y: 0;
-	--widgets-box-shadow-blur: 10px;
-	--widgets-box-shadow-spread: 0;
-	--widgets-box-shadow-color: rgba(0, 0, 0, 0.1);
+	--widgets-border-base-radius: 1.5rem;
+	--widgets-box-shadow-x: 0px;
+	--widgets-box-shadow-y: 16px;
+	--widgets-box-shadow-blur: 32px;
+	--widgets-box-shadow-spread: -4px;
+	--widgets-box-shadow-color: color-mix(in srgb, var(--plain-10) 7%, transparent);
+
 	// Primary buttons
 	--buttons-primary-background-color: var(--plain-0);
-	--buttons-primary-on-background-color: var(--plain-90);
+	--buttons-primary-on-background-color: var(--plain-100);
 	--buttons-primary-border-color: var(--plain-0);
-	--buttons-primary-box-shadow-x: 0;
-	--buttons-primary-box-shadow-y: 0;
-	--buttons-primary-box-shadow-blur: 10px;
-	--buttons-primary-box-shadow-spread: 0;
-	--buttons-primary-box-shadow-color: none;
 	// Secondary buttons & inputs
-	--inputs-background-color: var(--plain-90);
+	--inputs-background-color: var(--plain-95);
 	--inputs-on-background-color: var(--plain-0);
 	--inputs-border-width: 1px;
 	--inputs-border-color: var(--plain-60);
-	--inputs-border-base-radius: 0.5rem;
-	--inputs-box-shadow-x: 0;
-	--inputs-box-shadow-y: 0;
-	--inputs-box-shadow-blur: 10px;
-	--inputs-box-shadow-spread: 0;
-	--inputs-box-shadow-color: none;
+	--inputs-border-base-radius: 0.75rem;
 }

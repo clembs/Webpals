@@ -6,5 +6,11 @@ export default defineConfig({
 	plugins: [sveltePhosphorOptimize(), sveltekit()],
 	optimizeDeps: {
 		exclude: ['phosphor-svelte']
+	},
+	build: {
+		sourcemap: true
+	},
+	define: {
+		WEBPALS_VERSION: JSON.stringify(process.env.npm_package_version)
 	}
 });

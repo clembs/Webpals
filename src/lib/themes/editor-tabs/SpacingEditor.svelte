@@ -1,33 +1,35 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import LineSlider from '$lib/components/ThemeEditor/LineSlider.svelte';
+	import { mergeThemes } from '../merge-themes';
+	import { plainTheme } from '../plain-theme';
 	import type { Theme } from '../types';
 
 	let { theme = $bindable() }: { theme: Theme } = $props();
+
+	let cleanTheme = $derived(mergeThemes(page.data.currentProfile?.theme ?? {}, plainTheme));
 </script>
 
 <section>
-	<label for="spacing.padding">
-		Base padding
-
-		<input
+	<section class="subsection">
+		<LineSlider
+			label="Base padding"
 			name="spacing.padding"
-			type="range"
 			bind:value={theme.spacing.padding}
-			min="0.25"
-			max="2"
-			step="0.125"
+			initialValue={cleanTheme.spacing.padding}
+			min={0.25}
+			max={2}
+			step={0.125}
 		/>
-	</label>
 
-	<label for="spacing.gap">
-		Base spacing between elements
-
-		<input
+		<LineSlider
+			label="Spacing outside content in a widget"
 			name="spacing.gap"
-			type="range"
 			bind:value={theme.spacing.gap}
-			min="0.25"
-			max="2"
-			step="0.125"
+			initialValue={cleanTheme.spacing.gap}
+			min={0.25}
+			max={2}
+			step={0.125}
 		/>
-	</label>
+	</section>
 </section>

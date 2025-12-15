@@ -1,0 +1,50 @@
+@use '../../../styles/mixins.scss';
+
+[data-dropdown-menu-content] {
+	@include mixins.card;
+	gap: calc(var(--base-gap) * 0.5);
+	padding: calc(var(--base-padding) * 0.5);
+	min-width: 200px;
+
+	[data-dropdown-menu-group] {
+		display: flex;
+		flex-direction: column;
+		gap: calc(var(--base-gap) * 0.25);
+
+		[data-dropdown-menu-item] {
+			// Layout
+			display: flex;
+
+			// Gaps, paddings, margins
+			padding: calc(var(--base-padding) * 0.75);
+			gap: calc(var(--base-gap) * 0.75);
+
+			// Visual flair
+			border-radius: var(--inputs-border-base-radius);
+
+			// Misc
+			cursor: pointer;
+			user-select: none;
+
+			&:hover:not([aria-disabled='true']) {
+				background-color: var(--widgets-background-color-dim);
+			}
+
+			// Variants
+			&[data-variant='urgent'] {
+				color: var(--color-urgent);
+
+				&:hover:not([aria-disabled='true']) {
+					background-color: var(--color-urgent);
+					color: var(--buttons-primary-on-background-color);
+				}
+			}
+
+			// Disabled state overrides
+			&[aria-disabled='true'] {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+	}
+}

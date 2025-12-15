@@ -22,7 +22,7 @@ export const actions = {
 			});
 		}
 
-		const cities = cityTimezones.findFromCityStateProvince(query);
+		const cities = cityTimezones.findFromCityStateProvince(query).sort((a, b) => b.pop - a.pop);
 
 		if (!cities.length) {
 			return fail(404, {
@@ -31,7 +31,7 @@ export const actions = {
 		}
 
 		return {
-			cities: cities.slice(0, 10)
+			cities: cities.slice(0, 15)
 		};
 	}
 };

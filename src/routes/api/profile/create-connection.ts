@@ -2,13 +2,26 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from './$types';
 import { db } from '$lib/db';
 import { connections } from '$lib/db/schema/profiles';
-import { connectionProviders } from '$lib/widgets/connections';
-import type { ConnectionProvider } from '$lib/widgets/types';
+import {
+	connectionProviders,
+	type ConnectionProvider
+} from '$lib/widgets/connections/connection-providers';
+import { parseIdentifiableUrl } from '$lib/widgets/connections/helpers';
 
 export async function createConnection({ locals: { getCurrentProfile }, request }: RequestEvent) {
 	const user = getCurrentProfile();
 
 	if (!user) redirect(302, '/login');
+
+	const connectionsWidget = user.widgets
+		.find((column) => column.find((w) => w.id === 'connections'))
+		?.find((w) => w.id === 'connections');
+
+	if (!connectionsWidget) {
+		return fail(400, {
+			message: 'No connection widget'
+		});
+	}
 
 	const formData = await request.formData();
 	const rawProvider = formData.get('connection-provider')?.toString() as
@@ -18,14 +31,24 @@ export async function createConnection({ locals: { getCurrentProfile }, request 
 	const label = formData.get('connection-label')?.toString();
 
 	if (!rawProvider || !rawIdentifiable) {
-		return fail(400, { message: 'Missing required fields' });
+		return fail(400, {
+			message: 'Missing required fields'
+		});
 	}
 
-	if (label && label.length > 30) {
-		return fail(400, { message: 'Label too long' });
+	if (rawIdentifiable.length > 64) {
+		return fail(400, {
+			message: 'Identifiable is too long'
+		});
 	}
 
-	const connectionProvider = connectionProviders[rawProvider];
+	if (label && label.length > 32) {
+		return fail(400, {
+			message: 'Label too long'
+		});
+	}
+
+	const connectionProvider = connectionProviders.find(({ id }) => id === rawProvider);
 
 	if (!connectionProvider) {
 		return fail(400, {
@@ -49,12 +72,7 @@ export async function createConnection({ locals: { getCurrentProfile }, request 
 			matches![1] || matches![2] || rawIdentifiable
 		: rawIdentifiable;
 
-	// if the provider needs a URL, prepend https if not already present
-	const url = connectionProvider.hasUrl
-		? rawIdentifiable.startsWith('http')
-			? rawIdentifiable
-			: `https://${connectionProvider.identifiablePrefix ?? ''}${rawIdentifiable}`
-		: undefined;
+	const url = parseIdentifiableUrl(connectionProvider, rawIdentifiable);
 
 	try {
 		await db.insert(connections).values({
