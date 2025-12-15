@@ -1,54 +1,61 @@
 # Webpals
 
-Fun highly customizable mini profiles for everyone :3
+Webpals is a way to show off your personality using many widgets and customization options, with simple but powerful controls!
 
-## Description
+It's like a modern equivalent to MySpace, or a something between and a Linktree and a personal site.
 
-This project is a social network of profiles with plenty of customization options to make each one unique, sort of a modern equivalent to MySpace, or a mix of bento.me and a blog.
-
-Users will be able to set up a profile using a theme editor, add widgets, befriend other users, send posts, and more.
-
-This doesn't aim to replace any existing social media, just to have a fun and creative platform where people can show off their personality!
-
-If you're interested in the project, consider following updates more visually via [Bluesky](https://bsky.app/profile/clembs.com), [Twitter](https://twitter.com/clembsv) or [Discord](https://clembs.com/discord).
+Follow the project on [Bluesky](https://bsky.app/profile/clembs.com), [Twitter](https://twitter.com/clembsv) or [Discord](https://discord.gg/Mauurzxvrp)!
 
 ## Release roadmap
 
 Webpals is still in development and will be released in multiple stages. The following is a rough roadmap of the features I plan to implement (subject to change).
 
-### Private alpha
+<details>
+  <summary>
+
+### Private alpha (released, current)
+  </summary>
 
 An invite-only release where only I issue invite codes. It will be a way for close relatives to test the base features. No account will be required to view profiles. Expected features:
 
 - [x] Authentication (Login, Register, Logout)
-- [x] Friends[^1]
 - [x] Some default widgets
-- [ ] Barebones profile explore page
+- [x] Barebones profile explore page
 - [x] Barebones profile theming
 - [x] Notifications
-- [ ] Barebones mobile version
+- [x] Barebones mobile version
 - [x] Invite system
+</details>
+<details open>
+  <summary>
 
-### Public alpha
+### Public alpha (in development)
+  </summary>
 
 Every user will be able to issue codes to invite more people to the app. Expected features:
 
-- [ ] Onboarding
+- [x] Custom music in Music widget
+- [x] Clock widget
+- [x] Friends[^1]
+- [ ] Full UI & UX redesign
+- [ ] Profile view count
+- [ ] Profile likes
 - [ ] Profile comments
-- [ ] All planned default widgets
-- [ ] Barebones user & privacy settings
+- [ ] Webpals Webring
+- [ ] Complete settings page
+</details>
+<details>
+  <summary>
 
 ### Public beta
+  </summary>
 
 A release where anyone can sign up, without an invite code. Expected features:
 
-- [ ] Full profile theming
-- [ ] Virtual currency & badges
-- [ ] Advanced post features
+- [ ] Onboarding
+- [ ] Advanced profile theming
 - [ ] Custom widget API
-
-### General availability
-
-This release should not include more features, but the interface should be refined and most issues should be addressed.
+- [ ] Polishing things off
+</details>
 
 [^1]: Partially implemented
